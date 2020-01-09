@@ -2,9 +2,8 @@
 
 Game::Game()
 	:
-	wnd(1280,720,"B-Cubed")
-{
-}
+	wnd(1280, 720, "B-Cubed")
+{}
 
 int Game::Start()
 {
@@ -14,5 +13,11 @@ int Game::Start()
 		{
 			return *eCode;
 		}
+		DoFrame();
 	}
+}
+
+void Game::DoFrame()
+{
+	wnd.Gfx().TestDraw();
 }

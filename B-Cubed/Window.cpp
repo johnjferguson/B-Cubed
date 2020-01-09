@@ -77,6 +77,9 @@ Window::Window(int width, int height, const char * name)
 	);
 	// newly created window start off as hidden
 	ShowWindow(hWnd, SW_SHOW);
+
+	// initialize graphics
+	gfx = Graphics(hWnd, width, height);
 }
 
 Window::~Window()
@@ -106,6 +109,11 @@ std::optional<int> Window::ProcessMessages()
 	}
 	// std::optional will evaluate to false for empty optional
 	return {};
+}
+
+Graphics & Window::Gfx()
+{
+	return gfx;
 }
 
 LRESULT Window::ProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

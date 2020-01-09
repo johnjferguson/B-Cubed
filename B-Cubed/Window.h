@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <optional>
+#include "Graphics.h"
 
 class Window
 {
@@ -28,10 +29,13 @@ public:
 	~Window();
 	HWND GetHandle() const;
 	std::optional<int> ProcessMessages();
+	Graphics& Gfx();
 private:
 	HWND hWnd;
 	int width;
 	int height;
+private:
+	Graphics gfx;
 private:
 	static LRESULT CALLBACK ProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK ProcThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
