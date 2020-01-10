@@ -19,5 +19,8 @@ int Game::Start()
 
 void Game::DoFrame()
 {
-	wnd.Gfx().TestDraw();
+	if (wnd.mouse.LeftIsPressed())
+		wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY());
+	else
+		wnd.gfx.TestDraw(wnd.GetWidth()/2, wnd.GetHeight()/2);
 }

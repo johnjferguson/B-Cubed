@@ -9,7 +9,7 @@ class Graphics
 public:
 	Graphics() = default;
 	Graphics(HWND hwnd, unsigned int width, unsigned int height);
-	void TestDraw();
+	void TestDraw(int x, int y);
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = nullptr;

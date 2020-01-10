@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <optional>
 #include "Graphics.h"
+#include "Mouse.h"
 
 class Window
 {
@@ -29,13 +30,15 @@ public:
 	~Window();
 	HWND GetHandle() const;
 	std::optional<int> ProcessMessages();
-	Graphics& Gfx();
+	int GetWidth() const;
+	int GetHeight() const;
 private:
 	HWND hWnd;
 	int width;
 	int height;
-private:
+public:
 	Graphics gfx;
+	Mouse mouse;
 private:
 	static LRESULT CALLBACK ProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK ProcThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

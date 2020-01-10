@@ -111,9 +111,14 @@ std::optional<int> Window::ProcessMessages()
 	return {};
 }
 
-Graphics & Window::Gfx()
+int Window::GetWidth() const
 {
-	return gfx;
+	return width;
+}
+
+int Window::GetHeight() const
+{
+	return height;
 }
 
 LRESULT Window::ProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -141,11 +146,28 @@ LRESULT Window::ProcThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 LRESULT Window::Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	POINTS pt = MAKEPOINTS(lParam);
+
 	switch (msg)
 	{
 	// shuts down program when exit button is pressed
 	case WM_CLOSE:
 		PostQuitMessage(0); 
+		break;
+	case WM_MOUSEMOVE:
+		mouse.OnMove(pt.x, pt.y);
+		break;
+	case WM_LBUTTONDOWN:
+		mouse.OnLeftPress(pt.x, pt.y);
+		break;
+	case WM_LBUTTONUP:
+		mouse.OnLeftRelease(pt.x, pt.y);
+		break;
+	case WM_RBUTTONDOWN:
+		mouse.OnRightPress(pt.x, pt.y);
+		break;
+	case WM_RBUTTONUP:
+		mouse.OnRightRelease(pt.x, pt.y);
 		break;
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);

@@ -102,7 +102,7 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 	 pContext->RSSetViewports(1u, &vp);
 }
 
-void Graphics::TestDraw()
+void Graphics::TestDraw(int x, int y)
 {
 	// clear and set background color
 	FLOAT color[4] = { 0,1.0f,159.0f/255.0f,1.0f };
@@ -120,12 +120,18 @@ void Graphics::TestDraw()
 	};
 
 	// vertices being sent to gpu to be drawn
-	const Vertex vertices[] =
+	Vertex vertices[] =
 	{
 		{-0.5f,-0.5f},
 		{ 0.0f, 0.5f},
 		{ 0.5f,-0.5f}
 	};
+
+	for (auto& v : vertices)
+	{
+		v.pos.x = v.pos.x + ((2.0f * x) / float(width)) - 1.0f;
+		v.pos.y = v.pos.y + 1.0f - ((2.0f * y) / float(height));
+	}
 
 	// need to make sure indices are CLOCKWISE WINDING or gpu will cull it
 	//    1
@@ -197,16 +203,6 @@ void Graphics::TestDraw()
 	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 	
 	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
-
-	// configure viewport
-	D3D11_VIEWPORT vp;
-	vp.Width = float(width);
-	vp.Height = float(height);
-	vp.MinDepth = 0;
-	vp.MaxDepth = 1;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	pContext->RSSetViewports(1u, &vp);
 
 	// set primitive topology
 	pContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
