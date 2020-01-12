@@ -22,10 +22,8 @@ void Game::DoFrame()
 {
 	gui.Begin("B-Cubed gui window");
 
-	if (wnd.mouse.RightIsPressed())
-		wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY(),gui);
-	else
-		wnd.gfx.TestDraw(wnd.GetWidth()/2, wnd.GetHeight()/2,gui);
+	// mouse pos does nothing right now
+	wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY());
 
 	gui.End();
 	wnd.gfx.EndFrame();

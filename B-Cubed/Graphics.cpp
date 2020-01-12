@@ -115,14 +115,14 @@ void Graphics::EndFrame()
 	pSwap->Present(0u, 0u);
 }
 
-void Graphics::TestDraw(int x, int y, Gui& gui)
+void Graphics::TestDraw(int x, int y)
 {
 	// static variables for testing only
 	static float offsetX = 0.0f;
 	static float offsetY = 0.0f;
 	static float triangleColor[4] = { 1.0f, 0.55f, 0.60f, 1.00f };
 
-	gui.AddText("some random text");
+	Gui::AddText("some random text");
 
 	// clear and set background color
 	FLOAT color[4] = { 0,1.0f,159.0f/255.0f,1.0f };
@@ -153,8 +153,8 @@ void Graphics::TestDraw(int x, int y, Gui& gui)
 		v.pos.y += offsetY;
 	}
 	// adding gui sliders
-	gui.AddSlider("offset x", offsetX, -1.0f, 1.0f);
-	gui.AddSlider("offset y", offsetY, -1.0f, 1.0f);
+	Gui::AddSlider("offset x", offsetX, -1.0f, 1.0f);
+	Gui::AddSlider("offset y", offsetY, -1.0f, 1.0f);
 
 	// need to make sure indices are CLOCKWISE WINDING or gpu will cull it
 	//    1
@@ -246,7 +246,7 @@ void Graphics::TestDraw(int x, int y, Gui& gui)
 	pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 
 	// variable color panel
-	gui.AddColor4("<-(click) Triangle Color", triangleColor);
+	Gui::AddColor4("<-(click) Triangle Color", triangleColor);
 
 	// set primitive topology
 	pContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

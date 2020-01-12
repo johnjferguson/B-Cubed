@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "imgui/imgui_impl_win32.h"
+#include "resource.h"
 
 // initialize static variable for singleton
 Window::WindowClass  Window::WindowClass::wc("B-Cubed");
@@ -29,7 +30,7 @@ Window::WindowClass::WindowClass(const char * name)
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetInstance();
 	// could add logo for window here if we want
-	wc.hIcon = nullptr;
+	wc.hIcon = static_cast<HICON>(LoadImage(GetInstance(),MAKEINTRESOURCE(IDI_ICON1),IMAGE_ICON,16,16,0));
 	wc.hIconSm = nullptr;
 
 	// could add custom cursor

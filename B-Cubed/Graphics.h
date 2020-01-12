@@ -12,7 +12,7 @@ public:
 	Graphics() = default;
 	Graphics(HWND hwnd, unsigned int width, unsigned int height);
 	void EndFrame();
-	void TestDraw(int x, int y, Gui& gui);
+	void TestDraw(int x, int y);
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = nullptr;
