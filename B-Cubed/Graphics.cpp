@@ -1,6 +1,7 @@
 #include "Graphics.h"
 #include <DirectXMath.h>
 #include <vector>
+#include "imgui/imgui_impl_dx11.h"
 
 // use this way to link libraries
 #pragma comment(lib,"d3d11.lib")
@@ -100,10 +101,29 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 	 vp.TopLeftX = 0.0f;
 	 vp.TopLeftY = 0.0f;
 	 pContext->RSSetViewports(1u, &vp);
+
+	 // init imgui
+	 ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
 }
 
-void Graphics::TestDraw(int x, int y)
+void Graphics::EndFrame()
 {
+	// swaps the front and back buffer  
+	// _____    ____
+	// | 1 | -> |  |
+	// |0_2| <- |__|
+	pSwap->Present(0u, 0u);
+}
+
+void Graphics::TestDraw(int x, int y, Gui& gui)
+{
+	// static variables for testing only
+	static float offsetX = 0.0f;
+	static float offsetY = 0.0f;
+	static float triangleColor[4] = { 1.0f, 0.55f, 0.60f, 1.00f };
+
+	gui.AddText("some random text");
+
 	// clear and set background color
 	FLOAT color[4] = { 0,1.0f,159.0f/255.0f,1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);
@@ -129,9 +149,12 @@ void Graphics::TestDraw(int x, int y)
 
 	for (auto& v : vertices)
 	{
-		v.pos.x = v.pos.x + ((2.0f * x) / float(width)) - 1.0f;
-		v.pos.y = v.pos.y + 1.0f - ((2.0f * y) / float(height));
+		v.pos.x += offsetX;
+		v.pos.y += offsetY;
 	}
+	// adding gui sliders
+	gui.AddSlider("offset x", offsetX, -1.0f, 1.0f);
+	gui.AddSlider("offset y", offsetY, -1.0f, 1.0f);
 
 	// need to make sure indices are CLOCKWISE WINDING or gpu will cull it
 	//    1
@@ -191,7 +214,7 @@ void Graphics::TestDraw(int x, int y)
 	{
 		{ "POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }
 	};
-	// input layout wants blob from creation of vertex shader -> pBlob->GetBufferPointer()
+	// input layout wants blob from creation of vertex shader so it needs to be done first
 	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
 	pContext->IASetInputLayout(pInputLayout.Get());
 
@@ -204,15 +227,31 @@ void Graphics::TestDraw(int x, int y)
 	
 	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 
+	// sending 4 floats to the pixel shader
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
+
+	D3D11_BUFFER_DESC cbd;
+	cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbd.Usage = D3D11_USAGE_DYNAMIC;
+	cbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbd.MiscFlags = 0u;
+	cbd.ByteWidth = 4*sizeof(float);
+	cbd.StructureByteStride = 0u;
+
+	D3D11_SUBRESOURCE_DATA csd = {};
+	csd.pSysMem = triangleColor;
+	pDevice->CreateBuffer(&cbd, &csd, &pConstantBuffer);
+
+	// bind 4 floats to pixel shader
+	pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+
+	// variable color panel
+	gui.AddColor4("<-(click) Triangle Color", triangleColor);
+
 	// set primitive topology
 	pContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// draw object
 	pContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
 	
-	// swaps the front and back buffer  
-	// _____    ____
-	// | 1 | -> |  |
-	// |0_2| <- |__|
-	pSwap->Present(0u, 0u);
 }

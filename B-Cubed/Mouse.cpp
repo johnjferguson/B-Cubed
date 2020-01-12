@@ -7,6 +7,14 @@ Mouse::Event::Event(Event::Type type, int x, int y)
 	type(type)
 {}
 
+Mouse::Mouse()
+	:
+	x(0),
+	y(0),
+	leftIsPressed(false),
+	rightIsPressed(false)
+{}
+
 int Mouse::PosX() const
 {
 	return x;

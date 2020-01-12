@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "imgui/imgui_impl_win32.h"
 
 // initialize static variable for singleton
 Window::WindowClass  Window::WindowClass::wc("B-Cubed");
@@ -80,6 +81,9 @@ Window::Window(int width, int height, const char * name)
 
 	// initialize graphics
 	gfx = Graphics(hWnd, width, height);
+	
+	// init imgui win32
+	ImGui_ImplWin32_Init(hWnd);
 }
 
 Window::~Window()
@@ -146,6 +150,11 @@ LRESULT Window::ProcThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 LRESULT Window::Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+	{
+		return true;
+	}
+
 	POINTS pt = MAKEPOINTS(lParam);
 
 	switch (msg)

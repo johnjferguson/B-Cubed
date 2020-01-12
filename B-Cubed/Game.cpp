@@ -3,7 +3,8 @@
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed")
-{}
+{
+}
 
 int Game::Start()
 {
@@ -19,8 +20,13 @@ int Game::Start()
 
 void Game::DoFrame()
 {
-	if (wnd.mouse.LeftIsPressed())
-		wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY());
+	gui.Begin("B-Cubed gui window");
+
+	if (wnd.mouse.RightIsPressed())
+		wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY(),gui);
 	else
-		wnd.gfx.TestDraw(wnd.GetWidth()/2, wnd.GetHeight()/2);
+		wnd.gfx.TestDraw(wnd.GetWidth()/2, wnd.GetHeight()/2,gui);
+
+	gui.End();
+	wnd.gfx.EndFrame();
 }

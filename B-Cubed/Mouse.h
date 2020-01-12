@@ -26,7 +26,7 @@ public:
 		int y;
 	};
 public:
-	Mouse() = default;
+	Mouse();
 	int PosX() const;
 	int PosY() const;
 	std::pair<int, int> Pos() const;
