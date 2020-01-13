@@ -118,9 +118,13 @@ void Graphics::EndFrame()
 void Graphics::TestDraw(int x, int y)
 {
 	// static variables for testing only
-	static float offsetX = 0.0f;
-	static float offsetY = 0.0f;
+	static float pitch = 0.0f; // rotation around y-axis
+	static float yaw = 0.0f;   // rotation around z-axis
+	static float roll = 0.0f;  // rotation around x-axis
 	static float triangleColor[4] = { 1.0f, 0.55f, 0.60f, 1.00f };
+	const static float pi = 3.141529f;
+
+	HRESULT hr;
 
 	Gui::AddText("some random text");
 
@@ -132,36 +136,86 @@ void Graphics::TestDraw(int x, int y)
 
 	struct Vertex
 	{
-		struct
-		{
-			float x;
-			float y;
-		}pos;
+		dx::XMFLOAT3 pos;
+		dx::XMFLOAT3 color;
 	};
+
+	struct Transform
+	{
+		dx::XMMATRIX transform;
+	};
+
+	Transform transform =
+	{
+		dx::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*
+		dx::XMMatrixTranslation(0.0f,0.0f, 20.0f)*
+		dx::XMMatrixPerspectiveLH(1.0f, 9.0f/16.0f,1.0f,40.0f)
+	};
+
+	Gui::AddSlider("pitch", pitch, -2 * pi, 2 * pi);
+	Gui::AddSlider("yaw", yaw, -2 * pi, 2 * pi);
+	Gui::AddSlider("roll", roll, -2 * pi, 2 * pi);
+
 
 	// vertices being sent to gpu to be drawn
 	Vertex vertices[] =
 	{
-		{-0.5f,-0.5f},
-		{ 0.0f, 0.5f},
-		{ 0.5f,-0.5f}
+		// top
+		{dx::XMFLOAT3(-2.0f,0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 0
+		{dx::XMFLOAT3( 0.0f,4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 1
+		{dx::XMFLOAT3( 2.0f,0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 2
+
+		{dx::XMFLOAT3(-2.0f,0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 3
+		{dx::XMFLOAT3( 0.0f,4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 4
+		{dx::XMFLOAT3( 2.0f,0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 5
+		//left
+		{dx::XMFLOAT3(-4.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)}, // 6
+		{dx::XMFLOAT3(-2.0f, 0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)}, // 7
+		{dx::XMFLOAT3( 0.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)}, // 8
+
+		{dx::XMFLOAT3(-4.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)}, // 9
+		{dx::XMFLOAT3(-2.0f, 0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)}, // 10
+		{dx::XMFLOAT3( 0.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)}, // 11
+		// right
+		{dx::XMFLOAT3(0.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 12
+		{dx::XMFLOAT3(2.0f, 0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 13
+		{dx::XMFLOAT3(4.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 14
+
+		{dx::XMFLOAT3(0.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 15
+		{dx::XMFLOAT3(2.0f, 0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 16
+		{dx::XMFLOAT3(4.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 17
+
 	};
 
-	for (auto& v : vertices)
-	{
-		v.pos.x += offsetX;
-		v.pos.y += offsetY;
-	}
-	// adding gui sliders
-	Gui::AddSlider("offset x", offsetX, -1.0f, 1.0f);
-	Gui::AddSlider("offset y", offsetY, -1.0f, 1.0f);
-
-	// need to make sure indices are CLOCKWISE WINDING or gpu will cull it
-	//    1
-	//  0   2
 	const unsigned short indices[]
 	{
-		0,1,2
+		// top
+		0,1,2,
+		5,4,3,
+		3,4,1,
+		3,1,0,
+		2,1,4,
+		2,4,5,
+		5,3,0,
+		5,0,2,
+		// left
+		6,7,8,
+		11,10,9,
+		9,10,7,
+		9,7,6,
+		8,7,10,
+		8,10,11,
+		11,9,6,
+		11,6,8,
+		// right
+		12,13,14,
+		17,16,15,
+		15,16,13,
+		15,13,12,
+		14,13,16,
+		14,16,17,
+		17,15,12,
+		17,12,14
 	};
 	
 	// create vertex buffer and bind to pipeline
@@ -177,7 +231,8 @@ void Graphics::TestDraw(int x, int y)
 	bd.MiscFlags = 0u;
 	bd.StructureByteStride = sizeof(Vertex);
 
-	pDevice->CreateBuffer(&bd, &srd, &pVertexBuffer);
+	hr = pDevice->CreateBuffer(&bd, &srd, &pVertexBuffer);
+	assert(SUCCEEDED(hr));
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0u;
 	pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
@@ -193,7 +248,8 @@ void Graphics::TestDraw(int x, int y)
 	bd.MiscFlags = 0u;
 	bd.StructureByteStride = sizeof(unsigned short);
 
-	pDevice->CreateBuffer(&bd, &srd, &pIndexBuffer);
+	hr = pDevice->CreateBuffer(&bd, &srd, &pIndexBuffer);
+	assert(SUCCEEDED(hr));
 	stride = sizeof(unsigned short);
 	offset = 0u;
 	pContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, offset);
@@ -203,7 +259,7 @@ void Graphics::TestDraw(int x, int y)
 
 	// create vertex shader
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	D3DReadFileToBlob(L"VertexShaderBasic.cso", &pBlob);
+	D3DReadFileToBlob(L"VertexShaderTransform.cso", &pBlob);
 	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 	// bind vertex shader
 	pContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
@@ -212,7 +268,8 @@ void Graphics::TestDraw(int x, int y)
 	wrl::ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
-		{ "POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 }
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "COLOR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
 	};
 	// input layout wants blob from creation of vertex shader so it needs to be done first
 	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
@@ -220,7 +277,7 @@ void Graphics::TestDraw(int x, int y)
 
 	// create pixel shader
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-	D3DReadFileToBlob(L"PixelShaderBasic.cso", &pBlob);
+	D3DReadFileToBlob(L"PixelShaderTransform.cso", &pBlob);
 	pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
 	// bind pixel shader
 	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
@@ -245,8 +302,27 @@ void Graphics::TestDraw(int x, int y)
 	// bind 4 floats to pixel shader
 	pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 
+	// creating and binding tranform matrix to vertex shader
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pTransformConstantBuffer;
+
+	D3D11_BUFFER_DESC tcbd;
+	tcbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	tcbd.Usage = D3D11_USAGE_DYNAMIC;
+	tcbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	tcbd.MiscFlags = 0u;
+	tcbd.ByteWidth = sizeof(transform);
+	tcbd.StructureByteStride = 0u;
+
+	D3D11_SUBRESOURCE_DATA tcsd = {};
+	tcsd.pSysMem = &transform;
+	hr = pDevice->CreateBuffer(&tcbd, &tcsd, &pTransformConstantBuffer);
+	assert(SUCCEEDED(hr) && "transform constant buffer failed");
+
+	// bind transform matrix to vertex shader
+	pContext->VSSetConstantBuffers(0u, 1u, pTransformConstantBuffer.GetAddressOf());
+
 	// variable color panel
-	Gui::AddColor4("<-(click) Triangle Color", triangleColor);
+	//Gui::AddColor4("<-(click) Triangle Color", triangleColor);
 
 	// set primitive topology
 	pContext->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
