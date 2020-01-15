@@ -2,10 +2,12 @@
 #include <DirectXMath.h>
 #include <vector>
 #include "imgui/imgui_impl_dx11.h"
+#include "DirectXTex/WICTextureLoader/WICTextureLoader.h"
 
 // use this way to link libraries
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"D3DCompiler.lib")       // needed to compile shaders
+#pragma comment( lib, "dxguid.lib")          // this is need for WIC Texture
 
 // less typing while not losing too much clarity
 namespace wrl = Microsoft::WRL;
@@ -104,6 +106,17 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 
 	 // init imgui
 	 ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
+
+
+	 // this stuff goes here instead of draw test because loading images is expensive
+	 // and I was getting only 30 fps
+	 // image path
+	 const wchar_t* path = L"images//dice.jpg";
+
+	 wrl::ComPtr<ID3D11Resource> pResource;
+	 // load image from file
+	 HRESULT hr = DirectX::CreateWICTextureFromFile(pDevice.Get(), path, pResource.GetAddressOf(), pTextureView.GetAddressOf());
+	 assert(SUCCEEDED(hr) && "WIC failed to load texture");
 }
 
 void Graphics::EndFrame()
@@ -121,6 +134,7 @@ void Graphics::TestDraw(int x, int y)
 	static float pitch = 0.0f; // rotation around y-axis
 	static float yaw = 0.0f;   // rotation around z-axis
 	static float roll = 0.0f;  // rotation around x-axis
+	static float distance = 10.0f;
 	static float triangleColor[4] = { 1.0f, 0.55f, 0.60f, 1.00f };
 	const static float pi = 3.141529f;
 
@@ -137,7 +151,7 @@ void Graphics::TestDraw(int x, int y)
 	struct Vertex
 	{
 		dx::XMFLOAT3 pos;
-		dx::XMFLOAT3 color;
+		dx::XMFLOAT2 tex;
 	};
 
 	struct Transform
@@ -148,76 +162,60 @@ void Graphics::TestDraw(int x, int y)
 	Transform transform =
 	{
 		dx::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*
-		dx::XMMatrixTranslation(0.0f,0.0f, 20.0f)*
+		dx::XMMatrixTranslation(0.0f,0.0f, distance)*
 		dx::XMMatrixPerspectiveLH(1.0f, 9.0f/16.0f,1.0f,40.0f)
 	};
 
 	Gui::AddSlider("pitch", pitch, -2 * pi, 2 * pi);
 	Gui::AddSlider("yaw", yaw, -2 * pi, 2 * pi);
 	Gui::AddSlider("roll", roll, -2 * pi, 2 * pi);
+	Gui::AddSlider("distance", distance, 0.0f, 40.0f);
 
 
 	// vertices being sent to gpu to be drawn
 	Vertex vertices[] =
 	{
-		// top
-		{dx::XMFLOAT3(-2.0f,0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 0
-		{dx::XMFLOAT3( 0.0f,4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 1
-		{dx::XMFLOAT3( 2.0f,0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 2
-
-		{dx::XMFLOAT3(-2.0f,0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 3
-		{dx::XMFLOAT3( 0.0f,4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 4
-		{dx::XMFLOAT3( 2.0f,0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 5
-		//left
-		{dx::XMFLOAT3(-4.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)}, // 6
-		{dx::XMFLOAT3(-2.0f, 0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)}, // 7
-		{dx::XMFLOAT3( 0.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)}, // 8
-
-		{dx::XMFLOAT3(-4.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)}, // 9
-		{dx::XMFLOAT3(-2.0f, 0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)}, // 10
-		{dx::XMFLOAT3( 0.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)}, // 11
-		// right
-		{dx::XMFLOAT3(0.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 12
-		{dx::XMFLOAT3(2.0f, 0.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 13
-		{dx::XMFLOAT3(4.0f,-4.0f,0.0f),dx::XMFLOAT3(1.0f,0.0f,0.0f)},  // 14
-
-		{dx::XMFLOAT3(0.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 15
-		{dx::XMFLOAT3(2.0f, 0.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 16
-		{dx::XMFLOAT3(4.0f,-4.0f,1.0f),dx::XMFLOAT3(0.0f,0.0f,1.0f)},  // 17
-
+		{ dx::XMFLOAT3(-1.0f,1.0f,1.0f),dx::XMFLOAT2(0.5f,1.0f) },  // 0
+		{ dx::XMFLOAT3(1.0f,1.0f,1.0f),dx::XMFLOAT2(0.75f,1.0f) },   // 1
+		{ dx::XMFLOAT3(-1.0f,1.0f,-1.0f),dx::XMFLOAT2(0.5f,0.66f) }, // 2
+		{ dx::XMFLOAT3(1.0f,1.0f,-1.0f),dx::XMFLOAT2(0.75f,0.66f) },  // 3
+		{ dx::XMFLOAT3(-1.0f,-1.0f,-1.0f),dx::XMFLOAT2(0.5f,0.33f) },// 4
+		{ dx::XMFLOAT3(1.0f,-1.0f,-1.0f),dx::XMFLOAT2(0.75f,0.33f) }, // 5
+		{ dx::XMFLOAT3(-1.0f,-1.0f,1.0f),dx::XMFLOAT2(0.5f,0.0f) }, // 6
+		{ dx::XMFLOAT3(1.0f,-1.0f,1.0f),dx::XMFLOAT2(0.75f,0.0f) },  // 7
+		{ dx::XMFLOAT3(1.0f,1.0f,1.0f),dx::XMFLOAT2(1.0f,0.66f) },   // 8
+		{ dx::XMFLOAT3(1.0f,-1.0f,1.0f),dx::XMFLOAT2(1.0f,0.33f) },  // 9
+		{ dx::XMFLOAT3(-1.0f,1.0f,1.0f),dx::XMFLOAT2(0.25f,0.66f) },  // 10
+		{ dx::XMFLOAT3(-1.0f,-1.0f,1.0f),dx::XMFLOAT2(0.25f,0.33f) }, // 11
+		{ dx::XMFLOAT3(1.0f,1.0f,1.0f),dx::XMFLOAT2(0.0f,0.66f) },   // 12
+		{ dx::XMFLOAT3(1.0f,-1.0f,1.0f),dx::XMFLOAT2(0.0f,0.33f) },  // 13
 	};
 
 	const unsigned short indices[]
 	{
-		// top
-		0,1,2,
-		5,4,3,
-		3,4,1,
-		3,1,0,
-		2,1,4,
-		2,4,5,
-		5,3,0,
-		5,0,2,
-		// left
-		6,7,8,
-		11,10,9,
-		9,10,7,
-		9,7,6,
-		8,7,10,
-		8,10,11,
-		11,9,6,
-		11,6,8,
-		// right
-		12,13,14,
-		17,16,15,
-		15,16,13,
-		15,13,12,
-		14,13,16,
-		14,16,17,
-		17,15,12,
-		17,12,14
+		// dice 1
+		2,0,1,
+		2,1,3,
+		// dice 2
+		11,10,2,
+		11,2,4,
+		// dice 3
+		4,2,3,
+		4,3,5,
+		// dice 4
+		13,12,10,
+		13,10,11,
+		// dice 5
+		5,3,8,
+		5,8,9,
+		// dice 6
+		6,4,5,
+		6,5,7
 	};
 	
+	// bind texture to pixel shader
+	pContext->PSSetShaderResources(0, 1, pTextureView.GetAddressOf());
+
 	// create vertex buffer and bind to pipeline
 	wrl::ComPtr<ID3D11Buffer> pVertexBuffer = nullptr;
 	D3D11_SUBRESOURCE_DATA srd;
@@ -259,7 +257,7 @@ void Graphics::TestDraw(int x, int y)
 
 	// create vertex shader
 	wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-	D3DReadFileToBlob(L"VertexShaderTransform.cso", &pBlob);
+	D3DReadFileToBlob(L"VertexShaderTexture.cso", &pBlob);
 	pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 	// bind vertex shader
 	pContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
@@ -269,7 +267,7 @@ void Graphics::TestDraw(int x, int y)
 	const D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
 		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-		{ "COLOR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
 	};
 	// input layout wants blob from creation of vertex shader so it needs to be done first
 	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
@@ -277,7 +275,7 @@ void Graphics::TestDraw(int x, int y)
 
 	// create pixel shader
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-	D3DReadFileToBlob(L"PixelShaderTransform.cso", &pBlob);
+	D3DReadFileToBlob(L"PixelShaderTexture.cso", &pBlob);
 	pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
 	// bind pixel shader
 	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
