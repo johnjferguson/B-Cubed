@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Gui.h"
+#include "Physics.h"
 
 class Game
 {
@@ -13,4 +14,5 @@ private:
 	// some dependancy
 	Gui gui;
 	Window wnd;
+	Physics physics;
 };

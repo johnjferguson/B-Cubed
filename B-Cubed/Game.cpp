@@ -3,8 +3,7 @@
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed")
-{
-}
+{}
 
 int Game::Start()
 {
@@ -24,6 +23,7 @@ void Game::DoFrame()
 
 	// mouse pos does nothing right now
 	wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY());
+	physics.Update(1.0f / 60.0f);
 
 	gui.End();
 	wnd.gfx.EndFrame();

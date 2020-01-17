@@ -66,6 +66,9 @@
     <ClCompile Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.cpp">
       <Filter>TextureLoader</Filter>
     </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.h">
       <Filter>TextureLoader</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

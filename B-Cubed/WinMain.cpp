@@ -8,5 +8,7 @@ int CALLBACK WinMain(
 	LPSTR	  lpCmdLine,
 	int		  nCmdShow)
 {
-	return Game{}.Start();
+	return Game{}.Start();	
 }
+
+
