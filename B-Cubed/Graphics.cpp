@@ -140,8 +140,6 @@ void Graphics::TestDraw(int x, int y)
 
 	HRESULT hr;
 
-	Gui::AddText("some random text");
-
 	// clear and set background color
 	FLOAT color[4] = { 0,1.0f,159.0f/255.0f,1.0f };
 	pContext->ClearRenderTargetView(pTarget.Get(), color);
@@ -163,7 +161,7 @@ void Graphics::TestDraw(int x, int y)
 	{
 		dx::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*
 		dx::XMMatrixTranslation(0.0f,0.0f, distance)*
-		dx::XMMatrixPerspectiveLH(1.0f, 9.0f/16.0f,1.0f,40.0f)
+		dx::XMMatrixPerspectiveLH(1.0f, float(height)/float(width),1.0f,40.0f)
 	};
 
 	Gui::AddSlider("pitch", pitch, -2 * pi, 2 * pi);

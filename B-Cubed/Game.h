@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Gui.h"
 #include "Physics.h"
+#include "FrameTimer.h"
 
 class Game
 {
@@ -15,4 +16,5 @@ private:
 	Gui gui;
 	Window wnd;
 	Physics physics;
+	FrameTimer ft;
 };

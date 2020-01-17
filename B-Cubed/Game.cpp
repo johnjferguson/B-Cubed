@@ -1,4 +1,5 @@
 #include "Game.h"
+#include <sstream>
 
 Game::Game()
 	:
@@ -21,9 +22,16 @@ void Game::DoFrame()
 {
 	gui.Begin("B-Cubed gui window");
 
+	Time dt = ft.Set();
+
+	std::stringstream ss;
+	float mdt = dt.Milliseconds();
+	ss << "my frame timer: " << mdt;
+	Gui::AddText(ss.str());
+
 	// mouse pos does nothing right now
 	wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY());
-	physics.Update(1.0f / 60.0f);
+	physics.Update(dt());
 
 	gui.End();
 	wnd.gfx.EndFrame();

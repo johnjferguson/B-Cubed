@@ -1,13 +1,14 @@
 #pragma once
 #include <memory>
 #include "physx/include/PxPhysicsAPI.h"
+#include "Time.h"
 
 class Physics
 {
 public:
 	Physics();
 	~Physics();
-	void Update(float dt);
+	void Update(Time dt);
 private:
 	physx::PxRigidDynamic * CreateDynamic(const physx::PxTransform& t, const physx::PxGeometry& geometry, const physx::PxVec3& velocity);
 private:

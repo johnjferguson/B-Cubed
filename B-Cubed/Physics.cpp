@@ -63,9 +63,9 @@ Physics::~Physics()
 	ball->release();
 }
 
-void Physics::Update(float dt)
+void Physics::Update(Time dt)
 {
-	gScene->simulate(1.0f / 60.0f);
+	gScene->simulate(dt.Seconds());
 	gScene->fetchResults(true);
 	PxVec3 vel = ball->getLinearVelocity();
 	std::stringstream ss;
