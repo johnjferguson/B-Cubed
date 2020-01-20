@@ -12,7 +12,14 @@ public:
 	Graphics() = default;
 	Graphics(HWND hwnd, unsigned int width, unsigned int height);
 	void EndFrame();
+	void StartFrame();
+	void RenderIndexed(UINT count);
 	void TestDraw(int x, int y);
+public:
+	ID3D11Device* GetDevice();
+	ID3D11DeviceContext* GetContext();
+	int GetHeight() const;
+	int GetWidth() const;
 private:
 	Microsoft::WRL::ComPtr<ID3D11Device> pDevice = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap = nullptr;

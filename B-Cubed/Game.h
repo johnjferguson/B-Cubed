@@ -3,6 +3,7 @@
 #include "Gui.h"
 #include "Physics.h"
 #include "FrameTimer.h"
+#include "Entity.h"
 
 class Game
 {
@@ -17,4 +18,6 @@ private:
 	Window wnd;
 	Physics physics;
 	FrameTimer ft;
+private:
+	Entity entity;
 };

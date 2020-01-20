@@ -4,6 +4,9 @@
 #include "imgui/imgui_impl_dx11.h"
 #include "DirectXTex/WICTextureLoader/WICTextureLoader.h"
 
+// temp
+#include "ConstantBuffer.h"
+
 // use this way to link libraries
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"D3DCompiler.lib")       // needed to compile shaders
@@ -128,6 +131,19 @@ void Graphics::EndFrame()
 	pSwap->Present(0u, 0u);
 }
 
+void Graphics::StartFrame()
+{
+	FLOAT color[4] = { 0,1.0f,159.0f / 255.0f,1.0f };
+	pContext->ClearRenderTargetView(pTarget.Get(), color);
+	// clear z-buffer
+	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+}
+
+void Graphics::RenderIndexed(UINT count)
+{
+	pContext->DrawIndexed(count, 0u, 0u);
+}
+
 void Graphics::TestDraw(int x, int y)
 {
 	// static variables for testing only
@@ -140,12 +156,6 @@ void Graphics::TestDraw(int x, int y)
 
 	HRESULT hr;
 
-	// clear and set background color
-	FLOAT color[4] = { 0,1.0f,159.0f/255.0f,1.0f };
-	pContext->ClearRenderTargetView(pTarget.Get(), color);
-	// clear z-buffer
-	pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
-
 	struct Vertex
 	{
 		dx::XMFLOAT3 pos;
@@ -157,12 +167,15 @@ void Graphics::TestDraw(int x, int y)
 		dx::XMMATRIX transform;
 	};
 
+	auto i = sizeof(Transform);
+	int j = 0;
 	Transform transform =
 	{
 		dx::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*
 		dx::XMMatrixTranslation(0.0f,0.0f, distance)*
 		dx::XMMatrixPerspectiveLH(1.0f, float(height)/float(width),1.0f,40.0f)
 	};
+	
 
 	Gui::AddSlider("pitch", pitch, -2 * pi, 2 * pi);
 	Gui::AddSlider("yaw", yaw, -2 * pi, 2 * pi);
@@ -269,7 +282,7 @@ void Graphics::TestDraw(int x, int y)
 	};
 	// input layout wants blob from creation of vertex shader so it needs to be done first
 	pDevice->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
-	pContext->IASetInputLayout(pInputLayout.Get());
+	//pContext->IASetInputLayout(pInputLayout.Get());
 
 	// create pixel shader
 	wrl::ComPtr<ID3D11PixelShader> pPixelShader;
@@ -278,9 +291,10 @@ void Graphics::TestDraw(int x, int y)
 	// bind pixel shader
 	pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 	
-	pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
+	//pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 
 	// sending 4 floats to the pixel shader
+	/*
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;
 
 	D3D11_BUFFER_DESC cbd;
@@ -297,6 +311,7 @@ void Graphics::TestDraw(int x, int y)
 
 	// bind 4 floats to pixel shader
 	pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+	*/
 
 	// creating and binding tranform matrix to vertex shader
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pTransformConstantBuffer;
@@ -326,4 +341,24 @@ void Graphics::TestDraw(int x, int y)
 	// draw object
 	pContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
 	
+}
+
+ID3D11Device * Graphics::GetDevice()
+{
+	return pDevice.Get();
+}
+
+ID3D11DeviceContext * Graphics::GetContext()
+{
+	return pContext.Get();
+}
+
+int Graphics::GetHeight() const
+{
+	return height;
+}
+
+int Graphics::GetWidth() const
+{
+	return width;
 }

@@ -149,8 +149,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FrameTimer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -161,15 +164,29 @@
     <ClCompile Include="imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputLayout.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
+    <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="Topology.cpp" />
+    <ClCompile Include="TransformBuffer.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bindable.h" />
+    <ClInclude Include="BindableHeader.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
@@ -182,10 +199,19 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="Renderable.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="Topology.h" />
+    <ClInclude Include="TransformBuffer.h" />
+    <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
