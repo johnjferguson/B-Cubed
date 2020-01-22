@@ -1,12 +1,13 @@
 #include "Game.h"
 #include <sstream>
 #include "Box.h"
+#include <DirectXMath.h>
 
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed")
 {
-	entity.AddRenderable(std::make_unique<Box>(wnd.gfx));
+	entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//dice.jpg"));
 }
 
 int Game::Start()
