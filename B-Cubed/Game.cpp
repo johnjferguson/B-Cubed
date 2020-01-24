@@ -5,9 +5,10 @@
 
 Game::Game()
 	:
-	wnd(1280, 720, "B-Cubed")
+	wnd(1280, 720, "B-Cubed"),
+	camera(wnd.kbd,wnd.mouse,{0.0f,0.0f,0.0f})
 {
-	entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//dice.jpg"));
+	entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
 }
 
 int Game::Start()
@@ -35,7 +36,7 @@ void Game::DoFrame()
 	Gui::AddText(ss.str());
 
 	// mouse pos does nothing right now
-	entity.Render(wnd.gfx);
+	entity.Render(wnd.gfx, camera.GetTransform(dt));
 	//wnd.gfx.TestDraw(wnd.mouse.PosX(), wnd.mouse.PosY());
 	physics.Update(dt());
 

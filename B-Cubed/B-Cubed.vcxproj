@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{DEE04F7A-98A3-4A4C-BAB9-8AD895D7A3F7}</ProjectGuid>
     <RootNamespace>BCubed</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
@@ -166,10 +167,12 @@
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputLayout.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="Sampler.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Topology.cpp" />
@@ -183,6 +186,7 @@
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindableHeader.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
@@ -203,11 +207,13 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="IndexedVertexList.h" />
     <ClInclude Include="InputLayout.h" />
+    <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Renderable.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sampler.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Topology.h" />

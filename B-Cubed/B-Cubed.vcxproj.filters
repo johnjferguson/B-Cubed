@@ -123,6 +123,15 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>Source Files\Bindables</Filter>
+    </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -228,6 +237,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IndexedVertexList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Header Files\Bindables</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

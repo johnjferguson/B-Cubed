@@ -4,6 +4,7 @@
 #include "Physics.h"
 #include "FrameTimer.h"
 #include "Entity.h"
+#include "Camera.h"
 
 class Game
 {
@@ -20,4 +21,5 @@ private:
 	FrameTimer ft;
 private:
 	Entity entity;
+	FreeCamera camera;
 };

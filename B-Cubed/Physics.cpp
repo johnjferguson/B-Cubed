@@ -59,7 +59,7 @@ Physics::~Physics()
 	gDispatcher->release();
 	gScene->release();
 	gMaterial->release();
-	gCudaContextManager->release();
+	//gCudaContextManager->release();
 	ball->release();
 }
 

@@ -26,9 +26,12 @@ public:
 		int y;
 	};
 public:
-	Mouse();
+	Mouse() = delete;
+	Mouse(int width, int height);
 	int PosX() const;
 	int PosY() const;
+	// Normal x:[-1,1] and y:[-1,1]
+	std::pair<float, float> NormalPos() const;
 	std::pair<int, int> Pos() const;
 	bool LeftIsPressed() const;
 	bool RightIsPressed() const;
@@ -45,4 +48,6 @@ private:
 	int y;
 	bool leftIsPressed;
 	bool rightIsPressed;
+	int width;
+	int height;
 };

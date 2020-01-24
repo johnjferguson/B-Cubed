@@ -43,4 +43,5 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture)
 
 	AddBind(std::make_unique<TransformBuffer>(gfx, transform));
 	AddBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddBind(std::make_unique<Sampler>(gfx));
 }

@@ -3,6 +3,7 @@
 #include <optional>
 #include "Graphics.h"
 #include "Mouse.h"
+#include "Keyboard.h"
 
 class Window
 {
@@ -39,6 +40,7 @@ private:
 public:
 	Graphics gfx;
 	Mouse mouse;
+	Keyboard kbd;
 private:
 	static LRESULT CALLBACK ProcSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK ProcThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

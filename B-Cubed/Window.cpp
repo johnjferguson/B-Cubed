@@ -51,7 +51,8 @@ Window::WindowClass::~WindowClass()
 Window::Window(int width, int height, const char * name)
 	:
 	width(width),
-	height(height)
+	height(height),
+	mouse(width,height)
 {
 	// using the adjustwindowrect function allows the client region to be width * height
 	// rather then including title bar and padding around window
@@ -178,6 +179,12 @@ LRESULT Window::Proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_RBUTTONUP:
 		mouse.OnRightRelease(pt.x, pt.y);
+		break;
+	case WM_KEYDOWN:
+		kbd.OnKeyPress(char(wParam));
+		break;
+	case WM_KEYUP:
+		kbd.OnKeyRelease((unsigned char)wParam);
 		break;
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);

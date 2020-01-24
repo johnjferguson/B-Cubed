@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <DirectXMath.h>
 #include "Renderable.h"
 
 class Entity
@@ -7,7 +8,7 @@ class Entity
 public:
 	Entity() = default;
 	void AddRenderable(std::unique_ptr<Renderable> pRenderable);
-	void Render(Graphics& gfx);
+	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera);
 private:
 	std::unique_ptr<Renderable> renderable;
 private:

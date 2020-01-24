@@ -7,12 +7,14 @@ Mouse::Event::Event(Event::Type type, int x, int y)
 	type(type)
 {}
 
-Mouse::Mouse()
+Mouse::Mouse(int width, int height)
 	:
 	x(0),
 	y(0),
 	leftIsPressed(false),
-	rightIsPressed(false)
+	rightIsPressed(false),
+	width(width),
+	height(height)
 {}
 
 int Mouse::PosX() const
@@ -23,6 +25,11 @@ int Mouse::PosX() const
 int Mouse::PosY() const
 {
 	return y;
+}
+
+std::pair<float, float> Mouse::NormalPos() const
+{
+	return { (float(x)*2.0f / float(width)) - 1.0f, 1.0f - (float(y)*2.0f / float(height)) };
 }
 
 std::pair<int, int> Mouse::Pos() const
