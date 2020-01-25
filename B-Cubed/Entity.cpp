@@ -20,13 +20,7 @@ void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera)
 	{
 		DirectX::XMMATRIX transform;
 	};
-	/*
-	const DirectX::XMVECTOR eye = DirectX::XMVectorSet(x, y, z, 0.0f);
-	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-	const DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	look = DirectX::XMVector4Transform( look, DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw));
-	const DirectX::XMVECTOR target = DirectX::XMVectorAdd(eye, look);
-	*/
+	
 	Transform transform =
 	{
 		DirectX::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*

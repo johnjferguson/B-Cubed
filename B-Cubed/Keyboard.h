@@ -18,12 +18,16 @@ public:
 	public:
 		Event();
 		Event(const unsigned char c, Event::Type type);
+		Event::Type GetType() const;
+		unsigned char GetCharacter() const;
 	private:
 		Event::Type type;
 		unsigned char c;
 	};
 public:
 	bool IsKeyPressed(const unsigned char c) const;
+	Event PopEvent();
+	bool IsEmpty() const;
 public:
 	template <class T>
 	static void LimitQueue(std::queue<T>& queue, int limit)

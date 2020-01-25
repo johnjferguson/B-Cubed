@@ -12,6 +12,7 @@ public:
 	Game();
 	int Start();
 	void DoFrame();
+	void DoInput();
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy

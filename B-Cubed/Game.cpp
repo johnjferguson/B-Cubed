@@ -28,6 +28,8 @@ void Game::DoFrame()
 	wnd.gfx.StartFrame();
 	gui.Begin("B-Cubed gui window");
 
+	DoInput();
+
 	Time dt = ft.Set();
 
 	std::stringstream ss;
@@ -42,4 +44,24 @@ void Game::DoFrame()
 
 	gui.End();
 	wnd.gfx.EndFrame();
+}
+
+void Game::DoInput()
+{
+	while (!wnd.kbd.IsEmpty())
+	{
+		Keyboard::Event e = wnd.kbd.PopEvent();
+		Keyboard::Event::Type type = e.GetType();
+		unsigned char c = e.GetCharacter();
+
+		switch (c)
+		{
+		case VK_ESCAPE:
+			if (type == Keyboard::Event::Type::Press)
+			{
+				camera.ToggleInput();
+			}
+			break;
+		}
+	}
 }
