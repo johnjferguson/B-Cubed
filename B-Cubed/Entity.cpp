@@ -11,11 +11,6 @@ void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 
 void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera)
 {
-	Gui::AddSlider("pitch", pitch, -2 * 3.14f, 2 * 3.14f);
-	Gui::AddSlider("yaw", yaw, -2 * 3.14f, 2 * 3.14f);
-	Gui::AddSlider("roll", roll, -2 * 3.14f, 2 * 3.14f);
-	Gui::AddSlider("distance", distance, 0.0f, 40.0f);
-
 	struct Transform
 	{
 		DirectX::XMMATRIX transform;
@@ -24,10 +19,15 @@ void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera)
 	Transform transform =
 	{
 		DirectX::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*
-		DirectX::XMMatrixTranslation(0.0f,0.0f, distance)*
+		DirectX::XMMatrixTranslation(pos.x,pos.y, pos.z)*
 		camera*
 		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()),1.0f,400.0f)
 	};
 	renderable->Update(gfx, transform);
 	renderable->Render(gfx);
+}
+
+void Entity::SetPosition(float x, float y, float z)
+{
+	pos = DirectX::XMFLOAT3(x,y,z);
 }

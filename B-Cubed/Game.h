@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <memory>
 #include "Window.h"
 #include "Gui.h"
 #include "Physics.h"
@@ -21,6 +23,6 @@ private:
 	Physics physics;
 	FrameTimer ft;
 private:
-	Entity entity;
+	std::vector<Entity> entities;
 	FreeCamera camera;
 };
