@@ -79,6 +79,82 @@ public:
 		};
 		return { std::move(vertices),std::move(indices) };
 	}
+
+	template <class V>
+	static IndexedVertexList<V> MakeSkyBox(float side)
+	{
+		const float hs = side / 2.0f;
+		static constexpr float x = 0.25f;
+		static constexpr float y = 1.0f / 3.0f;
+
+		std::vector<V> vertices(14);
+
+		vertices[0].pos = DirectX::XMFLOAT3(hs, hs, -hs);
+		vertices[0].tex = DirectX::XMFLOAT2(0.0f*x, 2.0f*y);
+
+		vertices[1].pos = DirectX::XMFLOAT3(hs, hs, hs);
+		vertices[1].tex = DirectX::XMFLOAT2(1.0f*x, 2.0f*y);
+
+		vertices[2].pos = DirectX::XMFLOAT3(-hs, hs, hs);
+		vertices[2].tex = DirectX::XMFLOAT2(2.0f*x, 2.0f*y);
+
+		vertices[3].pos = DirectX::XMFLOAT3(-hs, hs, -hs);
+		vertices[3].tex = DirectX::XMFLOAT2(3.0f*x, 2.0f*y);
+
+		vertices[4].pos = DirectX::XMFLOAT3(hs, hs, -hs);
+		vertices[4].tex = DirectX::XMFLOAT2(4.0f*x, 2.0f*y);
+
+		vertices[5].pos = DirectX::XMFLOAT3(hs, -hs, -hs);
+		vertices[5].tex = DirectX::XMFLOAT2(0.0f*x, 1.0f*y);
+
+		vertices[6].pos = DirectX::XMFLOAT3(hs, -hs, hs);
+		vertices[6].tex = DirectX::XMFLOAT2(1.0f*x, 1.0f*y);
+
+		vertices[7].pos = DirectX::XMFLOAT3(-hs, -hs, hs);
+		vertices[7].tex = DirectX::XMFLOAT2(2.0f*x, 1.0f*y);
+
+		vertices[8].pos = DirectX::XMFLOAT3(-hs, -hs, -hs);
+		vertices[8].tex = DirectX::XMFLOAT2(3.0f*x, 1.0f*y);
+
+		vertices[9].pos = DirectX::XMFLOAT3(hs, -hs, -hs);
+		vertices[9].tex = DirectX::XMFLOAT2(4.0f*x, 1.0f*y);
+
+		vertices[10].pos = DirectX::XMFLOAT3(-hs, hs, hs);
+		vertices[10].tex = DirectX::XMFLOAT2(3.0f*x, 3.0f*y);
+
+		vertices[11].pos = DirectX::XMFLOAT3(hs, hs, hs);
+		vertices[11].tex = DirectX::XMFLOAT2(4.0f*x, 3.0f*y);
+
+		vertices[12].pos = DirectX::XMFLOAT3(-hs, -hs, hs);
+		vertices[12].tex = DirectX::XMFLOAT2(3.0f*x, 0.0f*y);
+
+		vertices[13].pos = DirectX::XMFLOAT3(hs, -hs, hs);
+		vertices[13].tex = DirectX::XMFLOAT2(4.0f*x, 0.0f*y);
+
+		std::vector<unsigned short> indices =
+		{
+			// front
+			9,4,3,
+			9,3,8,
+			// right
+			6,1,0,
+			6,0,5,
+			// left
+			8,3,2,
+			8,2,7,
+			// bottom
+			13,9,8,
+			13,8,12,
+			// top
+			4,11,10,
+			4,10,3,
+			// back
+			7,2,1,
+			7,1,6
+		};
+		return { std::move(vertices),std::move(indices) };
+
+	}
 	
 	
 private:

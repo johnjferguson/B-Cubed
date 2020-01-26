@@ -5,7 +5,7 @@
 
 namespace dx = DirectX;
 
-Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture)
+Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box::Type type)
 {
 	struct Vertex
 	{
@@ -13,7 +13,11 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture)
 		dx::XMFLOAT2 tex;
 	};
 
-	IndexedVertexList<Vertex> ivl = Geometry::MakeBoxIndependentFaces<Vertex>(lwh.x, lwh.y, lwh.z);
+	IndexedVertexList<Vertex> ivl;
+	if (type == Box::Type::Regular)
+		ivl = Geometry::MakeBoxIndependentFaces<Vertex>(lwh.x, lwh.y, lwh.z);
+	else if (type == Box::Type::Sky)
+		ivl = Geometry::MakeSkyBox<Vertex>(lwh.x);
 
 	struct Transform
 	{

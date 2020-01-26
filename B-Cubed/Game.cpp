@@ -45,6 +45,18 @@ Game::Game()
 	entities[7].AddRenderable(std::move(eb));
 	entities[7].SetPosition(-5.0f, 1.0f, 0.0f);
 
+	// skyboxes
+	skyboxes = std::vector<Entity>(4);
+	std::unique_ptr<Box> skybox0 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox0.png", Box::Type::Sky);
+	std::unique_ptr<Box> skybox1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox1.png", Box::Type::Sky);
+	std::unique_ptr<Box> skybox2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox2.png", Box::Type::Sky);
+	std::unique_ptr<Box> skybox3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox3.png", Box::Type::Sky);
+
+	skyboxes[0].AddRenderable(std::move(skybox0));
+	skyboxes[1].AddRenderable(std::move(skybox1));
+	skyboxes[2].AddRenderable(std::move(skybox2));
+	skyboxes[3].AddRenderable(std::move(skybox3));
+
 }
 
 int Game::Start()
@@ -68,10 +80,8 @@ void Game::DoFrame()
 
 	Time dt = ft.Set();
 
-	std::stringstream ss;
-	float mdt = dt.Milliseconds();
-	ss << "my frame timer: " << mdt;
-	Gui::AddText(ss.str());
+	Gui::AddText("Press ESC to TOGGLE Free Look Mode");
+	Gui::AddText("Press TAB to ROTATE Skyboxes");
 
 	
 	DirectX::XMMATRIX cameraTransform = camera.GetTransform(dt);
@@ -80,6 +90,7 @@ void Game::DoFrame()
 		e.Render(wnd.gfx, cameraTransform);
 	}
 
+	skyboxes[iSkybox].Render(wnd.gfx, cameraTransform);
 
 	physics.Update(dt());
 
@@ -101,6 +112,12 @@ void Game::DoInput()
 			if (type == Keyboard::Event::Type::Press)
 			{
 				camera.ToggleInput();
+			}
+			break;
+		case VK_TAB:
+			if (type == Keyboard::Event::Type::Press)
+			{
+				iSkybox = ++iSkybox % skyboxes.size();
 			}
 			break;
 		}

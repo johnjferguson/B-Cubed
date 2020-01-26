@@ -24,5 +24,8 @@ private:
 	FrameTimer ft;
 private:
 	std::vector<Entity> entities;
+	std::vector<Entity> skyboxes;
 	FreeCamera camera;
+private:
+	unsigned int iSkybox = 0u;
 };
