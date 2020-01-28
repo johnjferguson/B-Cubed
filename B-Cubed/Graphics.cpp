@@ -118,7 +118,7 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 
 	 wrl::ComPtr<ID3D11Resource> pResource;
 	 // load image from file
-	 HRESULT hr = DirectX::CreateWICTextureFromFile(pDevice.Get(), path, pResource.GetAddressOf(), pTextureView.GetAddressOf());
+	 HRESULT hr = DirectX::CreateWICTextureFromFile(pDevice.Get(), pContext.Get(), path, pResource.GetAddressOf(), pTextureView.GetAddressOf());
 	 assert(SUCCEEDED(hr) && "WIC failed to load texture");
 }
 
