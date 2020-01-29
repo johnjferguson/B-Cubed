@@ -1,6 +1,7 @@
 #pragma once
 #include "Bindable.h"
 #include <cstring>
+#include <string>
 
 class ConstantBuffer : public Bindable
 {
@@ -28,6 +29,7 @@ public:
 	{
 		D3D11_MAPPED_SUBRESOURCE msr;
 		gfx.GetContext()->Map(pConstantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr);
+
 		memcpy(msr.pData, &data, sizeof(C));
 		gfx.GetContext()->Unmap(pConstantBuffer.Get(), 0u);
 	}

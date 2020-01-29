@@ -11,19 +11,36 @@ void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 
 void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera)
 {
-	struct Transform
+	struct VertexConstant
 	{
 		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX perspective;
+		DirectX::XMMATRIX rollpitchyaw;
+	};
+
+	struct PixelConstant
+	{
+		DirectX::XMFLOAT4 light;
 	};
 	
-	Transform transform =
+	VertexConstant vc
 	{
-		DirectX::XMMatrixRotationRollPitchYaw(pitch,yaw,roll)*
-		DirectX::XMMatrixTranslation(pos.x,pos.y, pos.z)*
-		camera*
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()),1.0f,400.0f)
+		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*
+		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z)*
+		camera,
+		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 0.5f, 400.0f),
+		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)
 	};
-	renderable->Update(gfx, transform);
+
+	PixelConstant pc
+	{
+		DirectX::XMFLOAT4(10.0f,10.0f,10.0f,1.0f)
+	};
+
+
+	renderable->UpdateVertex(gfx, vc);
+	renderable->UpdatePixel(gfx, pc);
+
 	renderable->Render(gfx);
 }
 

@@ -10,6 +10,7 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	struct Vertex
 	{
 		dx::XMFLOAT3 pos;
+		dx::XMFLOAT3 norm;
 		dx::XMFLOAT2 tex;
 	};
 
@@ -37,15 +38,26 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
 		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 }
 	};
 	AddBind(std::make_unique<InputLayout>(gfx, vertexBlob, ied));
+	
+	struct VertexConstant
+	{
+		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX perspective;
+	}vertexConstant;
 
-	Transform transform = { 
-		dx::XMMatrixIdentity() 
-	};
+	struct PixelConstant
+	{
+		DirectX::XMFLOAT4 light;
+	}pixelConstant;
 
-	AddBind(std::make_unique<TransformBuffer>(gfx, transform));
+	// constant buffers
+	AddBind(std::make_unique<VertexConstantBuffer>(gfx, vertexConstant));
+	AddBind(std::make_unique<PixelConstantBuffer>(gfx, pixelConstant));
+
 	AddBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	AddBind(std::make_unique<Sampler>(gfx));
 }

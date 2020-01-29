@@ -48,6 +48,37 @@ public:
 		vertices[22].pos = DirectX::XMFLOAT3(-x,y,z);
 		vertices[23].pos = DirectX::XMFLOAT3(-x,-y,z);
 
+		// front
+		vertices[0].norm = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		vertices[1].norm = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		vertices[2].norm = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		vertices[3].norm = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+		// right
+		vertices[4].norm = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		vertices[5].norm = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		vertices[6].norm = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		vertices[7].norm = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		// left		
+		vertices[8].norm = DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f);
+		vertices[9].norm = DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f);
+		vertices[10].norm = DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f);
+		vertices[11].norm = DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f);
+		// bottom	 
+		vertices[12].norm = DirectX::XMFLOAT3(0.0, -1.0f, 0.0f);
+		vertices[13].norm = DirectX::XMFLOAT3(0.0, -1.0f, 0.0f);
+		vertices[14].norm = DirectX::XMFLOAT3(0.0, -1.0f, 0.0f);
+		vertices[15].norm = DirectX::XMFLOAT3(0.0, -1.0f, 0.0f);
+		// top		 
+		vertices[16].norm = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f);
+		vertices[17].norm = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f);
+		vertices[18].norm = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f);
+		vertices[19].norm = DirectX::XMFLOAT3(0.0, 1.0f, 0.0f);
+		// back		 
+		vertices[20].norm = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+		vertices[21].norm = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+		vertices[22].norm = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+		vertices[23].norm = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+
 		for (int i = 0; i < 24; i+=4)
 		{
 			vertices[i+0].tex = DirectX::XMFLOAT2(0.0f,0.0f);
@@ -55,6 +86,8 @@ public:
 			vertices[i+2].tex = DirectX::XMFLOAT2(1.0f,1.0f);
 			vertices[i+3].tex = DirectX::XMFLOAT2(1.0f, 0.0f);
 		}
+
+
 
 		std::vector<unsigned short> indices =
 		{

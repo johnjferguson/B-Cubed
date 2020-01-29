@@ -9,10 +9,15 @@ void Renderable::AddBind(std::unique_ptr<Bindable> bind)
 		assert(pIndexBuffer == nullptr && "more then one index buffer");
 		pIndexBuffer = &static_cast<IndexBuffer&>(*bind);
 	}
-	else if (typeid(*bind) == typeid(TransformBuffer))
+	else if (typeid(*bind) == typeid(VertexConstantBuffer))
 	{
-		assert(pIndexBuffer == nullptr && "more then one index buffer");
-		pTransformBuffer = &static_cast<TransformBuffer&>(*bind);
+		assert(vcb == nullptr && "more then one vertex constant buffer");
+		pVertexConstant = &static_cast<VertexConstantBuffer&>(*bind);
+	}
+	else if (typeid(*bind) == typeid(PixelConstantBuffer))
+	{
+		assert(vcb == nullptr && "more then one vertex constant buffer");
+		pPixelConstant = &static_cast<PixelConstantBuffer&>(*bind);
 	}
 	bindables.push_back(std::move(bind));
 }

@@ -9,3 +9,5 @@ void PixelConstantBuffer::Bind(Graphics & gfx)
 {
 	gfx.GetContext()->PSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
 }
+
+
