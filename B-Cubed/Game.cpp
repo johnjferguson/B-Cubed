@@ -1,12 +1,14 @@
 #include "Game.h"
 #include <sstream>
 #include "Box.h"
+#include "SkyBox.h"
 #include <DirectXMath.h>
 
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"),
-	camera(wnd.kbd,wnd.mouse,{0.0f,10.0f,10.0f})
+	camera(wnd.kbd,wnd.mouse,{0.0f,10.0f,10.0f}),
+	light(wnd.gfx, { 10.0f, 10.0f, 10.0f, 1.0f })
 {
 	entities = std::vector<Entity>(8);
 
@@ -46,17 +48,10 @@ Game::Game()
 	entities[7].SetPosition(-5.0f, 1.0f, 0.0f);
 
 	// skyboxes
-	skyboxes = std::vector<Entity>(4);
-	std::unique_ptr<Box> skybox0 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox0.png", Box::Type::Sky);
-	std::unique_ptr<Box> skybox1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox1.png", Box::Type::Sky);
-	std::unique_ptr<Box> skybox2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox2.png", Box::Type::Sky);
-	std::unique_ptr<Box> skybox3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 100.0f), L"images//skybox3.png", Box::Type::Sky);
-
-	skyboxes[0].AddRenderable(std::move(skybox0));
-	skyboxes[1].AddRenderable(std::move(skybox1));
-	skyboxes[2].AddRenderable(std::move(skybox2));
-	skyboxes[3].AddRenderable(std::move(skybox3));
-
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox0.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox1.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox2.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox3.png"));
 }
 
 int Game::Start()
@@ -87,12 +82,27 @@ void Game::DoFrame()
 	DirectX::XMMATRIX cameraTransform = camera.GetTransform(dt);
 	for (auto& e : entities)
 	{
-		e.Render(wnd.gfx, cameraTransform);
+		e.Render(wnd.gfx, cameraTransform, light);
 	}
 
-	skyboxes[iSkybox].Render(wnd.gfx, cameraTransform);
+	struct Transform
+	{
+		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX perspective;
+	};
+
+	Transform transform
+	{
+		cameraTransform,
+		DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 400.0f)
+	};
+
+	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
+	skyboxes[iSkybox]->Render(wnd.gfx);
 
 	physics.Update(dt());
+	light.Update(wnd.gfx, cameraTransform);
+	light.Render(wnd.gfx);
 
 	gui.End();
 	wnd.gfx.EndFrame();

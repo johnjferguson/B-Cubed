@@ -188,6 +188,53 @@ public:
 		return { std::move(vertices),std::move(indices) };
 
 	}
+
+	template <class V>
+	static IndexedVertexList<V> MakeLightBox(float side)
+	{
+
+		const float hs = side / 2.0f;
+
+		std::vector<V> vertices(14);
+
+		vertices[0].pos = DirectX::XMFLOAT3(hs, hs, -hs);
+		vertices[1].pos = DirectX::XMFLOAT3(hs, hs, hs);
+		vertices[2].pos = DirectX::XMFLOAT3(-hs, hs, hs);
+		vertices[3].pos = DirectX::XMFLOAT3(-hs, hs, -hs);
+		vertices[4].pos = DirectX::XMFLOAT3(hs, hs, -hs);
+		vertices[5].pos = DirectX::XMFLOAT3(hs, -hs, -hs);
+		vertices[6].pos = DirectX::XMFLOAT3(hs, -hs, hs);
+		vertices[7].pos = DirectX::XMFLOAT3(-hs, -hs, hs);
+		vertices[8].pos = DirectX::XMFLOAT3(-hs, -hs, -hs);
+		vertices[9].pos = DirectX::XMFLOAT3(hs, -hs, -hs);
+		vertices[10].pos = DirectX::XMFLOAT3(-hs, hs, hs);
+		vertices[11].pos = DirectX::XMFLOAT3(hs, hs, hs);
+		vertices[12].pos = DirectX::XMFLOAT3(-hs, -hs, hs);
+		vertices[13].pos = DirectX::XMFLOAT3(hs, -hs, hs);
+
+		std::vector<unsigned short> indices =
+		{
+			// front
+			9,4,3,
+			9,3,8,
+			// right
+			6,1,0,
+			6,0,5,
+			// left
+			8,3,2,
+			8,2,7,
+			// bottom
+			13,9,8,
+			13,8,12,
+			// top
+			4,11,10,
+			4,10,3,
+			// back
+			7,2,1,
+			7,1,6
+		};
+		return { std::move(vertices),std::move(indices) };
+	}
 	
 	
 private:

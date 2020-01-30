@@ -7,6 +7,7 @@
 #include "FrameTimer.h"
 #include "Entity.h"
 #include "Camera.h"
+#include "Light.h"
 
 class Game
 {
@@ -24,8 +25,9 @@ private:
 	FrameTimer ft;
 private:
 	std::vector<Entity> entities;
-	std::vector<Entity> skyboxes;
+	std::vector<std::unique_ptr<Renderable>> skyboxes;
 	FreeCamera camera;
+	Light light;
 private:
 	unsigned int iSkybox = 0u;
 };

@@ -9,7 +9,7 @@ void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 	renderable = std::move(pRenderable);
 }
 
-void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera)
+void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera, const Light& light)
 {
 	struct VertexConstant
 	{
@@ -34,7 +34,7 @@ void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera)
 
 	PixelConstant pc
 	{
-		DirectX::XMFLOAT4(10.0f,10.0f,10.0f,1.0f)
+		light.GetPosition()
 	};
 
 
