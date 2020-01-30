@@ -286,6 +286,12 @@
     <FxCompile Include="PixelShaderSkyBox.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="PixelShaderDepth.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShaderDepth.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="B-Cubed.rc">

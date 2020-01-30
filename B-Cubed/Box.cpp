@@ -29,11 +29,11 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	AddBind(std::make_unique<IndexBuffer>(gfx, ivl.indices));
 	AddBind(std::make_unique<Texture>(gfx, texture.c_str()));
 
-	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderTexture.cso");
+	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderDepth.cso");
 	ID3DBlob* vertexBlob = pVertexShader->GetBlob();
 	AddBind(std::move(pVertexShader));
 
-	AddBind(std::make_unique<PixelShader>(gfx, L"PixelShaderTexture.cso"));
+	AddBind(std::make_unique<PixelShader>(gfx, L"PixelShaderDepth.cso"));
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
@@ -47,6 +47,7 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	{
 		DirectX::XMMATRIX transform;
 		DirectX::XMMATRIX perspective;
+		DirectX::XMMATRIX rollpitchyaw;
 	}vertexConstant;
 
 	struct PixelConstant

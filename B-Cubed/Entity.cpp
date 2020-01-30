@@ -28,7 +28,7 @@ void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera, const Light
 		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*
 		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z)*
 		camera,
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 0.5f, 400.0f),
+		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 0.5f, 100.0f),
 		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)
 	};
 

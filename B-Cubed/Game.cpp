@@ -100,7 +100,7 @@ void Game::DoFrame()
 	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
 	skyboxes[iSkybox]->Render(wnd.gfx);
 
-	physics.Update(dt());
+	//physics.Update(dt());
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
 
