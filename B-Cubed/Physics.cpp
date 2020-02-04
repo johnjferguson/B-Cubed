@@ -51,6 +51,13 @@ Physics::Physics()
 
 	ball = CreateDynamic(PxTransform(PxVec3(0, 20, 100)), PxSphereGeometry(5), PxVec3(0, -25, -100));
 	PxRigidBodyExt::updateMassAndInertia(*ball, 1000.f);
+
+	gPvd = PxCreatePvd(*gFoundation);
+	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("136.159.213.54", 5425, 10);
+	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+
+	PxPhysics* gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
+
 }
 
 Physics::~Physics()
@@ -61,6 +68,14 @@ Physics::~Physics()
 	gMaterial->release();
 	//gCudaContextManager->release();
 	ball->release();
+
+	//After releasing PxPhysics, release the PVD
+	if (gPvd)
+	{
+		PxPvdTransport* transport = gPvd->getTransport();
+		gPvd->release();	gPvd = NULL;
+		transport->release();
+	}
 }
 
 void Physics::Update(Time dt)

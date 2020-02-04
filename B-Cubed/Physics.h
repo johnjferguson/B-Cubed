@@ -21,4 +21,5 @@ private:
 	physx::PxMaterial* gMaterial = NULL;
 	physx::PxCudaContextManager* gCudaContextManager = NULL;
 	physx::PxRigidDynamic* ball = NULL;
+	physx::PxPvd* gPvd = NULL;
 };
