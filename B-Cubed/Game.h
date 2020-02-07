@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "Camera.h"
 #include "Light.h"
+#include "RenderTexture.h"
 
 class Game
 {
@@ -26,6 +27,7 @@ private:
 private:
 	std::vector<Entity> entities;
 	std::vector<std::unique_ptr<Renderable>> skyboxes;
+	RenderTexture renderTexture;
 	FreeCamera camera;
 	Light light;
 private:

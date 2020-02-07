@@ -29,11 +29,11 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	AddBind(std::make_unique<IndexBuffer>(gfx, ivl.indices));
 	AddBind(std::make_unique<Texture>(gfx, texture.c_str()));
 
-	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderDepth.cso");
+	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderTexture.cso");
 	ID3DBlob* vertexBlob = pVertexShader->GetBlob();
 	AddBind(std::move(pVertexShader));
 
-	AddBind(std::make_unique<PixelShader>(gfx, L"PixelShaderDepth.cso"));
+	AddBind(std::make_unique<PixelShader>(gfx, L"PixelShaderTexture.cso"));
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 	{
@@ -61,4 +61,24 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 
 	AddBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	AddBind(std::make_unique<Sampler>(gfx));
+
+	// depth stuff ----------------------------------------------------------------
+	// ------------------------------------------------------------------------------
+	AddDepthBind(std::make_unique<VertexBuffer>(gfx, ivl.vertices));
+
+	std::unique_ptr<VertexShader> pVertexShaderDepth = std::make_unique<VertexShader>(gfx, L"VertexShaderDepth.cso");
+	ID3DBlob* vertexBlobDepth = pVertexShaderDepth->GetBlob();
+	AddDepthBind(std::move(pVertexShaderDepth));
+
+	AddDepthBind(std::make_unique<PixelShader>(gfx, L"PixelShaderDepth.cso"));
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> ied0 =
+	{
+		{ "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 }
+	};
+	AddDepthBind(std::make_unique<InputLayout>(gfx, vertexBlobDepth, ied0));
+
+	AddDepthBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 }

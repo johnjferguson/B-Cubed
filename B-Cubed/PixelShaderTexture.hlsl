@@ -17,7 +17,7 @@ float4 main(float2 tex : TEXCOORD, float4 norm : NORMAL, float4 wpos : WORLDPOSI
 	}
 	else
 	{
-		return simpleTexture.Sample(simpleSampler, tex) * 0.0f;
+		return simpleTexture.Sample(simpleSampler, tex); //* 0.0f;
 	}
 
 }

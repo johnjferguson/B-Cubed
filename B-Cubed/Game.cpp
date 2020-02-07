@@ -8,7 +8,8 @@ Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"),
 	camera(wnd.kbd,wnd.mouse,{0.0f,10.0f,10.0f}),
-	light(wnd.gfx, { 10.0f, 10.0f, 10.0f, 1.0f })
+	light(wnd.gfx, { 10.0f, 10.0f, 10.0f, 1.0f }),
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 200.0f)
 {
 	entities = std::vector<Entity>(8);
 
@@ -78,13 +79,28 @@ void Game::DoFrame()
 	Gui::AddText("Press ESC to TOGGLE Free Look Mode");
 	Gui::AddText("Press TAB to ROTATE Skyboxes");
 
-	
+	// testing --------------------------------
 	DirectX::XMMATRIX cameraTransform = camera.GetTransform(dt);
+
+	renderTexture.SetRenderTarget(wnd.gfx.GetContext());
+	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
+
+	for (auto& e : entities)
+	{
+		e.RenderDepth(wnd.gfx, cameraTransform, light);
+	}
+
+	wnd.gfx.ResetRenderTargetView();
+	wnd.gfx.ResetViewPort();
+
+	wnd.gfx.GetContext()->PSSetShaderResources(0, 1, renderTexture.GetShaderResourceView());
+
 	for (auto& e : entities)
 	{
 		e.Render(wnd.gfx, cameraTransform, light);
 	}
-
+	
+	// testing ---------------------------
 	struct Transform
 	{
 		DirectX::XMMATRIX transform;

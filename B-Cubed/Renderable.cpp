@@ -22,6 +22,11 @@ void Renderable::AddBind(std::unique_ptr<Bindable> bind)
 	bindables.push_back(std::move(bind));
 }
 
+void Renderable::AddDepthBind(std::unique_ptr<Bindable> bind)
+{
+	depthBindables.push_back(std::move(bind));
+}
+
 void Renderable::Render(Graphics & gfx)
 {
 	assert(pIndexBuffer != nullptr && "no index buffer renderable");
@@ -29,5 +34,18 @@ void Renderable::Render(Graphics & gfx)
 	{
 		b->Bind(gfx);
 	}
+	gfx.RenderIndexed(pIndexBuffer->GetCount());
+}
+
+void Renderable::RenderDepth(Graphics & gfx)
+{
+	for (auto& b : depthBindables)
+	{
+		b->Bind(gfx);
+	}
+	pIndexBuffer->Bind(gfx);
+	pVertexConstant->Bind(gfx);
+	pPixelConstant->Bind(gfx);
+
 	gfx.RenderIndexed(pIndexBuffer->GetCount());
 }

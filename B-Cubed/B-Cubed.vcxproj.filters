@@ -141,6 +141,9 @@
     <ClCompile Include="SkyBox.cpp">
       <Filter>Source Files\Renderables</Filter>
     </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -265,6 +268,9 @@
     </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>Header Files\Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

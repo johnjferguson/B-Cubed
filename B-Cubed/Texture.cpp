@@ -15,5 +15,5 @@ Texture::Texture(Graphics & gfx, const std::wstring& widePath)
 void Texture::Bind(Graphics & gfx)
 {
 	// might have to add more texture slots later
-	gfx.GetContext()->PSSetShaderResources(0, 1, pTextureView.GetAddressOf());
+	//gfx.GetContext()->PSSetShaderResources(0, 1, pTextureView.GetAddressOf());
 }

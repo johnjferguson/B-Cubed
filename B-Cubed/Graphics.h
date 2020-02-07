@@ -11,6 +11,8 @@ class Graphics
 public:
 	Graphics() = default;
 	Graphics(HWND hwnd, unsigned int width, unsigned int height);
+	void ResetRenderTargetView();
+	void ResetViewPort();
 	void EndFrame();
 	void StartFrame();
 	void RenderIndexed(UINT count);
@@ -27,6 +29,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV = nullptr;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
+	D3D11_VIEWPORT vp;
 private:
 	int width;
 	int height;
