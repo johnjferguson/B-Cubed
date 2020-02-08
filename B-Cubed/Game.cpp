@@ -9,7 +9,7 @@ Game::Game()
 	wnd(1280, 720, "B-Cubed"),
 	camera(wnd.kbd,wnd.mouse,{0.0f,10.0f,10.0f}),
 	light(wnd.gfx, { 10.0f, 10.0f, 10.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 200.0f)
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 400.0f)
 {
 	entities = std::vector<Entity>(8);
 
@@ -88,7 +88,7 @@ void Game::DoFrame()
 
 	for (auto& e : entities)
 	{
-		e.RenderDepth(wnd.gfx, cameraTransform, renderTexture.GetPerspective(), light);
+		e.RenderDepth(wnd.gfx, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
 	}
 	
 

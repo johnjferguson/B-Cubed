@@ -136,7 +136,7 @@ void Graphics::EndFrame()
 	// _____    ____
 	// | 1 | -> |  |
 	// |0_2| <- |__|
-	pSwap->Present(0u, 0u);
+	pSwap->Present(1u, 0u);
 }
 
 void Graphics::StartFrame()
