@@ -30,7 +30,7 @@ void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const Direct
 	{
 		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
 		camera,
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 1.0f, 200.0f),
+		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 0.5f, 400.0f),
 		lightView,
 		lightProjection,
 		light.GetPosition()
@@ -40,7 +40,6 @@ void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const Direct
 	{
 		light.GetPosition()
 	};
-
 
 	renderable->UpdateVertex(gfx, vc);
 	renderable->UpdatePixel(gfx, pc);

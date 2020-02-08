@@ -34,6 +34,9 @@
     <Filter Include="Source Files\Renderables">
       <UniqueIdentifier>{5fedc4d2-ff23-422c-90a8-355dcc1d21e0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Vehicle4W">
+      <UniqueIdentifier>{3657cd3b-16de-4a29-9207-d081d5b8c9a1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -143,6 +146,33 @@
     </ClCompile>
     <ClCompile Include="RenderTexture.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicle4WCreate.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleCreate.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleFilterShader.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleNoDriveCreate.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleSceneQuery.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleTankCreate.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleTireFriction.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4WRender.cpp">
+      <Filter>Vehicle4W</Filter>
+    </ClCompile>
+    <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4W.cpp">
+      <Filter>Vehicle4W</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +301,24 @@
     </ClInclude>
     <ClInclude Include="RenderTexture.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleConcurrency.h">
+      <Filter>Vehicle4W</Filter>
+    </ClInclude>
+    <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleCreate.h">
+      <Filter>Vehicle4W</Filter>
+    </ClInclude>
+    <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleFilterShader.h">
+      <Filter>Vehicle4W</Filter>
+    </ClInclude>
+    <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleSceneQuery.h">
+      <Filter>Vehicle4W</Filter>
+    </ClInclude>
+    <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleTireFriction.h">
+      <Filter>Vehicle4W</Filter>
+    </ClInclude>
+    <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleWheelQueryResult.h">
+      <Filter>Vehicle4W</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

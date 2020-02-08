@@ -106,12 +106,17 @@ void Game::DoFrame()
 	// testing ---------------------------
 	struct Transform
 	{
-		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX perspective;
+		DirectX::XMMATRIX buf0;
+		DirectX::XMMATRIX buf1;
+		DirectX::XMFLOAT4 buf3;
 	};
 
 	Transform transform
 	{
+		DirectX::XMMatrixIdentity(),
 		cameraTransform,
 		DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 400.0f)
 	};

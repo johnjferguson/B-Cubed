@@ -31,8 +31,12 @@ LightBox::LightBox(Graphics & gfx, float side)
 
 	struct VertexConstant
 	{
-		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX perspective;
+		DirectX::XMMATRIX lightView;
+		DirectX::XMMATRIX lightProjection;
+		DirectX::XMFLOAT4 lightPosition;
 	}vertexConstant;
 
 	// constant buffers
