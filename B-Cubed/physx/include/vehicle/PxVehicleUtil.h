@@ -33,7 +33,7 @@
   @{
 */
 
-#include "foundation/Px.h"
+#include "physx/include/foundation/Px.h"
 
 #if !PX_DOXYGEN
 namespace physx

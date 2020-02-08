@@ -25,33 +25,38 @@
 //
 // Copyright (c) 2008-2019 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
-#ifndef PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
-#define PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
+#ifndef SNIPPET_VEHICLE_FILTERSHADER_H
+#define SNIPPET_VEHICLE_FILTERSHADER_H
 
-#include "physx/include/foundation/PxPreprocessor.h"
+#include "physx/include/PxPhysicsAPI.h"
 
-/** \addtogroup foundation
-  @{
-*/
+namespace snippetvehicle
+{
 
-#if defined PX_PHYSX_STATIC_LIB
-	#define PX_FOUNDATION_API
-#else
-	#if (PX_WINDOWS_FAMILY || PX_XBOXONE || PX_PS4) && !defined(__CUDACC__)
-		#if defined PX_PHYSX_FOUNDATION_EXPORTS
-			#define PX_FOUNDATION_API __declspec(dllexport)
-		#else
-			#define PX_FOUNDATION_API __declspec(dllimport)
-		#endif
-	#elif PX_UNIX_FAMILY
-		#define PX_FOUNDATION_API PX_UNIX_EXPORT
-	#else
-		#define PX_FOUNDATION_API
-	#endif
-#endif 
+using namespace physx;
 
+enum
+{
+	COLLISION_FLAG_GROUND			=	1 << 0,
+	COLLISION_FLAG_WHEEL			=	1 << 1,
+	COLLISION_FLAG_CHASSIS			=	1 << 2,
+	COLLISION_FLAG_OBSTACLE			=	1 << 3,
+	COLLISION_FLAG_DRIVABLE_OBSTACLE=	1 << 4,
 
-/** @} */
-#endif // PX_FOUNDATION_PX_ASSERT_H
+	COLLISION_FLAG_GROUND_AGAINST	=															COLLISION_FLAG_CHASSIS | COLLISION_FLAG_OBSTACLE | COLLISION_FLAG_DRIVABLE_OBSTACLE,
+	COLLISION_FLAG_WHEEL_AGAINST	=									COLLISION_FLAG_WHEEL |	COLLISION_FLAG_CHASSIS | COLLISION_FLAG_OBSTACLE,
+	COLLISION_FLAG_CHASSIS_AGAINST	=			COLLISION_FLAG_GROUND | COLLISION_FLAG_WHEEL |	COLLISION_FLAG_CHASSIS | COLLISION_FLAG_OBSTACLE | COLLISION_FLAG_DRIVABLE_OBSTACLE,
+	COLLISION_FLAG_OBSTACLE_AGAINST	=			COLLISION_FLAG_GROUND | COLLISION_FLAG_WHEEL |	COLLISION_FLAG_CHASSIS | COLLISION_FLAG_OBSTACLE | COLLISION_FLAG_DRIVABLE_OBSTACLE,
+	COLLISION_FLAG_DRIVABLE_OBSTACLE_AGAINST=	COLLISION_FLAG_GROUND 						 |	COLLISION_FLAG_CHASSIS | COLLISION_FLAG_OBSTACLE | COLLISION_FLAG_DRIVABLE_OBSTACLE
+};
+
+PxFilterFlags VehicleFilterShader
+(PxFilterObjectAttributes attributes0, PxFilterData filterData0, 
+ PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+ PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize);
+
+} // namespace snippetvehicle
+
+#endif //SNIPPET_VEHICLE_FILTERSHADER_H

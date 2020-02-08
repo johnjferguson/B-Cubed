@@ -25,33 +25,12 @@
 //
 // Copyright (c) 2008-2019 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
-
-#ifndef PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
-#define PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
-
-#include "physx/include/foundation/PxPreprocessor.h"
-
-/** \addtogroup foundation
-  @{
-*/
-
-#if defined PX_PHYSX_STATIC_LIB
-	#define PX_FOUNDATION_API
-#else
-	#if (PX_WINDOWS_FAMILY || PX_XBOXONE || PX_PS4) && !defined(__CUDACC__)
-		#if defined PX_PHYSX_FOUNDATION_EXPORTS
-			#define PX_FOUNDATION_API __declspec(dllexport)
-		#else
-			#define PX_FOUNDATION_API __declspec(dllimport)
-		#endif
-	#elif PX_UNIX_FAMILY
-		#define PX_FOUNDATION_API PX_UNIX_EXPORT
-	#else
-		#define PX_FOUNDATION_API
-	#endif
-#endif 
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
 
-/** @} */
-#endif // PX_FOUNDATION_PX_ASSERT_H
+#ifndef PHYSX_SNIPPET_PVD_H
+#define PHYSX_SNIPPET_PVD_H
+
+#define PVD_HOST "127.0.0.1"	//Set this to the IP address of the system running the PhysX Visual Debugger that you want to connect to.
+
+#endif //PHYSX_SNIPPET_PVD_H

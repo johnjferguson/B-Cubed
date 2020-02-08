@@ -25,33 +25,34 @@
 //
 // Copyright (c) 2008-2019 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
-#ifndef PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
-#define PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
+#include <new>
+#include "SnippetVehicleFilterShader.h"
+#include "PxPhysicsAPI.h"
 
-#include "physx/include/foundation/PxPreprocessor.h"
+namespace snippetvehicle
+{
 
-/** \addtogroup foundation
-  @{
-*/
+using namespace physx;
 
-#if defined PX_PHYSX_STATIC_LIB
-	#define PX_FOUNDATION_API
-#else
-	#if (PX_WINDOWS_FAMILY || PX_XBOXONE || PX_PS4) && !defined(__CUDACC__)
-		#if defined PX_PHYSX_FOUNDATION_EXPORTS
-			#define PX_FOUNDATION_API __declspec(dllexport)
-		#else
-			#define PX_FOUNDATION_API __declspec(dllimport)
-		#endif
-	#elif PX_UNIX_FAMILY
-		#define PX_FOUNDATION_API PX_UNIX_EXPORT
-	#else
-		#define PX_FOUNDATION_API
-	#endif
-#endif 
+PxFilterFlags VehicleFilterShader
+(PxFilterObjectAttributes attributes0, PxFilterData filterData0, 
+ PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+ PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{
+	PX_UNUSED(attributes0);
+	PX_UNUSED(attributes1);
+	PX_UNUSED(constantBlock);
+	PX_UNUSED(constantBlockSize);
 
+	if( (0 == (filterData0.word0 & filterData1.word1)) && (0 == (filterData1.word0 & filterData0.word1)) )
+		return PxFilterFlag::eSUPPRESS;
 
-/** @} */
-#endif // PX_FOUNDATION_PX_ASSERT_H
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	pairFlags |= PxPairFlags(PxU16(filterData0.word2 | filterData1.word2));
+
+	return PxFilterFlags();
+}
+
+} // namespace snippetvehicle

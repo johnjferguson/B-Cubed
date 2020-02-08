@@ -25,33 +25,35 @@
 //
 // Copyright (c) 2008-2019 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
 
-#ifndef PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
-#define PX_FOUNDATION_PX_FOUNDATION_CONFIG_H
+#ifndef SNIPPET_VEHICLE_TIREFRICTION_H
+#define SNIPPET_VEHICLE_TIREFRICTION_H
 
-#include "physx/include/foundation/PxPreprocessor.h"
+#include "physx/include/PxPhysicsAPI.h"
 
-/** \addtogroup foundation
-  @{
-*/
+namespace snippetvehicle
+{
 
-#if defined PX_PHYSX_STATIC_LIB
-	#define PX_FOUNDATION_API
-#else
-	#if (PX_WINDOWS_FAMILY || PX_XBOXONE || PX_PS4) && !defined(__CUDACC__)
-		#if defined PX_PHYSX_FOUNDATION_EXPORTS
-			#define PX_FOUNDATION_API __declspec(dllexport)
-		#else
-			#define PX_FOUNDATION_API __declspec(dllimport)
-		#endif
-	#elif PX_UNIX_FAMILY
-		#define PX_FOUNDATION_API PX_UNIX_EXPORT
-	#else
-		#define PX_FOUNDATION_API
-	#endif
-#endif 
+using namespace physx;
 
+//Drivable surface types.
+enum
+{
+	SURFACE_TYPE_TARMAC,
+	MAX_NUM_SURFACE_TYPES
+};
 
-/** @} */
-#endif // PX_FOUNDATION_PX_ASSERT_H
+//Tire types.
+enum
+{
+	TIRE_TYPE_NORMAL=0,
+	TIRE_TYPE_WORN,
+	MAX_NUM_TIRE_TYPES
+};
+
+PxVehicleDrivableSurfaceToTireFrictionPairs* createFrictionPairs(const PxMaterial* defaultMaterial);
+
+} // namespace snippetvehicle
+
+#endif //SNIPPET_VEHICLE_TIREFRICTION_H
