@@ -9,13 +9,16 @@ void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 	renderable = std::move(pRenderable);
 }
 
-void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera, const Light& light)
+void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light)
 {
 	struct VertexConstant
 	{
-		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX perspective;
-		DirectX::XMMATRIX rollpitchyaw;
+		DirectX::XMMATRIX lightView;
+		DirectX::XMMATRIX lightProjection;
+		DirectX::XMFLOAT4 lightPosition;
 	};
 
 	struct PixelConstant
@@ -25,11 +28,12 @@ void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera, const Light
 	
 	VertexConstant vc
 	{
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*
-		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z)*
+		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
 		camera,
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 1.0f, 50.0f),
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)
+		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 1.0f, 200.0f),
+		lightView,
+		lightProjection,
+		light.GetPosition()
 	};
 
 	PixelConstant pc
@@ -44,13 +48,16 @@ void Entity::Render(Graphics & gfx, const DirectX::XMMATRIX& camera, const Light
 	renderable->Render(gfx);
 }
 
-void Entity::RenderDepth(Graphics & gfx, const DirectX::XMMATRIX & camera, const Light & light)
+void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightProjection, const Light& light)
 {
 	struct VertexConstant
 	{
-		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX perspective;
-		DirectX::XMMATRIX rollpitchyaw;
+		DirectX::XMMATRIX lightView;
+		DirectX::XMMATRIX lightProjection;
+		DirectX::XMFLOAT4 lightPosition;
 	};
 
 	struct PixelConstant
@@ -60,11 +67,9 @@ void Entity::RenderDepth(Graphics & gfx, const DirectX::XMMATRIX & camera, const
 
 	VertexConstant vc
 	{
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)*
-		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z)*
+		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
 		camera,
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 1.0f, 50.0f),
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll)
+		lightProjection
 	};
 
 	PixelConstant pc

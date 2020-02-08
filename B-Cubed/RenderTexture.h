@@ -10,6 +10,7 @@ public:
 	void SetRenderTarget(ID3D11DeviceContext* pContext);
 	ID3D11ShaderResourceView*const* GetShaderResourceView();
 	void ClearRenderTarget(ID3D11DeviceContext* pContext);
+	const DirectX::XMMATRIX& GetPerspective() const;
 private:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pSRV;

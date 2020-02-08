@@ -98,3 +98,8 @@ void RenderTexture::ClearRenderTarget(ID3D11DeviceContext * pContext)
 	pContext->ClearRenderTargetView(pRenderTargetView.Get(), color);
 	pContext->ClearDepthStencilView(pDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
+
+const DirectX::XMMATRIX & RenderTexture::GetPerspective() const
+{
+	return perspective;
+}

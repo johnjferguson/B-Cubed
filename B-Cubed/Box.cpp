@@ -45,9 +45,12 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	
 	struct VertexConstant
 	{
-		DirectX::XMMATRIX transform;
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
 		DirectX::XMMATRIX perspective;
-		DirectX::XMMATRIX rollpitchyaw;
+		DirectX::XMMATRIX lightView;
+		DirectX::XMMATRIX lightProjection;
+		DirectX::XMFLOAT4 lightPosition;
 	}vertexConstant;
 
 	struct PixelConstant
@@ -64,6 +67,7 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 
 	// depth stuff ----------------------------------------------------------------
 	// ------------------------------------------------------------------------------
+	
 	AddDepthBind(std::make_unique<VertexBuffer>(gfx, ivl.vertices));
 
 	std::unique_ptr<VertexShader> pVertexShaderDepth = std::make_unique<VertexShader>(gfx, L"VertexShaderDepth.cso");
@@ -81,4 +85,5 @@ Box::Box(Graphics & gfx, DirectX::XMFLOAT3 lwh, const std::wstring& texture, Box
 	AddDepthBind(std::make_unique<InputLayout>(gfx, vertexBlobDepth, ied0));
 
 	AddDepthBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	
 }

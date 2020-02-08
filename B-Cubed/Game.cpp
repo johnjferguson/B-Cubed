@@ -81,23 +81,26 @@ void Game::DoFrame()
 
 	// testing --------------------------------
 	DirectX::XMMATRIX cameraTransform = camera.GetTransform(dt);
-
+	
 	renderTexture.SetRenderTarget(wnd.gfx.GetContext());
 	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
 
+
 	for (auto& e : entities)
 	{
-		e.RenderDepth(wnd.gfx, cameraTransform, light);
+		e.RenderDepth(wnd.gfx, cameraTransform, renderTexture.GetPerspective(), light);
 	}
+	
 
 	wnd.gfx.ResetRenderTargetView();
 	wnd.gfx.ResetViewPort();
+	
 
-	wnd.gfx.GetContext()->PSSetShaderResources(0, 1, renderTexture.GetShaderResourceView());
+	wnd.gfx.GetContext()->PSSetShaderResources(1, 1, renderTexture.GetShaderResourceView());
 
 	for (auto& e : entities)
 	{
-		e.Render(wnd.gfx, cameraTransform, light);
+		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
 	}
 	
 	// testing ---------------------------
@@ -116,7 +119,7 @@ void Game::DoFrame()
 	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
 	skyboxes[iSkybox]->Render(wnd.gfx);
 
-	//physics.Update(dt());
+	physics.Update(dt());
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
 

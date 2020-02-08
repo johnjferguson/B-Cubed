@@ -13,6 +13,7 @@ public:
 	void Update(Graphics& gfx, const DirectX::XMMATRIX& camera);
 	void Render(Graphics& gfx);
 	void SetPosition(const DirectX::XMFLOAT4& newPos);
+	DirectX::XMMATRIX LookAt(const DirectX::XMFLOAT3& target) const;
 private:
 	DirectX::XMFLOAT4 pos;
 	LightBox lightBox;
