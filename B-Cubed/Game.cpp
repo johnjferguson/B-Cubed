@@ -107,6 +107,65 @@ void Game::DoFrame()
 	physx::PxVec3 pos = physics.GetPosition();
 	entities[5].SetPosition(pos.x, pos.y, pos.z);
 	// testing ---------------------------
+
+
+	// ------------- controller stuff ------------
+	if (wnd.clr.IsPressed(Controller::Button::A))
+	{
+		Gui::AddText("A is pressed");
+	}
+	else
+	{
+		Gui::AddText("A is not pressed");
+	}
+	if (wnd.clr.IsPressed(Controller::Button::B))
+	{
+		Gui::AddText("B is pressed");
+	}
+	else
+	{
+		Gui::AddText("B is not pressed");
+	}
+	if (wnd.clr.IsPressed(Controller::Button::Y))
+	{
+		Gui::AddText("Y is pressed");
+	}
+	else
+	{
+		Gui::AddText("Y is not pressed");
+	}
+	if (wnd.clr.IsPressed(Controller::Button::X))
+	{
+		Gui::AddText("X is pressed");
+	}
+	else
+	{
+		Gui::AddText("X is not pressed");
+	}
+	if (wnd.clr.IsPressed(Controller::Button::L_TRIGGER))
+	{
+		Gui::AddText("Left Trigger is pressed");
+	}
+	else
+	{
+		Gui::AddText("Left Trigger is not pressed");
+	}
+	if (wnd.clr.IsPressed(Controller::Button::R_TRIGGER))
+	{
+		Gui::AddText("Right Trigger is pressed");
+	}
+	else
+	{
+		Gui::AddText("Right Trigger is not pressed");
+	}
+	DirectX::XMFLOAT2 lt = wnd.clr.GetLeftStick();
+	DirectX::XMFLOAT2 rt = wnd.clr.GetRightStick();
+	std::stringstream ss;
+	ss << "Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
+		rt.x << "," << rt.y << ")";
+	Gui::AddText(ss.str());
+
+	//--------------------------------------------
 	struct Transform
 	{
 		DirectX::XMMATRIX world;
