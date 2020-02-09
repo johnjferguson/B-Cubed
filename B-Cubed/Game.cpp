@@ -102,7 +102,10 @@ void Game::DoFrame()
 	{
 		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
 	}
-	
+	//----------------
+
+	physx::PxVec3 pos = physics.GetPosition();
+	entities[5].SetPosition(pos.x, pos.y, pos.z);
 	// testing ---------------------------
 	struct Transform
 	{
