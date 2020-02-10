@@ -79,4 +79,6 @@ private:
 
 	physx::PxVehicleKeySmoothingData gKeySmoothingData;
 	physx::PxVehiclePadSmoothingData gPadSmoothingData;
+
+	int currentMode = 0; 
 };

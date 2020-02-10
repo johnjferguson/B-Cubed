@@ -87,12 +87,25 @@ void Physics::Update(Time dt)
 	PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
 
+	//gVehicleOrderProgress = 1;
+
 	std::stringstream ss;
 	ss << "Velocity of ball (x,y,z) = (" << (abs(vel.x) < 0.1 ? 0.0f : vel.x) << "," << (abs(vel.y) < 0.1 ? 0.0f : vel.y) << "," << (abs(vel.z) < 0.1 ? 0.0f : vel.z) << ")";
 	Gui::AddText(ss.str());
 	std::stringstream bb;
 	bb << "Position of vehicle (x,y,z) = (" << vehicle_position.x << "," << vehicle_position.y << "," << vehicle_position.z << ")";
 	Gui::AddText(bb.str());
+	std::stringstream cc;
+	cc << "Vehicle Mode Timer = " << gVehicleModeTimer;
+	Gui::AddText(cc.str());
+	std::stringstream dd;
+	dd << "Drive Mode = " << gVehicleOrderProgress;
+	Gui::AddText(dd.str());
+	std::stringstream ee;
+	ee << "Drive Function Called = " << currentMode;
+	Gui::AddText(ee.str());
+
+	
 	stepPhysics();
 }
 
@@ -347,6 +360,7 @@ void Physics::incrementDrivingMode(const PxF32 timestep)
 
 void Physics::startAccelerateForwardsMode()
 {
+	currentMode = 10;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalAccel(true);
@@ -359,6 +373,7 @@ void Physics::startAccelerateForwardsMode()
 
 void Physics::startAccelerateReverseMode()
 {
+	currentMode = 20;
 	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 
 	if (gMimicKeyInputs)
@@ -373,6 +388,7 @@ void Physics::startAccelerateReverseMode()
 
 void Physics::startBrakeMode()
 {
+	currentMode = 30;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalBrake(true);
@@ -385,6 +401,7 @@ void Physics::startBrakeMode()
 
 void Physics::startTurnHardLeftMode()
 {
+	currentMode = 40;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalAccel(true);
@@ -399,6 +416,7 @@ void Physics::startTurnHardLeftMode()
 
 void Physics::startTurnHardRightMode()
 {
+	currentMode = 50;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalAccel(true);
@@ -413,6 +431,7 @@ void Physics::startTurnHardRightMode()
 
 void Physics::startHandbrakeTurnLeftMode()
 {
+	currentMode = 60;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalSteerLeft(true);
@@ -427,6 +446,7 @@ void Physics::startHandbrakeTurnLeftMode()
 
 void Physics::startHandbrakeTurnRightMode()
 {
+	currentMode = 70;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalSteerRight(true);
@@ -442,6 +462,7 @@ void Physics::startHandbrakeTurnRightMode()
 
 void Physics::releaseAllControls()
 {
+	currentMode = -1;
 	if (gMimicKeyInputs)
 	{
 		gVehicleInputData.setDigitalAccel(false);
