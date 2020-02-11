@@ -203,6 +203,7 @@ void Physics::initVehicle()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
+	//---------------------------
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
@@ -474,9 +475,9 @@ void Physics::stepPhysics(Controller& gameController)
 	gVehicleInputData.setAnalogSteer(gameController.GetRightStick().x);
 
 	// TEMP: just testing stuff since I don't have xbox controller
-	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-	gVehicleInputData.setAnalogAccel(true);
-	gVehicleInputData.setAnalogSteer(0.5f);
+	//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+	//gVehicleInputData.setAnalogAccel(true);
+	//gVehicleInputData.setAnalogSteer(0.5f);
 	// --------------------------------------------------------
 	//"Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
 		//rt.x << "," << rt.y << ")";
