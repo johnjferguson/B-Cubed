@@ -31,3 +31,15 @@ private:
 	float roll = 1.0f;
 	bool inputEnabled = true;
 };
+
+class FollowCamera : public Camera
+{
+public:
+	FollowCamera() = default;
+	void SetTarget(const class Entity& target);
+	virtual DirectX::XMMATRIX GetTransform(const Time& dt) override;
+private:
+	const class Entity* entity = nullptr;
+	const float followZ = 12.0f;
+	const float followY = 8.0f;
+};

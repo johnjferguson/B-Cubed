@@ -11,6 +11,7 @@
 #include "physx/include/vehicle/PxVehicleUtil.h"
 #include "physx/include/snippetutils/SnippetUtils.h"
 #include <vector>
+#include <DirectXMath.h>
 
 class Physics
 {
@@ -18,7 +19,8 @@ public:
 	Physics();
 	~Physics();
 	void Update(Time dt, Controller& gameController);
-	physx::PxVec3 GetPosition();
+	physx::PxVec3 GetPosition() const;
+	DirectX::XMMATRIX GetTransform() const;
 
 	enum DriveMode
 	{

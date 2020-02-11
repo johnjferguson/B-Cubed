@@ -27,9 +27,10 @@ private:
 private:
 	std::vector<Entity> entities;
 	std::vector<std::unique_ptr<Renderable>> skyboxes;
+	std::vector<std::unique_ptr<Camera>> cameras;
 	RenderTexture renderTexture;
-	FreeCamera camera;
 	Light light;
 private:
 	unsigned int iSkybox = 0u;
+	unsigned int activeCamera = 0u;
 };

@@ -7,19 +7,19 @@
 class Entity
 {
 public:
-	Entity() = default;
+	Entity();
 	void AddRenderable(std::unique_ptr<Renderable> pRenderable);
 	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light);
 	void RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightProjection, const Light& light);
 
 	void SetPosition(float x, float y, float z);
+	const DirectX::XMFLOAT3& GetPosition() const;
+	void SetTransform(const DirectX::XMMATRIX& transform_in);
+	const DirectX::XMMATRIX& GetTransform() const;
 private:
 	std::unique_ptr<Renderable> renderable;
 private:
-	// TEMP just making sure refactor is working
+	// position vector and rotation matrix for object
 	DirectX::XMFLOAT3 pos;
-	float pitch = 0.0f; // rotation around y-axis
-	float yaw = 0.0f;   // rotation around z-axis
-	float roll = 3.1415f;  // rotation around x-axis
-	float distance = 10.0f;
+	DirectX::XMMATRIX transform;
 };

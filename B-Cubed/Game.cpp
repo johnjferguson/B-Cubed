@@ -7,7 +7,6 @@
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"),
-	camera(wnd.kbd,wnd.mouse,{0.0f,10.0f,10.0f}),
 	light(wnd.gfx, { 10.0f, 10.0f, 10.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 400.0f)
 {
@@ -53,6 +52,13 @@ Game::Game()
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox1.png"));
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox2.png"));
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 100.0f, L"images//skybox3.png"));
+
+	std::unique_ptr<FollowCamera> cam0 = std::make_unique<FollowCamera>();
+	cam0->SetTarget(entities[5]);
+	std::unique_ptr<FreeCamera> cam1 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
+	cameras.push_back(std::move(cam0));
+	cameras.push_back(std::move(cam1));
+
 }
 
 int Game::Start()
@@ -80,7 +86,7 @@ void Game::DoFrame()
 	Gui::AddText("Press TAB to ROTATE Skyboxes");
 
 	// testing --------------------------------
-	DirectX::XMMATRIX cameraTransform = camera.GetTransform(dt);
+	DirectX::XMMATRIX cameraTransform = cameras[activeCamera]->GetTransform(dt);
 	
 	renderTexture.SetRenderTarget(wnd.gfx.GetContext());
 	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
@@ -102,70 +108,12 @@ void Game::DoFrame()
 	{
 		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
 	}
-	//----------------
+
 
 	physx::PxVec3 pos = physics.GetPosition();
+	entities[5].SetTransform(physics.GetTransform());
 	entities[5].SetPosition(pos.x, pos.y, pos.z);
-	// testing ---------------------------
-
-
-	// ------------- controller stuff ------------
-	if (wnd.clr.IsPressed(Controller::Button::A))
-	{
-		Gui::AddText("A is pressed");
-	}
-	else
-	{
-		Gui::AddText("A is not pressed");
-	}
-	if (wnd.clr.IsPressed(Controller::Button::B))
-	{
-		Gui::AddText("B is pressed");
-	}
-	else
-	{
-		Gui::AddText("B is not pressed");
-	}
-	if (wnd.clr.IsPressed(Controller::Button::Y))
-	{
-		Gui::AddText("Y is pressed");
-	}
-	else
-	{
-		Gui::AddText("Y is not pressed");
-	}
-	if (wnd.clr.IsPressed(Controller::Button::X))
-	{
-		Gui::AddText("X is pressed");
-	}
-	else
-	{
-		Gui::AddText("X is not pressed");
-	}
-	if (wnd.clr.IsPressed(Controller::Button::L_TRIGGER))
-	{
-		Gui::AddText("Left Trigger is pressed");
-	}
-	else
-	{
-		Gui::AddText("Left Trigger is not pressed");
-	}
-	if (wnd.clr.IsPressed(Controller::Button::R_TRIGGER))
-	{
-		Gui::AddText("Right Trigger is pressed");
-	}
-	else
-	{
-		Gui::AddText("Right Trigger is not pressed");
-	}
-	DirectX::XMFLOAT2 lt = wnd.clr.GetLeftStick();
-	DirectX::XMFLOAT2 rt = wnd.clr.GetRightStick();
-	std::stringstream ss;
-	ss << "Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
-		rt.x << "," << rt.y << ")";
-	Gui::AddText(ss.str());
-
-	//--------------------------------------------
+	
 	struct Transform
 	{
 		DirectX::XMMATRIX world;
@@ -207,7 +155,7 @@ void Game::DoInput()
 		case VK_ESCAPE:
 			if (type == Keyboard::Event::Type::Press)
 			{
-				camera.ToggleInput();
+				activeCamera = ++activeCamera % cameras.size();
 			}
 			break;
 		case VK_TAB:

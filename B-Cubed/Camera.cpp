@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include "Gui.h"
+#include <cassert>
+#include "Entity.h"
 
 namespace dx = DirectX;
 
@@ -120,4 +122,28 @@ void FreeCamera::WrapAngle(float& angle)
 		}
 	}
 
+}
+
+
+void FollowCamera::SetTarget(const Entity & target)
+{
+	entity = &target;
+}
+
+DirectX::XMMATRIX FollowCamera::GetTransform(const Time & dt)
+{
+	if (entity != nullptr)
+	{
+		DirectX::XMFLOAT3 pos = entity->GetPosition();
+		DirectX::XMMATRIX transform = entity->GetTransform();
+	
+		DirectX::XMVECTOR vz = transform.r[2];
+		vz = DirectX::XMVectorScale(vz, -followZ);
+		vz = DirectX::XMVectorAdd(vz, DirectX::XMVectorSet(0.0f, followY, 0.0f, 1.0f));
+		vz = DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&pos), vz);
+
+		return DirectX::XMMatrixLookAtLH(vz, DirectX::XMVectorSet(pos.x, pos.y, pos.z, 1.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	}
+	assert(false && "follow camera does not have a target");
+	return DirectX::XMMatrixIdentity();
 }

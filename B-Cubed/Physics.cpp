@@ -116,10 +116,17 @@ void Physics::Update(Time dt, Controller& gameController)
 	stepPhysics(gameController);
 }
 
-PxVec3 Physics::GetPosition()
+PxVec3 Physics::GetPosition() const
 {
 	PxVec3 pos = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
 	return pos;
+}
+
+DirectX::XMMATRIX Physics::GetTransform() const
+{
+	PxQuat quat = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+
+	return DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quat.x, quat.y, quat.z, quat.w));
 }
 
 PxRigidDynamic* Physics::CreateDynamic(const physx::PxTransform & t, const physx::PxGeometry & geometry, const physx::PxVec3& velocity)
@@ -465,6 +472,12 @@ void Physics::stepPhysics(Controller& gameController)
 	}
 
 	gVehicleInputData.setAnalogSteer(gameController.GetRightStick().x);
+
+	// TEMP: just testing stuff since I don't have xbox controller
+	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+	gVehicleInputData.setAnalogAccel(true);
+	gVehicleInputData.setAnalogSteer(0.5f);
+	// --------------------------------------------------------
 	//"Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
 		//rt.x << "," << rt.y << ")";
 

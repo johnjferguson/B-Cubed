@@ -4,6 +4,12 @@
 
 
 
+Entity::Entity()
+	:
+	transform(DirectX::XMMatrixIdentity())
+{
+}
+
 void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 {
 	renderable = std::move(pRenderable);
@@ -28,7 +34,7 @@ void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const Direct
 	
 	VertexConstant vc
 	{
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
+		transform * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
 		camera,
 		DirectX::XMMatrixPerspectiveLH(1.0f, float(gfx.GetHeight()) / float(gfx.GetWidth()), 0.5f, 400.0f),
 		lightView,
@@ -66,7 +72,7 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 
 	VertexConstant vc
 	{
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
+		transform * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z),
 		camera,
 		lightProjection
 	};
@@ -85,4 +91,19 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 void Entity::SetPosition(float x, float y, float z)
 {
 	pos = DirectX::XMFLOAT3(x,y,z);
+}
+
+const DirectX::XMFLOAT3 & Entity::GetPosition() const
+{
+	return pos;
+}
+
+void Entity::SetTransform(const DirectX::XMMATRIX & transform_in)
+{
+	transform = transform_in;
+}
+
+const DirectX::XMMATRIX & Entity::GetTransform() const
+{
+	return transform;
 }
