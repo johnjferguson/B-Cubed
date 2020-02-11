@@ -80,9 +80,6 @@ private:
 	physx::PxVehicleDrive4WRawInputData gVehicleInputData;
 	std::vector<DriveMode> gDriveModeOrder;
 
-	physx::PxF32					gVehicleModeLifetime = 4.0f;
-	physx::PxF32					gVehicleModeTimer = 0.0f;
-	physx::PxU32					gVehicleOrderProgress = 0;
-	bool					gVehicleOrderComplete = false;
-	bool					gMimicKeyInputs = false;
+	physx::PxVehicleKeySmoothingData gKeySmoothingData;
+	physx::PxVehiclePadSmoothingData gPadSmoothingData;
 };
