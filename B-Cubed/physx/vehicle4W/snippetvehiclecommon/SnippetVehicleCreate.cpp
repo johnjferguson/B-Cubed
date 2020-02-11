@@ -42,7 +42,7 @@ using namespace physx;
 PxRigidStatic* createDrivablePlane(const PxFilterData& simFilterData, PxMaterial* material, PxPhysics* physics)
 {
 	//Add a plane to the scene.
-	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0,1,0,-2), *material);
+	PxRigidStatic* groundPlane = PxCreatePlane(*physics, PxPlane(0,1,0,0), *material);
 
 	//Get the plane shape so we can set query and simulation filter data.
 	PxShape* shapes[1];

@@ -7,51 +7,71 @@ using namespace snippetvehicle;
 
 Physics::Physics()
 {
-	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
-	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true);
-
-	PxCudaContextManagerDesc cudaContextManagerDesc;
-
-#ifdef RENDER_SNIPPET
-	cudaContextManagerDesc.interopMode = PxCudaInteropMode::OGL_INTEROP;	//Choose interop mode. As the snippets use OGL, we select OGL_INTEROP
-																			//when using D3D, cudaContextManagerDesc.graphicsDevice must be set as the graphics device pointer.
-#else
-	cudaContextManagerDesc.interopMode = PxCudaInteropMode::NO_INTEROP;
-#endif
-
-	gCudaContextManager = PxCreateCudaContextManager(*gFoundation, cudaContextManagerDesc, PxGetProfilerCallback());	//Create the CUDA context manager, required for GRB to dispatch CUDA kernels.
-	if (gCudaContextManager)
+	gSteerVsForwardSpeedData = 
 	{
-		if (!gCudaContextManager->contextIsValid())
+		0.0f,		0.75f,
+	5.0f,		0.75f,
+	30.0f,		0.125f,
+	120.0f,		0.1f,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32,
+	PX_MAX_F32, PX_MAX_F32
+	};
+
+	gSteerVsForwardSpeedTable = PxFixedSizeLookupTable<8>(gSteerVsForwardSpeedData.data(), 4);
+	gKeySmoothingData = 
+	{
 		{
-			gCudaContextManager->release();
-			gCudaContextManager = NULL;
+			6.0f,	//rise rate eANALOG_INPUT_ACCEL
+			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+		},
+		{
+			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
 		}
-	}
+	};
 
-	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
-	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
-	gDispatcher = PxDefaultCpuDispatcherCreate(4);			//Create a CPU dispatcher using 4 worther threads
-	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	gPadSmoothingData =
+	{
+		{
+			6.0f,	//rise rate eANALOG_INPUT_ACCEL
+			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+		},
+		{
+			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+		}
+	};
 
-	sceneDesc.cudaContextManager = gCudaContextManager;		//Set the CUDA context manager, used by GRB.
-
-	sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;	//Enable GPU dynamics - without this enabled, simulation (contact gen and solver) will run on the CPU.
-	sceneDesc.flags |= PxSceneFlag::eENABLE_PCM;			//Enable PCM. PCM NP is supported on GPU. Legacy contact gen will fall back to CPU
-	sceneDesc.flags |= PxSceneFlag::eENABLE_STABILIZATION;	//Improve solver stability by enabling post-stabilization.
-	sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;		//Enable GPU broad phase. Without this set, broad phase will run on the CPU.
-	sceneDesc.gpuMaxNumPartitions = 8;						//Defines the maximum number of partitions used by the solver. Only power-of-2 values are valid. 
-															//A value of 8 generally gives best balance between performance and stability.
-	gScene = gPhysics->createScene(sceneDesc);
-
-	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-
-	//PxRigidStatic* groundPlane = PxCreatePlane(*gPhysics, PxPlane(0, 1, 0, 0), *gMaterial);
-	//gScene->addActor(*groundPlane);
-
-	ball = CreateDynamic(PxTransform(PxVec3(0, 20, 100)), PxSphereGeometry(5), PxVec3(0, -25, -100));
-	PxRigidBodyExt::updateMassAndInertia(*ball, 1000.f);
+	gDriveModeOrder =
+	{
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_ACCEL_REVERSE,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_HARD_TURN_LEFT,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_HARD_TURN_RIGHT,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+		eDRIVE_MODE_NONE
+	};
 
 	initVehicle();
 }
@@ -63,7 +83,7 @@ Physics::~Physics()
 	gScene->release();
 	gMaterial->release();
 	//gCudaContextManager->release();
-	ball->release();
+	//ball->release();
 
 	gVehicle4W->getRigidDynamicActor()->release();
 	gVehicle4W->free();
@@ -80,8 +100,8 @@ Physics::~Physics()
 
 void Physics::Update(Time dt)
 {
-	gScene->simulate(dt.Seconds());
-	gScene->fetchResults(true);
+	//gScene->simulate(dt.Seconds());
+	//gScene->fetchResults(true);
 	//PxVec3 vel = ball->getLinearVelocity();
 
 	PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
@@ -154,89 +174,21 @@ snippetvehicle::VehicleDesc Physics::initVehicleDesc()
 
 void Physics::initVehicle()
 {
+	gFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, gAllocator, gErrorCallback);
 	gPvd = PxCreatePvd(*gFoundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
 	gPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 	gPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *gFoundation, PxTolerancesScale(), true, gPvd);
 
-	gDriveModeOrder[0] = DriveMode::eDRIVE_MODE_BRAKE;
-	gDriveModeOrder[1] = DriveMode::eDRIVE_MODE_ACCEL_FORWARDS;
-	gDriveModeOrder[2] = DriveMode::eDRIVE_MODE_BRAKE;
-	gDriveModeOrder[3] = DriveMode::eDRIVE_MODE_ACCEL_REVERSE;
-	gDriveModeOrder[4] = DriveMode::eDRIVE_MODE_BRAKE;
-	gDriveModeOrder[5] = DriveMode::eDRIVE_MODE_HARD_TURN_LEFT;
-	gDriveModeOrder[6] = DriveMode::eDRIVE_MODE_BRAKE;
-	gDriveModeOrder[7] = DriveMode::eDRIVE_MODE_HARD_TURN_RIGHT;
-	gDriveModeOrder[8] = DriveMode::eDRIVE_MODE_ACCEL_FORWARDS;
-	gDriveModeOrder[9] = DriveMode::eDRIVE_MODE_HANDBRAKE_TURN_LEFT;
-	gDriveModeOrder[10] = DriveMode::eDRIVE_MODE_ACCEL_FORWARDS;
-	gDriveModeOrder[11] = DriveMode::eDRIVE_MODE_HANDBRAKE_TURN_RIGHT;
-	gDriveModeOrder[12] = DriveMode::eDRIVE_MODE_NONE;
-
-	gSteerVsForwardSpeedData[0] = 0.0f;
-	gSteerVsForwardSpeedData[1] = 0.75f;
-	gSteerVsForwardSpeedData[2] = 5.0f;
-	gSteerVsForwardSpeedData[3] = 0.75f;
-	gSteerVsForwardSpeedData[4] = 30.0f;
-	gSteerVsForwardSpeedData[5] = 0.125f;
-	gSteerVsForwardSpeedData[6] = 120.0f;
-	gSteerVsForwardSpeedData[7] = 0.1f;
-	gSteerVsForwardSpeedData[8] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[9] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[10] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[11] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[12] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[13] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[14] = PX_MAX_F32;
-	gSteerVsForwardSpeedData[15] = PX_MAX_F32;
-
-	gKeySmoothingData =
-	{
-		{
-			6.0f,	//rise rate eANALOG_INPUT_ACCEL
-			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
-			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
-		},
-		{
-			10.0f,	//fall rate eANALOG_INPUT_ACCEL
-			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
-			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
-			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
-		}
-	};
-
-	gPadSmoothingData =
-{
-	{
-		6.0f,	//rise rate eANALOG_INPUT_ACCEL
-		6.0f,	//rise rate eANALOG_INPUT_BRAKE		
-		6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-		2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-		2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
-	},
-	{
-		10.0f,	//fall rate eANALOG_INPUT_ACCEL
-		10.0f,	//fall rate eANALOG_INPUT_BRAKE		
-		10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-		5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
-		5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
-	}
-};
-
-	PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable(gSteerVsForwardSpeedData, 4);
-
 	PxSceneDesc sceneDesc(gPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 
 	PxU32 numWorkers = 1;
-	//gDispatcher = PxDefaultCpuDispatcherCreate(numWorkers);
+	gDispatcher = PxDefaultCpuDispatcherCreate(numWorkers);
 	sceneDesc.cpuDispatcher = gDispatcher;
 	sceneDesc.filterShader = VehicleFilterShader;
 
-	//gScene = gPhysics->createScene(sceneDesc);
+	gScene = gPhysics->createScene(sceneDesc);
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{

@@ -9,6 +9,7 @@
 #include "physx/vehicle4W/snippetcommon/SnippetPVD.h"
 #include "physx/include/vehicle/PxVehicleUtil.h"
 #include "physx/include/snippetutils/SnippetUtils.h"
+#include <vector>
 
 class Physics
 {
@@ -18,7 +19,7 @@ public:
 	void Update(Time dt);
 	physx::PxVec3 GetPosition();
 
-	enum class DriveMode
+	enum DriveMode
 	{
 		eDRIVE_MODE_ACCEL_FORWARDS = 0,
 		eDRIVE_MODE_ACCEL_REVERSE,
@@ -46,37 +47,42 @@ private:
 	void stepPhysics();
 	void cleanupPhysics();
 private:
-	physx::PxDefaultAllocator gAllocator;
-	physx::PxDefaultErrorCallback gErrorCallback;
+	physx::PxDefaultAllocator		gAllocator;
+	physx::PxDefaultErrorCallback	gErrorCallback;
 
-	physx::PxFoundation* gFoundation = NULL;			// Wrapper that goes around allocator and error callback
-	physx::PxPhysics* gPhysics = NULL;					// Does the physics simulation
-	physx::PxDefaultCpuDispatcher* gDispatcher = NULL;
-	physx::PxScene*	gScene = NULL;
-	physx::PxMaterial* gMaterial = NULL;
-	physx::PxCudaContextManager* gCudaContextManager = NULL;
-	physx::PxRigidDynamic* ball = NULL;
+	physx::PxFoundation*			gFoundation = NULL;
+	physx::PxPhysics*				gPhysics = NULL;
+
+	physx::PxDefaultCpuDispatcher*	gDispatcher = NULL;
+	physx::PxScene*				gScene = NULL;
+
+	physx::PxCooking*				gCooking = NULL;
+
+	physx::PxMaterial*				gMaterial = NULL;
+
+	physx::PxPvd*                  gPvd = NULL;
+
+	snippetvehicle::VehicleSceneQueryData*	gVehicleSceneQueryData = NULL;
+	physx::PxBatchQuery*			gBatchQuery = NULL;
+
+	physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
+
+	physx::PxRigidStatic*			gGroundPlane = NULL;
+	physx::PxVehicleDrive4W*		gVehicle4W = NULL;
+
+	bool					gIsVehicleInAir = true;
+
+	std::vector<physx::PxF32> gSteerVsForwardSpeedData;
+	physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
+	physx::PxVehicleKeySmoothingData gKeySmoothingData;
+	physx::PxVehiclePadSmoothingData gPadSmoothingData;
+
+	physx::PxVehicleDrive4WRawInputData gVehicleInputData;
+	std::vector<DriveMode> gDriveModeOrder;
+
 	physx::PxF32					gVehicleModeLifetime = 4.0f;
 	physx::PxF32					gVehicleModeTimer = 0.0f;
 	physx::PxU32					gVehicleOrderProgress = 0;
 	bool					gVehicleOrderComplete = false;
 	bool					gMimicKeyInputs = false;
-	physx::PxRigidStatic*			gGroundPlane = NULL;
-	physx::PxVehicleDrive4W*		gVehicle4W = NULL;
-	physx::PxCooking*				gCooking = NULL;
-
-	physx::PxPvd*                  gPvd = NULL;			// Visual Debugger
-	snippetvehicle::VehicleSceneQueryData*	gVehicleSceneQueryData = NULL;
-	physx::PxBatchQuery*			gBatchQuery = NULL;
-	physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
-	physx::PxVehicleDrive4WRawInputData gVehicleInputData;
-	
-	physx::PxF32 gSteerVsForwardSpeedData[2 * 8];
-	bool					gIsVehicleInAir = true;
-	physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
-
-	DriveMode gDriveModeOrder[8];
-
-	physx::PxVehicleKeySmoothingData gKeySmoothingData;
-	physx::PxVehiclePadSmoothingData gPadSmoothingData;
 };
