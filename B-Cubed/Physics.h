@@ -1,4 +1,5 @@
 #pragma once
+#include "Controller.h"
 #include <memory>
 #include "physx/include/PxPhysicsAPI.h"
 #include "Time.h"
@@ -16,7 +17,7 @@ class Physics
 public:
 	Physics();
 	~Physics();
-	void Update(Time dt);
+	void Update(Time dt, Controller& gameController);
 	physx::PxVec3 GetPosition();
 
 	enum DriveMode
@@ -44,7 +45,7 @@ private:
 	void startHandbrakeTurnRightMode();
 	void releaseAllControls();
 	void incrementDrivingMode(const physx::PxF32 timestep);
-	void stepPhysics();
+	void stepPhysics(Controller& gameController);
 	void cleanupPhysics();
 private:
 	physx::PxDefaultAllocator		gAllocator;

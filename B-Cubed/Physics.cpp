@@ -10,13 +10,13 @@ Physics::Physics()
 	gSteerVsForwardSpeedData = 
 	{
 		0.0f,		0.75f,
-	5.0f,		0.75f,
-	30.0f,		0.125f,
-	120.0f,		0.1f,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32,
-	PX_MAX_F32, PX_MAX_F32
+		5.0f,		0.75f,
+		30.0f,		0.125f,
+		120.0f,		0.1f,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32
 	};
 
 	gSteerVsForwardSpeedTable = PxFixedSizeLookupTable<8>(gSteerVsForwardSpeedData.data(), 4);
@@ -98,7 +98,7 @@ Physics::~Physics()
 	printf("SnippetVehicle4W done.\n");
 }
 
-void Physics::Update(Time dt)
+void Physics::Update(Time dt, Controller& gameController)
 {
 	//gScene->simulate(dt.Seconds());
 	//gScene->fetchResults(true);
@@ -113,7 +113,7 @@ void Physics::Update(Time dt)
 	std::stringstream bb;
 	bb << "Position of vehicle (x,y,z) = (" << vehicle_position.x << "," << vehicle_position.y << "," << vehicle_position.z << ")";
 	Gui::AddText(bb.str());
-	stepPhysics();
+	stepPhysics(gameController);
 }
 
 PxVec3 Physics::GetPosition()
@@ -233,7 +233,7 @@ void Physics::initVehicle()
 
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
-	startBrakeMode();
+	//startBrakeMode();
 }
 
 
@@ -391,7 +391,6 @@ void Physics::startHandbrakeTurnRightMode()
 	}
 }
 
-
 void Physics::releaseAllControls()
 {
 	if (gMimicKeyInputs)
@@ -411,12 +410,63 @@ void Physics::releaseAllControls()
 	}
 }
 
-void Physics::stepPhysics()
+void Physics::stepPhysics(Controller& gameController)
 {
 	const PxF32 timestep = 1.0f / 60.0f;
 
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
-	incrementDrivingMode(timestep);
+	//incrementDrivingMode(timestep);
+	if (gameController.IsPressed(Controller::Button::A))
+	{
+		Gui::AddText("A is pressed");
+	}
+	else
+	{
+		Gui::AddText("A is not pressed");
+	}
+	if (gameController.IsPressed(Controller::Button::B))
+	{
+		Gui::AddText("B is pressed");
+	}
+	else
+	{
+		Gui::AddText("B is not pressed");
+	}
+	if (gameController.IsPressed(Controller::Button::Y))
+	{
+		Gui::AddText("Y is pressed");
+	}
+	else
+	{
+		Gui::AddText("Y is not pressed");
+	}
+	if (gameController.IsPressed(Controller::Button::X))
+	{
+		Gui::AddText("X is pressed");
+	}
+	else
+	{
+		Gui::AddText("X is not pressed");
+	}
+	if (gameController.IsPressed(Controller::Button::L_TRIGGER))
+	{
+		releaseAllControls();
+		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+		gVehicleInputData.setAnalogAccel(true);
+	}
+	else if (gameController.IsPressed(Controller::Button::R_TRIGGER))
+	{
+		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		gVehicleInputData.setAnalogAccel(true);
+	}
+	else
+	{
+		gVehicleInputData.setAnalogAccel(false);
+	}
+
+	gVehicleInputData.setAnalogSteer(gameController.GetRightStick().x);
+	//"Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
+		//rt.x << "," << rt.y << ")";
 
 	//Update the control inputs for the vehicle.
 	if (gMimicKeyInputs)
