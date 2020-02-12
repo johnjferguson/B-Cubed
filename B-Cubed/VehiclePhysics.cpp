@@ -6,11 +6,13 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController)
+VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game)
 	:
 	gameController(gameController),
 	ps(*ps)
 {
+	VehiclePhysics::game = game;
+
 	gSteerVsForwardSpeedData =
 	{
 		0.0f,		0.75f,
@@ -222,6 +224,7 @@ void VehiclePhysics::stepPhysics()
 	if (gameController.IsPressed(Controller::Button::Y))
 	{
 		Gui::AddText("Y is pressed");
+		game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p);
 	}
 	else
 	{
@@ -291,3 +294,30 @@ void VehiclePhysics::stepPhysics()
 	//Time t(1.0f / 60.0f);
 	//ps.Update(t);
 }
+/*
+//-----------------------------------------ADDED-----------------------------------------------------
+void Physics::fireMissile(PxVec3 startPos)
+{
+	PxRigidDynamic* dyn = createDynamic(PxTransform(startPos), PxSphereGeometry(10), PxVec3(0, -50, -100));
+
+	dyn->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+
+
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr);
+
+	Game::entities[5].AddRenderable(std::move(nb));
+	Game::entities[5].SetPosition(5.0f, 1.0f, 0.0f);
+	Game::entities[5].AddPhysics(std::move(vp0));
+}
+
+//----------------------------------ADDED----------------------------------------
+PxRigidDynamic* Physics::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
+{
+	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
+	dynamic->setAngularDamping(0.5f);
+	dynamic->setLinearVelocity(velocity);
+	gScene->addActor(*dynamic);
+	return dynamic;
+}
+*/

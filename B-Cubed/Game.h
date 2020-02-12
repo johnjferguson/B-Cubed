@@ -18,6 +18,8 @@ public:
 	int Start();
 	void DoFrame();
 	void DoInput();
+	std::vector<Entity> entities;
+	void fireMissile(physx::PxVec3 startPos);
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy
@@ -27,7 +29,6 @@ private:
 	PhysicsScene ps;
 	FrameTimer ft;
 private:
-	std::vector<Entity> entities;
 	std::vector<std::unique_ptr<Renderable>> skyboxes;
 	std::vector<std::unique_ptr<Camera>> cameras;
 	RenderTexture renderTexture;

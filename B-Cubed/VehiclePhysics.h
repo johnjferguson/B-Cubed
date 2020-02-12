@@ -14,6 +14,8 @@
 #include "PhysicsScene.h"
 #include "Controller.h"
 #include <vector>
+#include "Entity.h"
+#include "Game.h"
 
 class VehiclePhysics : public PhysicsComponent
 {
@@ -29,7 +31,7 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(PhysicsScene* ps, Controller& gameController);
+	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game);
 	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
 	void initVehicle(PhysicsScene* ps);
 	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene* ps);
@@ -39,26 +41,23 @@ private:
 	physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 	physx::PxRigidStatic*			gGroundPlane = NULL;
 	physx::PxVehicleDrive4W*		gVehicle4W = NULL;
-	bool					gIsVehicleInAir = true;
-	//std::vector<physx::PxF32> gSteerVsForwardSpeedData;
-	//physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
-	//physx::PxVehicleKeySmoothingData gKeySmoothingData;
-	//physx::PxVehiclePadSmoothingData gPadSmoothingData;
-	//physx::PxVehicleDrive4WRawInputData gVehicleInputData;
+	bool							gIsVehicleInAir = true;
 	physx::PxBatchQuery*			gBatchQuery = NULL;
 	snippetvehicle::VehicleSceneQueryData*	gVehicleSceneQueryData = NULL;
 	physx::PxF32					gVehicleModeLifetime = 4.0f;
 	physx::PxF32					gVehicleModeTimer = 0.0f;
 	physx::PxU32					gVehicleOrderProgress = 0;
-	bool					gVehicleOrderComplete = false;
-	bool					gMimicKeyInputs = false;
+	bool							gVehicleOrderComplete = false;
+	bool							gMimicKeyInputs = false;
 	Controller& gameController;
 	PhysicsScene& ps;
-	std::vector<physx::PxF32> gSteerVsForwardSpeedData;
+	std::vector<physx::PxF32>		 gSteerVsForwardSpeedData;
 	physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
 	physx::PxVehicleKeySmoothingData gKeySmoothingData;
 	physx::PxVehiclePadSmoothingData gPadSmoothingData;
 
 	physx::PxVehicleDrive4WRawInputData gVehicleInputData;
-	std::vector<DriveMode> gDriveModeOrder;
+	std::vector<DriveMode>			    gDriveModeOrder;
+
+	Game* game;
 };

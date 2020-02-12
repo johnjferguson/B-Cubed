@@ -175,6 +175,7 @@
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightBox.cpp" />
+    <ClCompile Include="MissilePhysics.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysicsScene.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightBox.h" />
+    <ClInclude Include="MissilePhysics.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsComponent.h" />
