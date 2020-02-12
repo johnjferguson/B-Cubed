@@ -1,45 +1,130 @@
 #include "VehiclePhysics.h"
 #include "Gui.h"
+#include <sstream>
+#include "Time.h"
 
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(PhysicsScene & ps)
+VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController)
+	:
+	gameController(gameController),
+	ps(*ps)
 {
+	gSteerVsForwardSpeedData =
+	{
+		0.0f,		0.75f,
+		5.0f,		0.75f,
+		30.0f,		0.125f,
+		120.0f,		0.1f,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32
+	};
+
+	gSteerVsForwardSpeedTable = PxFixedSizeLookupTable<8>(gSteerVsForwardSpeedData.data(), 4);
+	gKeySmoothingData =
+	{
+		{
+			6.0f,	//rise rate eANALOG_INPUT_ACCEL
+			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+		},
+		{
+			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+		}
+	};
+
+	gPadSmoothingData =
+	{
+		{
+			6.0f,	//rise rate eANALOG_INPUT_ACCEL
+			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+		},
+		{
+			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+		}
+	};
+
+	gDriveModeOrder =
+	{
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_ACCEL_REVERSE,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_HARD_TURN_LEFT,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_HARD_TURN_RIGHT,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+		eDRIVE_MODE_NONE
+	};
+
 	initVehicle(ps);
 }
 
 void VehiclePhysics::Update(DirectX::XMFLOAT3 & pos, DirectX::XMMATRIX & transform)
 {
+	PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+	PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+
+	pos = DirectX::XMFLOAT3(vehicle_position.x, vehicle_position.y, vehicle_position.z);
+	PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+	transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
+
+	std::stringstream ss;
+	ss << "Velocity of ball (x,y,z) = (" << (abs(vel.x) < 0.1 ? 0.0f : vel.x) << "," << (abs(vel.y) < 0.1 ? 0.0f : vel.y) << "," << (abs(vel.z) < 0.1 ? 0.0f : vel.z) << ")";
+	Gui::AddText(ss.str());
+	std::stringstream bb;
+	bb << "Position of vehicle (x,y,z) = (" << vehicle_position.x << "," << vehicle_position.y << "," << vehicle_position.z << ")";
+	Gui::AddText(bb.str());
+	stepPhysics();
 }
 
-void VehiclePhysics::initVehicle(PhysicsScene & ps)
+void VehiclePhysics::initVehicle(PhysicsScene* ps)
 {
 	
 	/////////////////////////////////////////////
 
-	PxInitVehicleSDK(*ps.gPhysics);
+	PxInitVehicleSDK(*ps->gPhysics);
 	PxVehicleSetBasisVectors(PxVec3(0, 1, 0), PxVec3(0, 0, 1));
 	PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
 
 	//Create the batched scene queries for the suspension raycasts.
-	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, ps.gAllocator);
-	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, ps.gScene);
+	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, ps->gAllocator);
+	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, ps->gScene);
 
 	//Create the friction table for each combination of tire and surface type.
-	gFrictionPairs = createFrictionPairs(ps.gMaterial);
+	gFrictionPairs = createFrictionPairs(ps->gMaterial);
 
 	//Create a plane to drive on.
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, ps.gMaterial, ps.gPhysics);
-	ps.gScene->addActor(*gGroundPlane);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, ps->gMaterial, ps->gPhysics);
+	ps->gScene->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(ps);
-	gVehicle4W = createVehicle4W(vehicleDesc, ps.gPhysics, ps.gCooking);
+	gVehicle4W = createVehicle4W(vehicleDesc, ps->gPhysics, ps->gCooking);
 	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
-	ps.gScene->addActor(*gVehicle4W->getRigidDynamicActor());
+	ps->gScene->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	//Set the vehicle to rest in first gear.
 	//Set the vehicle to use auto-gears.
@@ -52,7 +137,7 @@ void VehiclePhysics::initVehicle(PhysicsScene & ps)
 	//startBrakeMode();
 }
 
-snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene & ps)
+snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene* ps)
 {
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
@@ -79,7 +164,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene & ps)
 	vehicleDesc.chassisDims = chassisDims;
 	vehicleDesc.chassisMOI = chassisMOI;
 	vehicleDesc.chassisCMOffset = chassisCMOffset;
-	vehicleDesc.chassisMaterial = ps.gMaterial;
+	vehicleDesc.chassisMaterial = ps->gMaterial;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
 
 	vehicleDesc.wheelMass = wheelMass;
@@ -87,7 +172,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene & ps)
 	vehicleDesc.wheelWidth = wheelWidth;
 	vehicleDesc.wheelMOI = wheelMOI;
 	vehicleDesc.numWheels = nbWheels;
-	vehicleDesc.wheelMaterial = ps.gMaterial;
+	vehicleDesc.wheelMaterial = ps->gMaterial;
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 
 	return vehicleDesc;
@@ -112,7 +197,7 @@ void VehiclePhysics::releaseAllControls()
 	}
 }
 
-void VehiclePhysics::stepPhysics(Controller & gameController)
+void VehiclePhysics::stepPhysics()
 {
 	const PxF32 timestep = 1.0f / 60.0f;
 
@@ -193,11 +278,16 @@ void VehiclePhysics::stepPhysics(Controller & gameController)
 	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
 
 	//Vehicle update.
-	const PxVec3 grav = PxVec3(0.0f, -9.81f, 0.0f);
+	const PxVec3 grav = ps.gScene->getGravity();
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
 
 	//Work out if the vehicle is in the air.
 	gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
+
+	//ps.gScene->simulate(timestep);
+	//ps.gScene->fetchResults(true);
+	//Time t(1.0f / 60.0f);
+	//ps.Update(t);
 }

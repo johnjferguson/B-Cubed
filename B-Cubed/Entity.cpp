@@ -15,6 +15,11 @@ void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 	renderable = std::move(pRenderable);
 }
 
+void Entity::AddPhysics(std::unique_ptr<PhysicsComponent> pPhysics)
+{
+	physicsComponent = std::move(pPhysics);
+}
+
 void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light)
 {
 	struct VertexConstant
@@ -86,6 +91,11 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 	renderable->UpdatePixel(gfx, pc);
 
 	renderable->RenderDepth(gfx);
+}
+
+void Entity::UpdatePhysics()
+{
+	physicsComponent->Update(pos, transform);
 }
 
 void Entity::SetPosition(float x, float y, float z)

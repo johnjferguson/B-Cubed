@@ -3,6 +3,7 @@
 #include "Box.h"
 #include "SkyBox.h"
 #include <DirectXMath.h>
+#include "VehiclePhysics.h"
 
 Game::Game()
 	:
@@ -23,6 +24,10 @@ Game::Game()
 	std::unique_ptr<Box> zb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//zoe.jpg");
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
+	// create physics component
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr);
+
 	entities[0].AddRenderable(std::move(bl));
 	entities[0].SetPosition(-5.0f, -0.5f, -5.0f);
 
@@ -37,9 +42,11 @@ Game::Game()
 			   
 	entities[4].AddRenderable(std::move(vb));
 	entities[4].SetPosition(0.0f, 1.0f, 5.0f);
+	entities[4].AddPhysics(std::move(vp1));
 			   
 	entities[5].AddRenderable(std::move(nb));
 	entities[5].SetPosition(5.0f, 1.0f, 0.0f);
+	entities[5].AddPhysics(std::move(vp0));
 			   
 	entities[6].AddRenderable(std::move(zb));
 	entities[6].SetPosition(0.0f, 1.0f, -5.0f);
@@ -110,9 +117,9 @@ void Game::DoFrame()
 	}
 
 
-	physx::PxVec3 pos = physics.GetPosition();
-	entities[5].SetTransform(physics.GetTransform());
-	entities[5].SetPosition(pos.x, pos.y, pos.z);
+	//physx::PxVec3 pos = physics.GetPosition();
+	//entities[5].SetTransform(physics.GetTransform());
+	//entities[5].SetPosition(pos.x, pos.y, pos.z);
 	
 	struct Transform
 	{
@@ -134,7 +141,10 @@ void Game::DoFrame()
 	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
 	skyboxes[iSkybox]->Render(wnd.gfx);
 
-	physics.Update(dt(), wnd.clr);
+	entities[5].UpdatePhysics();
+	entities[4].UpdatePhysics();
+	ps.Update(dt);
+	//physics.Update(dt(), wnd.clr);
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
 

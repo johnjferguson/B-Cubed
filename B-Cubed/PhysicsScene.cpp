@@ -33,3 +33,10 @@ PhysicsScene::PhysicsScene()
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 }
+
+void PhysicsScene::Update(Time & dt)
+{
+	//Scene update.
+	gScene->simulate(1.0f/60.0f);
+	gScene->fetchResults(true);
+}

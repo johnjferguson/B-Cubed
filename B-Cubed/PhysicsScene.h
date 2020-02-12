@@ -1,11 +1,13 @@
 #pragma once
 #include "physx/include/PxPhysicsAPI.h"
+#include "Time.h"
 
 class PhysicsScene
 {
 	friend class VehiclePhysics;
 public:
 	PhysicsScene();
+	void Update(Time& dt);
 
 private:
 	physx::PxDefaultAllocator		gAllocator;

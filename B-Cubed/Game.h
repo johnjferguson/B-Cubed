@@ -3,12 +3,13 @@
 #include <memory>
 #include "Window.h"
 #include "Gui.h"
-#include "Physics.h"
+//#include "Physics.h"
 #include "FrameTimer.h"
 #include "Entity.h"
 #include "Camera.h"
 #include "Light.h"
 #include "RenderTexture.h"
+#include "PhysicsScene.h"
 
 class Game
 {
@@ -22,7 +23,8 @@ private:
 	// some dependancy
 	Gui gui;
 	Window wnd;
-	Physics physics;
+	//Physics physics;
+	PhysicsScene ps;
 	FrameTimer ft;
 private:
 	std::vector<Entity> entities;

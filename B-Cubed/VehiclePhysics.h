@@ -13,26 +13,38 @@
 #include <DirectXMath.h>
 #include "PhysicsScene.h"
 #include "Controller.h"
+#include <vector>
 
 class VehiclePhysics : public PhysicsComponent
 {
 public:
-	VehiclePhysics(PhysicsScene& ps);
+	enum DriveMode
+	{
+		eDRIVE_MODE_ACCEL_FORWARDS = 0,
+		eDRIVE_MODE_ACCEL_REVERSE,
+		eDRIVE_MODE_HARD_TURN_LEFT,
+		eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+		eDRIVE_MODE_HARD_TURN_RIGHT,
+		eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_NONE
+	};
+	VehiclePhysics(PhysicsScene* ps, Controller& gameController);
 	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
-	void initVehicle(PhysicsScene & ps);
-	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene & ps);
+	void initVehicle(PhysicsScene* ps);
+	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene* ps);
 	void releaseAllControls();
-	void stepPhysics(Controller& gameController);
+	void stepPhysics();
 private:
 	physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 	physx::PxRigidStatic*			gGroundPlane = NULL;
 	physx::PxVehicleDrive4W*		gVehicle4W = NULL;
 	bool					gIsVehicleInAir = true;
-	std::vector<physx::PxF32> gSteerVsForwardSpeedData;
-	physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
-	physx::PxVehicleKeySmoothingData gKeySmoothingData;
-	physx::PxVehiclePadSmoothingData gPadSmoothingData;
-	physx::PxVehicleDrive4WRawInputData gVehicleInputData;
+	//std::vector<physx::PxF32> gSteerVsForwardSpeedData;
+	//physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
+	//physx::PxVehicleKeySmoothingData gKeySmoothingData;
+	//physx::PxVehiclePadSmoothingData gPadSmoothingData;
+	//physx::PxVehicleDrive4WRawInputData gVehicleInputData;
 	physx::PxBatchQuery*			gBatchQuery = NULL;
 	snippetvehicle::VehicleSceneQueryData*	gVehicleSceneQueryData = NULL;
 	physx::PxF32					gVehicleModeLifetime = 4.0f;
@@ -40,4 +52,13 @@ private:
 	physx::PxU32					gVehicleOrderProgress = 0;
 	bool					gVehicleOrderComplete = false;
 	bool					gMimicKeyInputs = false;
+	Controller& gameController;
+	PhysicsScene& ps;
+	std::vector<physx::PxF32> gSteerVsForwardSpeedData;
+	physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
+	physx::PxVehicleKeySmoothingData gKeySmoothingData;
+	physx::PxVehiclePadSmoothingData gPadSmoothingData;
+
+	physx::PxVehicleDrive4WRawInputData gVehicleInputData;
+	std::vector<DriveMode> gDriveModeOrder;
 };

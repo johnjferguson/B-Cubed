@@ -177,6 +177,7 @@
     <ClCompile Include="LightBox.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="PhysicsScene.cpp" />
     <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4W.cpp" />
     <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4WRender.cpp" />
     <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicle4WCreate.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="TransformBuffer.cpp" />
+    <ClCompile Include="VehiclePhysics.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -231,6 +233,8 @@
     <ClInclude Include="LightBox.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PhysicsComponent.h" />
+    <ClInclude Include="PhysicsScene.h" />
     <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleConcurrency.h" />
     <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleCreate.h" />
     <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleFilterShader.h" />
@@ -247,6 +251,7 @@
     <ClInclude Include="Time.h" />
     <ClInclude Include="Topology.h" />
     <ClInclude Include="TransformBuffer.h" />
+    <ClInclude Include="VehiclePhysics.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
