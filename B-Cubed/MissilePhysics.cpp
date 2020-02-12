@@ -2,11 +2,13 @@
 
 using namespace physx;
 
-MissilePhysics::MissilePhysics(PhysicsScene * ps, PxVec3& startPos)
+MissilePhysics::MissilePhysics(PhysicsScene * ps, PxVec3& startPos, PxQuat& startRot)
 	:
 	ps(*ps)
 {
-	mis = createDynamic(PxTransform(startPos), PxSphereGeometry(10), PxVec3(0, -50, -100), ps);
+	
+
+	mis = createDynamic(PxTransform(startPos), PxSphereGeometry(10), PxVec3(-(startRot.x) * 1000, 0, -(startRot.z) * 1000), ps);
 	mis->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 }
 

@@ -202,6 +202,7 @@ void VehiclePhysics::releaseAllControls()
 void VehiclePhysics::stepPhysics()
 {
 	const PxF32 timestep = 1.0f / 60.0f;
+	readyToFire++;
 
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
@@ -224,11 +225,21 @@ void VehiclePhysics::stepPhysics()
 	if (gameController.IsPressed(Controller::Button::Y))
 	{
 		Gui::AddText("Y is pressed");
-		game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p);
+		if (readyToFire > 60 && yOnPress) {
+			PxQuat transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			//DirectX::XMMATRIX transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
+
+			game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p, transform);
+			readyToFire = 0;
+
+
+		}
+		yOnPress = false;
 	}
 	else
 	{
 		Gui::AddText("Y is not pressed");
+		yOnPress = true;
 	}
 	if (gameController.IsPressed(Controller::Button::X))
 	{
@@ -240,7 +251,7 @@ void VehiclePhysics::stepPhysics()
 	}
 	if (gameController.IsPressed(Controller::Button::L_TRIGGER))
 	{
-		releaseAllControls();
+		//releaseAllControls();
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 		gVehicleInputData.setAnalogAccel(true);
 	}
@@ -254,7 +265,7 @@ void VehiclePhysics::stepPhysics()
 		gVehicleInputData.setAnalogAccel(false);
 	}
 
-	gVehicleInputData.setAnalogSteer(gameController.GetRightStick().x);
+	gVehicleInputData.setAnalogSteer(gameController.GetLeftStick().x);
 
 	// TEMP: just testing stuff since I don't have xbox controller
 	//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);

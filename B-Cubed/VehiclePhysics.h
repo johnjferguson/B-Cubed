@@ -49,6 +49,8 @@ private:
 	physx::PxU32					gVehicleOrderProgress = 0;
 	bool							gVehicleOrderComplete = false;
 	bool							gMimicKeyInputs = false;
+	bool							yOnPress = true;
+	int								readyToFire = 0;
 	Controller& gameController;
 	PhysicsScene& ps;
 	std::vector<physx::PxF32>		 gSteerVsForwardSpeedData;
@@ -60,4 +62,5 @@ private:
 	std::vector<DriveMode>			    gDriveModeOrder;
 
 	Game* game;
+
 };
