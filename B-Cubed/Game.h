@@ -19,7 +19,7 @@ public:
 	void DoFrame();
 	void DoInput();
 	std::vector<Entity> entities;
-	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot);
+	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel);
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy

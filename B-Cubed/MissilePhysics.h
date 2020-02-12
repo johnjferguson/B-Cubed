@@ -15,7 +15,7 @@
 class MissilePhysics : public PhysicsComponent
 {
 public:
-	MissilePhysics(PhysicsScene* ps, physx::PxVec3& startPos, physx::PxQuat& startRot);
+	MissilePhysics(PhysicsScene* ps, physx::PxVec3& startPos, physx::PxQuat& startRot, physx::PxVec3& startVel);
 	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
 private:
 	physx::PxRigidDynamic* createDynamic(const physx::PxTransform& t, const physx::PxGeometry& geometry, const physx::PxVec3& velocity, PhysicsScene* ps);

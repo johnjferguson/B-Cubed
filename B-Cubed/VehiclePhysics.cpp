@@ -229,7 +229,7 @@ void VehiclePhysics::stepPhysics()
 			PxQuat transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			//DirectX::XMMATRIX transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
 
-			game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p, transform);
+			game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p, transform, gVehicle4W->getRigidDynamicActor()->getLinearVelocity());
 			readyToFire = 0;
 
 

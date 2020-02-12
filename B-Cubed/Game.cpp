@@ -9,7 +9,7 @@
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"),
-	light(wnd.gfx, { 10.0f, 10.0f, 10.0f, 1.0f }),
+	light(wnd.gfx, { 10.0f, 50.0f, 10.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 400.0f)
 {
 	entities = std::vector<Entity>(8);
@@ -189,11 +189,11 @@ void Game::DoInput()
 }
 
 
-void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot)
+void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel)
 {
 	entities.push_back(Entity());
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, startPos, startRot);
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, startPos, startRot, startVel);
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));
