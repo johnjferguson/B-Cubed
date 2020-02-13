@@ -31,13 +31,19 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game);
+	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool AI, float startPosX, float startPosZ);
 	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
 	void initVehicle(PhysicsScene* ps);
 	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene* ps);
 	void releaseAllControls();
 	void stepPhysics();
+
+	bool reverse;
+	bool accel;
+	float steer;
 private:
+	float							startPosX;
+	float							startPosZ;
 	physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 	physx::PxRigidStatic*			gGroundPlane = NULL;
 	physx::PxVehicleDrive4W*		gVehicle4W = NULL;
@@ -50,6 +56,7 @@ private:
 	bool							gVehicleOrderComplete = false;
 	bool							gMimicKeyInputs = false;
 	bool							yOnPress = true;
+	bool							AI = false;
 	int								readyToFire = 0;
 	Controller& gameController;
 	PhysicsScene& ps;

@@ -6,12 +6,15 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game)
+VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool AI, float startPosX, float startPosZ)
 	:
 	gameController(gameController),
 	ps(*ps)
 {
+	VehiclePhysics::AI = AI;
 	VehiclePhysics::game = game;
+	VehiclePhysics::startPosX = startPosX;
+	VehiclePhysics::startPosZ = startPosZ;
 
 	gSteerVsForwardSpeedData =
 	{
@@ -124,7 +127,7 @@ void VehiclePhysics::initVehicle(PhysicsScene* ps)
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(ps);
 	gVehicle4W = createVehicle4W(vehicleDesc, ps->gPhysics, ps->gCooking);
-	PxTransform startTransform(PxVec3(0, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), 0), PxQuat(PxIdentity));
+	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), startPosZ), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	ps->gScene->addActor(*gVehicle4W->getRigidDynamicActor());
 
@@ -201,6 +204,12 @@ void VehiclePhysics::releaseAllControls()
 
 void VehiclePhysics::stepPhysics()
 {
+	if (!AI) {
+		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
+		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
+		steer = gameController.GetLeftStick().x;
+	}
+
 	const PxF32 timestep = 1.0f / 60.0f;
 	readyToFire++;
 
@@ -249,13 +258,13 @@ void VehiclePhysics::stepPhysics()
 	{
 		Gui::AddText("X is not pressed");
 	}
-	if (gameController.IsPressed(Controller::Button::L_TRIGGER))
+	if (reverse)
 	{
 		//releaseAllControls();
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
 		gVehicleInputData.setAnalogAccel(true);
 	}
-	else if (gameController.IsPressed(Controller::Button::R_TRIGGER))
+	else if (accel)
 	{
 		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		gVehicleInputData.setAnalogAccel(true);
@@ -265,7 +274,7 @@ void VehiclePhysics::stepPhysics()
 		gVehicleInputData.setAnalogAccel(false);
 	}
 
-	gVehicleInputData.setAnalogSteer(gameController.GetLeftStick().x);
+	gVehicleInputData.setAnalogSteer(steer);
 
 	// TEMP: just testing stuff since I don't have xbox controller
 	//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);

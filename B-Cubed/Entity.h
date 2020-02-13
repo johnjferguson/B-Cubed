@@ -20,8 +20,8 @@ public:
 	void SetTransform(const DirectX::XMMATRIX& transform_in);
 	const DirectX::XMMATRIX& GetTransform() const;
 private:
-	std::unique_ptr<Renderable> renderable;
 	std::unique_ptr<PhysicsComponent> physicsComponent;
+	std::unique_ptr<Renderable> renderable;
 private:
 	// position vector and rotation matrix for object
 	DirectX::XMFLOAT3 pos;

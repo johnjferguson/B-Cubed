@@ -21,6 +21,7 @@ PhysicsScene::PhysicsScene()
 	sceneDesc.filterShader = VehicleFilterShader;
 
 	gScene = gPhysics->createScene(sceneDesc);
+	//static PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();
 	if (pvdClient)
 	{
@@ -32,6 +33,27 @@ PhysicsScene::PhysicsScene()
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
+
+	//PxRigidStatic* wall1 = PxCreatePlane(* gPhysics, PxPlane(1, 0, 0, 0), * gMaterial);
+	
+	//Get the plane shape so we can set query and simulation filter data.
+	//PxShape* shapes[1];
+	//wall1->getShapes(shapes, 1);
+
+	//Set the query filter data of the ground plane so that the vehicle raycasts can hit the ground.
+	//PxFilterData qryFilterData;
+	//setupDrivableSurface(qryFilterData);
+	//shapes[0]->setQueryFilterData(qryFilterData);
+
+	//Set the simulation filter data of the ground plane so that it collides with the chassis of a vehicle but not the wheels.
+	//shapes[0]->setSimulationFilterData(simFilterData);
+
+	//gScene->addActor(*wall1);
+	//Create a plane to drive on.
+	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	//PxRigidStatic* wall1 = PxCreatePlane(*gPhysics, PxPlane(10, 0, 10, 0), *gMaterial);
+	//gScene->addActor(*wall1);
+
 }
 
 void PhysicsScene::Update(Time & dt)
@@ -40,3 +62,4 @@ void PhysicsScene::Update(Time & dt)
 	gScene->simulate(1.0f/60.0f);
 	gScene->fetchResults(true);
 }
+

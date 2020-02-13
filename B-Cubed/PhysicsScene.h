@@ -1,6 +1,8 @@
 #pragma once
 #include "physx/include/PxPhysicsAPI.h"
 #include "Time.h"
+#include "physx/include/PxShape.h"
+
 
 class PhysicsScene
 {

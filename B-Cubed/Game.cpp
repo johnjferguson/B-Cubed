@@ -26,14 +26,18 @@ Game::Game()
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this);
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 0.0f, 0.0f);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 10.f, 10.f);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -10.f, -10.f);
 
 	entities[0].AddRenderable(std::move(bl));
 	entities[0].SetPosition(0.0f, 0.0f, 0.0f);
 
-	entities[1].AddRenderable(std::move(br));
-	entities[1].SetPosition(5.0f, -0.5f, -5.0f);
+	entities[1].AddRenderable(std::move(zb));
+	entities[1].SetPosition(0.0f, 1.0f, 10.0f);
+	entities[1].AddPhysics(std::move(vp2));
+	//entities[1].AddRenderable(std::move(br));
+	//entities[1].SetPosition(5.0f, -0.5f, -5.0f);
 			   
 	entities[2].AddRenderable(std::move(tl));
 	entities[2].SetPosition(-5.0f, -0.5f, 5.0f);
@@ -49,7 +53,7 @@ Game::Game()
 	entities[5].SetPosition(5.0f, 1.0f, 0.0f);
 	entities[5].AddPhysics(std::move(vp0));
 			   
-	entities[6].AddRenderable(std::move(zb));
+	entities[6].AddRenderable(std::move(br));
 	entities[6].SetPosition(0.0f, 1.0f, -5.0f);
 			   
 	entities[7].AddRenderable(std::move(eb));
@@ -142,6 +146,7 @@ void Game::DoFrame()
 	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
 	skyboxes[iSkybox]->Render(wnd.gfx);
 
+	entities[1].UpdatePhysics();
 	entities[5].UpdatePhysics();
 	entities[4].UpdatePhysics();
 	
