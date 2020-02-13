@@ -208,6 +208,8 @@ void VehiclePhysics::stepPhysics()
 		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
 		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
 		steer = gameController.GetLeftStick().x;
+		boost = gameController.IsPressed(Controller::Button::B);
+		blast = gameController.IsPressed(Controller::Button::Y);
 	}
 
 	const PxF32 timestep = 1.0f / 60.0f;
@@ -223,15 +225,36 @@ void VehiclePhysics::stepPhysics()
 	{
 		Gui::AddText("A is not pressed");
 	}
-	if (gameController.IsPressed(Controller::Button::B))
+
+	if (boost)
 	{
+		if (bOnPress) {
+			if (!boosting) {
+				boosting = true;
+				boostTimer = 30;
+			}
+		}
+		bOnPress = false;
+
 		Gui::AddText("B is pressed");
 	}
 	else
 	{
 		Gui::AddText("B is not pressed");
+		bOnPress = true;
 	}
-	if (gameController.IsPressed(Controller::Button::Y))
+	if (boosting) {
+		Gui::AddText("Currently Boosting");
+		if (boostTimer < 0) {
+			boosting = false;
+		}
+		else {
+			applyBoost();
+			boostTimer--;
+		}
+	}
+
+	if (blast)
 	{
 		Gui::AddText("Y is pressed");
 		if (readyToFire > 60 && yOnPress) {
@@ -308,36 +331,16 @@ void VehiclePhysics::stepPhysics()
 
 	//Work out if the vehicle is in the air.
 	gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
-
-	//ps.gScene->simulate(timestep);
-	//ps.gScene->fetchResults(true);
-	//Time t(1.0f / 60.0f);
-	//ps.Update(t);
-}
-/*
-//-----------------------------------------ADDED-----------------------------------------------------
-void Physics::fireMissile(PxVec3 startPos)
-{
-	PxRigidDynamic* dyn = createDynamic(PxTransform(startPos), PxSphereGeometry(10), PxVec3(0, -50, -100));
-
-	dyn->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-
-
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr);
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr);
-
-	Game::entities[5].AddRenderable(std::move(nb));
-	Game::entities[5].SetPosition(5.0f, 1.0f, 0.0f);
-	Game::entities[5].AddPhysics(std::move(vp0));
 }
 
-//----------------------------------ADDED----------------------------------------
-PxRigidDynamic* Physics::createDynamic(const PxTransform& t, const PxGeometry& geometry, const PxVec3& velocity)
-{
-	PxRigidDynamic* dynamic = PxCreateDynamic(*gPhysics, t, geometry, *gMaterial, 10.0f);
-	dynamic->setAngularDamping(0.5f);
-	dynamic->setLinearVelocity(velocity);
-	gScene->addActor(*dynamic);
-	return dynamic;
+void VehiclePhysics::applyBoost() {
+
+	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+	gVehicle4W->getRigidDynamicActor()->addForce(60000.f * forward);
 }
-*/
+
+

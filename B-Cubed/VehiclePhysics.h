@@ -37,10 +37,8 @@ public:
 	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene* ps);
 	void releaseAllControls();
 	void stepPhysics();
-
-	bool reverse;
-	bool accel;
-	float steer;
+private:
+	void applyBoost();
 private:
 	float							startPosX;
 	float							startPosZ;
@@ -55,7 +53,13 @@ private:
 	physx::PxU32					gVehicleOrderProgress = 0;
 	bool							gVehicleOrderComplete = false;
 	bool							gMimicKeyInputs = false;
+	// OnPress switches to true when button is relased
+	// This ensures that you press the button to initiate an ability not just hold down the button
 	bool							yOnPress = true;
+	bool							bOnPress = true;
+	bool							aOnPress = true;
+	bool							xOnPress = true;
+
 	bool							AI = false;
 	int								readyToFire = 0;
 	Controller& gameController;
@@ -70,4 +74,14 @@ private:
 
 	Game* game;
 
+	bool reverse;
+	bool accel;
+	float steer;
+
+	bool boost;
+	bool barrier;
+	bool blast;
+
+	bool boosting;	// is true when vehicle is currently boosting
+	int boostTimer; // counts down while boosting -> boosting stops at 0
 };
