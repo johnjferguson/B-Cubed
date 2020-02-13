@@ -6,6 +6,7 @@ class Physics
 {
 	friend class PhysicsStatic;
 	friend class PhysicsDynamic;
+	friend class PhysicsVehicle;
 
 public:
 	Physics();
@@ -21,6 +22,7 @@ private:
 	physx::PxScene*				    gScene = NULL;
 	physx::PxPvd*                   gPvd = NULL;
 	physx::PxMaterial*				gMaterial = NULL;
+	physx::PxCooking*				gCooking = NULL;
 private:
 	float current = 0.0f;
 	static constexpr float timestep = 1.0f / 60.0f;

@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "PhysicsDynamic.h"
 #include "PhysicsStatic.h"
+#include "PhysicsVehicle.h"
 
 Game::Game()
 	:
@@ -33,10 +34,17 @@ Game::Game()
 		std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//voli.jpg"),
 		std::make_unique<PhysicsDynamic>(&physics, physx::PxVec3(0.0f, 5.0f, 5.0f), physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(1.0f,1.0f,1.0f))
 	);
+	/*
 	entities.emplace_back(
 		std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//naut.jpg"),
 		std::make_unique<PhysicsDynamic>(&physics, physx::PxVec3(5.0f, 5.0f, 0.0f), physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(1.0f, 1.0f, 1.0f))
 	);
+	*/
+	entities.emplace_back(
+		std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//naut.jpg"),
+		std::make_unique<PhysicsVehicle>(&physics)
+	);
+	// ----------
 	entities.emplace_back(
 		std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//zoe.jpg"),
 		std::make_unique<PhysicsDynamic>(&physics, physx::PxVec3(0.0f, 5.0f, -5.0f), physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(1.0f, 1.0f, 1.0f))
@@ -80,12 +88,13 @@ void Game::DoFrame()
 	DoInput();
 	Time dt = ft.Set();
 
-	physics.Simulate(dt);
 
 	for (auto& e : entities)
 	{
 		e.UpdatePhysics();
 	}
+	// update need to be called before simulate
+	physics.Simulate(dt);
 
 	// testing --------------------------------
 	DirectX::XMMATRIX cameraTransform = cameras[activeCamera]->GetTransform(dt);

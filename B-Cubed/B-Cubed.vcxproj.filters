@@ -174,9 +174,6 @@
     <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4WRender.cpp">
       <Filter>Vehicle4W</Filter>
     </ClCompile>
-    <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4W.cpp">
-      <Filter>Vehicle4W</Filter>
-    </ClCompile>
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -187,6 +184,9 @@
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsDynamic.cpp">
+      <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsVehicle.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -345,6 +345,9 @@
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsDynamic.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsVehicle.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>

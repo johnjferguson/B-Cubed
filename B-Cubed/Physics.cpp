@@ -1,4 +1,5 @@
 #include "Physics.h"
+#include "physx/vehicle4W/snippetvehiclecommon/SnippetVehicleFilterShader.h"
 
 using namespace physx;
 
@@ -19,8 +20,10 @@ Physics::Physics()
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 	gDispatcher = PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.cpuDispatcher = gDispatcher;
-	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
+	sceneDesc.filterShader = snippetvehicle::VehicleFilterShader;
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 	gScene = gPhysics->createScene(sceneDesc);
 
 	PxPvdSceneClient* pvdClient = gScene->getScenePvdClient();

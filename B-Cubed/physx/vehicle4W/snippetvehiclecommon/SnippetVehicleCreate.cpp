@@ -123,7 +123,7 @@ PxRigidDynamic* createVehicleActor
 {
 	//We need a rigid body actor for the vehicle.
 	//Don't forget to add the actor to the scene after setting up the associated vehicle.
-	PxRigidDynamic* vehActor = physics.createRigidDynamic(PxTransform(PxIdentity));
+	PxRigidDynamic* vehActor = physics.createRigidDynamic(PxTransform(PxVec3(20.0f,20.0f,20.0f)));
 
 	//Wheel and chassis query filter data.
 	//Optional: cars don't drive on other cars.
@@ -139,7 +139,7 @@ PxRigidDynamic* createVehicleActor
 		PxShape* wheelShape=PxRigidActorExt::createExclusiveShape(*vehActor, geom, *wheelMaterials[i]);
 		wheelShape->setQueryFilterData(wheelQryFilterData);
 		wheelShape->setSimulationFilterData(wheelSimFilterData);
-		wheelShape->setLocalPose(PxTransform(PxIdentity));
+		wheelShape->setLocalPose(PxTransform(PxVec3(20.0f, 20.0f, 20.0f)));
 	}
 
 	//Add the chassis shapes to the actor.
@@ -148,7 +148,7 @@ PxRigidDynamic* createVehicleActor
 		PxShape* chassisShape=PxRigidActorExt::createExclusiveShape(*vehActor, PxConvexMeshGeometry(chassisConvexMeshes[i]), *chassisMaterials[i]);
 		chassisShape->setQueryFilterData(chassisQryFilterData);
 		chassisShape->setSimulationFilterData(chassisSimFilterData);
-		chassisShape->setLocalPose(PxTransform(PxIdentity));
+		chassisShape->setLocalPose(PxTransform(PxVec3(20.0f, 20.0f, 20.0f)));
 	}
 
 	vehActor->setMass(chassisData.mMass);
