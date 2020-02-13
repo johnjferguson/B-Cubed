@@ -6,12 +6,98 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool AI, float startPosX, float startPosZ)
+VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, float startPosX, float startPosZ)
 	:
 	gameController(gameController),
 	ps(*ps)
 {
-	VehiclePhysics::AI = AI;
+	VehiclePhysics::game = game;
+	VehiclePhysics::startPosX = startPosX;
+	VehiclePhysics::startPosZ = startPosZ;
+
+	gSteerVsForwardSpeedData =
+	{
+		0.0f,		0.75f,
+		5.0f,		0.75f,
+		30.0f,		0.125f,
+		120.0f,		0.1f,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32
+	};
+
+	gSteerVsForwardSpeedTable = PxFixedSizeLookupTable<8>(gSteerVsForwardSpeedData.data(), 4);
+	gKeySmoothingData =
+	{
+		{
+			6.0f,	//rise rate eANALOG_INPUT_ACCEL
+			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+		},
+		{
+			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+		}
+	};
+
+	gPadSmoothingData =
+	{
+		{
+			6.0f,	//rise rate eANALOG_INPUT_ACCEL
+			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
+			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
+			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
+		},
+		{
+			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
+			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
+			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
+			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
+		}
+	};
+
+	gDriveModeOrder =
+	{
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_ACCEL_REVERSE,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_HARD_TURN_LEFT,
+		eDRIVE_MODE_BRAKE,
+		eDRIVE_MODE_HARD_TURN_RIGHT,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
+		eDRIVE_MODE_ACCEL_FORWARDS,
+		eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
+		eDRIVE_MODE_NONE
+	};
+
+	initVehicle(ps);
+}
+
+VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
+	:
+	gameController(gameController),
+	ps(*ps)
+{
+	VehiclePhysics::useAI = useAI;
+	if (useAI) {
+		std::vector<physx::PxVec3> p;
+		p.push_back(physx::PxVec3(30.f, 0.f, 30.f));
+		p.push_back(physx::PxVec3(-30.f, 0.f, 30.f));
+		p.push_back(physx::PxVec3(-30.f, 0.f, -30.f));
+		p.push_back(physx::PxVec3(30.f, 0.f, -30.f));
+		VehiclePhysics::ai = AI::AI(p);
+	}
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
 	VehiclePhysics::startPosZ = startPosZ;
@@ -204,17 +290,33 @@ void VehiclePhysics::releaseAllControls()
 
 void VehiclePhysics::stepPhysics()
 {
-	if (!AI) {
-		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
+	bool accel;
+	bool reverse;
+	float steer;
+
+	if (useAI) {
+		PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+		PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+		PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+		DirectX::XMVECTOR dirVec = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)).r[2];
+
+		ai.update(vehicle_position, vel, dirVec);
+
+		accel = ai.getAcceleration();
+		reverse = ai.getBrake();
+		steer = ai.getSteering();
+	} else {
 		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
+		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
 		steer = gameController.GetLeftStick().x;
-		boost = gameController.IsPressed(Controller::Button::B);
+
 		blast = gameController.IsPressed(Controller::Button::Y);
+		boost = gameController.IsPressed(Controller::Button::B);
 	}
 
 	const PxF32 timestep = 1.0f / 60.0f;
 	readyToFire++;
-
+	
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
 	if (gameController.IsPressed(Controller::Button::A))
@@ -281,6 +383,7 @@ void VehiclePhysics::stepPhysics()
 	{
 		Gui::AddText("X is not pressed");
 	}
+	
 	if (reverse)
 	{
 		//releaseAllControls();
