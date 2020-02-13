@@ -16,7 +16,6 @@
 #include <vector>
 #include "Entity.h"
 #include "Game.h"
-#include "AI.h"
 
 class VehiclePhysics : public PhysicsComponent
 {
@@ -32,8 +31,7 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, float startPosX, float startPosZ);
-	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ);
+	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool AI, float startPosX, float startPosZ);
 	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
 	void initVehicle(PhysicsScene* ps);
 	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene* ps);
@@ -62,6 +60,7 @@ private:
 	bool							aOnPress = true;
 	bool							xOnPress = true;
 
+	bool							AI = false;
 	int								readyToFire = 0;
 	Controller& gameController;
 	PhysicsScene& ps;
@@ -74,8 +73,10 @@ private:
 	std::vector<DriveMode>			    gDriveModeOrder;
 
 	Game* game;
-	AI ai;
-	bool useAI = false;
+
+	bool reverse;
+	bool accel;
+	float steer;
 
 	bool boost;
 	bool barrier;

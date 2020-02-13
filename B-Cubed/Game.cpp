@@ -13,7 +13,7 @@ Game::Game()
 	light(wnd.gfx, { 10.0f, 50.0f, 10.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 400.0f)
 {
-	entities = std::vector<Entity>(8);
+	entities = std::vector<Entity>(9);
 
 	//entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
 	std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
@@ -32,23 +32,20 @@ Game::Game()
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 0.0f, 0.0f);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 10.f, 10.f);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -10.f, -10.f);
 
-	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 10.0f, 0.0f);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 0.f);
-
-	// Static Physics
 	std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(100.0f, 1.0f, 100.0f));
 	std::unique_ptr<PhysicsStatic> sp1 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(3.0f, 2.0f, 6.0f), physx::PxVec3(5.0f,0.5f,5.0f));
 
-	// Static Physics Cont. (Walls)
 	std::unique_ptr<PhysicsStatic> sp2 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(-50.0f, 2.5f, 0.0f), physx::PxVec3(0.5f, 10.0f, 50.0f));
 	std::unique_ptr<PhysicsStatic> sp3 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 2.5f, 50.0f), physx::PxVec3(50.0f, 10.0f, 0.5f));
 	std::unique_ptr<PhysicsStatic> sp4 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(50.0f, 2.5f, 0.0f), physx::PxVec3(0.5f, 10.0f, 50.0f));
 	std::unique_ptr<PhysicsStatic> sp5 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 2.5f, -50.0f), physx::PxVec3(50.0f, 10.0f, 0.5f));
 
 	entities[0].AddRenderable(std::move(bl));
-	entities[0].SetPosition(30.0f, 0.0f, 0.0f);
+	entities[0].SetPosition(0.0f, 0.0f, 0.0f);
 	entities[0].AddPhysics(std::move(sp0));
 
 	entities[1].AddRenderable(std::move(zb));
@@ -63,21 +60,25 @@ Game::Game()
 	entities[3].SetPosition(5.0f, -0.5f, 5.0f);
 	entities[3].AddPhysics(std::move(sp3));
 
-	entities[4].AddRenderable(std::move(nb));
-	entities[4].SetPosition(10.0f, 1.0f, 0.0f);
-	entities[4].AddPhysics(std::move(vp0));
+	entities[4].AddRenderable(std::move(vb));
+	entities[4].SetPosition(0.0f, 1.0f, 5.0f);
+	entities[4].AddPhysics(std::move(vp1));
 			   
-	entities[5].AddRenderable(std::move(br));
-	entities[5].SetPosition(0.0f, 1.0f, -5.0f);
-	entities[5].AddPhysics(std::move(sp1));
+	entities[5].AddRenderable(std::move(nb));
+	entities[5].SetPosition(5.0f, 1.0f, 0.0f);
+	entities[5].AddPhysics(std::move(vp0));
 			   
-	entities[6].AddRenderable(std::move(w2));
-	entities[6].SetPosition(-5.0f, 1.0f, 0.0f);
-	entities[6].AddPhysics(std::move(sp4));
-
-	entities[7].AddRenderable(std::move(w3));
+	entities[6].AddRenderable(std::move(br));
+	entities[6].SetPosition(0.0f, 1.0f, -5.0f);
+	entities[6].AddPhysics(std::move(sp1));
+			   
+	entities[7].AddRenderable(std::move(w2));
 	entities[7].SetPosition(-5.0f, 1.0f, 0.0f);
-	entities[7].AddPhysics(std::move(sp5));
+	entities[7].AddPhysics(std::move(sp4));
+
+	entities[8].AddRenderable(std::move(w3));
+	entities[8].SetPosition(-5.0f, 1.0f, 0.0f);
+	entities[8].AddPhysics(std::move(sp5));
 
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 200.0f, L"images//skybox0.png"));
@@ -86,7 +87,7 @@ Game::Game()
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 200.0f, L"images//skybox3.png"));
 
 	cam0 = std::make_unique<FollowCamera>();
-	cam0->SetTarget(entities[4]);
+	cam0->SetTarget(entities[5]);
 	//std::unique_ptr<FreeCamera> cam1 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
 	cameras.push_back(std::move(cam0));
 	//cameras.push_back(std::move(cam1));
@@ -171,7 +172,7 @@ void Game::DoFrame()
 	}
 	
 	cam0 = std::make_unique<FollowCamera>();
-	cam0->SetTarget(entities[4]);
+	cam0->SetTarget(entities[5]);
 	cameras.pop_back();
 	cameras.push_back(std::move(cam0));
 	
