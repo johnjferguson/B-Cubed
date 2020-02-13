@@ -9,6 +9,7 @@ class Entity
 {
 public:
 	Entity();
+	Entity(std::unique_ptr<Renderable> pRenderable, std::unique_ptr<PhysicsComponent> pPhysics);
 	void AddRenderable(std::unique_ptr<Renderable> pRenderable);
 	void AddPhysics(std::unique_ptr<PhysicsComponent> pPhysics);
 	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light);
@@ -20,8 +21,8 @@ public:
 	void SetTransform(const DirectX::XMMATRIX& transform_in);
 	const DirectX::XMMATRIX& GetTransform() const;
 private:
-	std::unique_ptr<Renderable> renderable;
-	std::unique_ptr<PhysicsComponent> physicsComponent;
+	std::unique_ptr<Renderable> renderable = nullptr;
+	std::unique_ptr<PhysicsComponent> physicsComponent = nullptr;
 private:
 	// position vector and rotation matrix for object
 	DirectX::XMFLOAT3 pos;

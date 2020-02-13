@@ -10,6 +10,14 @@ Entity::Entity()
 {
 }
 
+Entity::Entity(std::unique_ptr<Renderable> pRenderable, std::unique_ptr<PhysicsComponent> pPhysics)
+	:
+	renderable(std::move(pRenderable)),
+	physicsComponent(std::move(pPhysics)),
+	pos(DirectX::XMFLOAT3(0.0f,0.0f,0.0f)),
+	transform(DirectX::XMMatrixIdentity())
+{}
+
 void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 {
 	renderable = std::move(pRenderable);
@@ -95,7 +103,7 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 
 void Entity::UpdatePhysics()
 {
-	physicsComponent->Update(pos, transform);
+	physicsComponent->Update(this);
 }
 
 void Entity::SetPosition(float x, float y, float z)

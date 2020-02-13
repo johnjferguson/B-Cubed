@@ -37,6 +37,12 @@
     <Filter Include="Vehicle4W">
       <UniqueIdentifier>{3657cd3b-16de-4a29-9207-d081d5b8c9a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Physics">
+      <UniqueIdentifier>{af3d28b5-5bba-4e0c-b842-285a51b35114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Physics">
+      <UniqueIdentifier>{862aa3cc-16f3-440c-b7c2-84b4ffed608b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -77,9 +83,6 @@
     </ClCompile>
     <ClCompile Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.cpp">
       <Filter>TextureLoader</Filter>
-    </ClCompile>
-    <ClCompile Include="Physics.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>Source Files</Filter>
@@ -177,14 +180,14 @@
     <ClCompile Include="Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsScene.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="VehiclePhysics.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="PhysicsStatic.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="MissilePhysics.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="PhysicsDynamic.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,9 +238,6 @@
     </ClInclude>
     <ClInclude Include="DirectXTex\DDSTextureLoader\DDSTextureLoader.h">
       <Filter>TextureLoader</Filter>
-    </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FrameTimer.h">
       <Filter>Header Files</Filter>
@@ -335,17 +335,17 @@
     <ClInclude Include="Controller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Header Files\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="PhysicsComponent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsScene.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PhysicsStatic.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="VehiclePhysics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MissilePhysics.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PhysicsDynamic.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

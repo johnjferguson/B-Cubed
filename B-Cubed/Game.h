@@ -3,13 +3,12 @@
 #include <memory>
 #include "Window.h"
 #include "Gui.h"
-//#include "Physics.h"
 #include "FrameTimer.h"
 #include "Entity.h"
 #include "Camera.h"
 #include "Light.h"
 #include "RenderTexture.h"
-#include "PhysicsScene.h"
+#include "Physics.h"
 
 class Game
 {
@@ -18,15 +17,16 @@ public:
 	int Start();
 	void DoFrame();
 	void DoInput();
+private:
+	// keep this order
+	Physics physics;
 	std::vector<Entity> entities;
-	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel);
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy
 	Gui gui;
 	Window wnd;
 	//Physics physics;
-	PhysicsScene ps;
 	FrameTimer ft;
 	std::unique_ptr<FollowCamera> cam0;
 private:
