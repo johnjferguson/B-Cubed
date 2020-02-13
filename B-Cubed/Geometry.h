@@ -87,6 +87,11 @@ public:
 			vertices[i+3].tex = DirectX::XMFLOAT2(1.0f, 0.0f);
 		}
 
+		for (int i = 0; i < 24; i++)
+		{
+			vertices[i].tex.y = 1 - vertices[i].tex.y;
+		}
+
 
 
 		std::vector<unsigned short> indices =
@@ -163,6 +168,11 @@ public:
 
 		vertices[13].pos = DirectX::XMFLOAT3(hs, -hs, hs);
 		vertices[13].tex = DirectX::XMFLOAT2(4.0f*x, 0.0f*y);
+
+		for (int i = 0; i < 14; i++)
+		{
+			vertices[i].tex.y = 1 - vertices[i].tex.y;
+		}
 
 		std::vector<unsigned short> indices =
 		{

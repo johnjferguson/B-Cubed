@@ -40,6 +40,6 @@ public:
 	virtual DirectX::XMMATRIX GetTransform(const Time& dt) override;
 private:
 	const class Entity* entity = nullptr;
-	const float followZ = 12.0f;
-	const float followY = 8.0f;
+	const float followZ = 15.0f;
+	const float followY = 6.0f;
 };
