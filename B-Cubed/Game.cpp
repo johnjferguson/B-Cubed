@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "VehiclePhysics.h"
 #include "MissilePhysics.h"
+#include "PhysicsStatic.h"
 
 Game::Game()
 	:
@@ -29,6 +30,8 @@ Game::Game()
 	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 0.0f, 0.0f);
 	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 10.f, 10.f);
 	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -10.f, -10.f);
+	std::unique_ptr<PhysicsStatic> vp3 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(3.0f, 2.0f, 6.0f), physx::PxVec3(5.0f,0.5f,5.0f));
+
 
 	entities[0].AddRenderable(std::move(bl));
 	entities[0].SetPosition(0.0f, 0.0f, 0.0f);
@@ -55,6 +58,7 @@ Game::Game()
 			   
 	entities[6].AddRenderable(std::move(br));
 	entities[6].SetPosition(0.0f, 1.0f, -5.0f);
+	entities[6].AddPhysics(std::move(vp3));
 			   
 	entities[7].AddRenderable(std::move(eb));
 	entities[7].SetPosition(-5.0f, 1.0f, 0.0f);
@@ -149,6 +153,7 @@ void Game::DoFrame()
 	entities[1].UpdatePhysics();
 	entities[5].UpdatePhysics();
 	entities[4].UpdatePhysics();
+	entities[6].UpdatePhysics();
 	
 	for (int i = 8; i < entities.size(); i++) {
 		entities[i].UpdatePhysics();

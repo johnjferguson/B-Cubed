@@ -8,6 +8,7 @@ class PhysicsScene
 {
 	friend class VehiclePhysics;
 	friend class MissilePhysics;
+	friend class PhysicsStatic;
 public:
 	PhysicsScene();
 	void Update(Time& dt);
