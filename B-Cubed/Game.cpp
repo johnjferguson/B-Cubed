@@ -13,29 +13,33 @@ Game::Game()
 	light(wnd.gfx, { 10.0f, 50.0f, 10.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 400.0f)
 {
-	entities = std::vector<Entity>(8);
+	entities = std::vector<Entity>(10);
 
 	//entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
-	std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
-	std::unique_ptr<Box> br = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//metal.jpg");
+	std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//neonfloor.jpg");
+	std::unique_ptr<Box> br = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//neonwall.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
 
-	std::unique_ptr<Box> w0 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 2.0f, 5.0f), L"images//metal.jpg");
-	std::unique_ptr<Box> w1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, -100.0f, 5.0f), L"images//metal.jpg");
-	std::unique_ptr<Box> w2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(-100.0f, 2.0f, 5.0f), L"images//metal.jpg");
-	std::unique_ptr<Box> w3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 100.0f, 5.0f), L"images//metal.jpg");
+	std::unique_ptr<Box> w0 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 2.0f, 5.0f), L"images//neonwall.jpg");
+	std::unique_ptr<Box> w1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, -100.0f, 5.0f), L"images//neonwall.jpg");
+	std::unique_ptr<Box> w2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(-100.0f, 2.0f, 5.0f), L"images//neonwall.jpg");
+	std::unique_ptr<Box> w3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 100.0f, 5.0f), L"images//neonwall.jpg");
 
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//voli.jpg");
-	std::unique_ptr<Box> nb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//naut.jpg");
-	std::unique_ptr<Box> zb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//zoe.jpg");
+	std::unique_ptr<Box> nb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
+	std::unique_ptr<Box> zb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
+	std::unique_ptr<Box> zb1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
+	std::unique_ptr<Box> zb2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component
 
 	// Vehicle Physics
 	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 10.0f, 0.0f);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 0.f);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 0.f);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 10.f);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 20.f);
 
 	// Static Physics
 	std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -53,7 +57,7 @@ Game::Game()
 
 	entities[1].AddRenderable(std::move(zb));
 	entities[1].SetPosition(0.0f, 1.0f, 10.0f);
-	entities[1].AddPhysics(std::move(vp2));
+	entities[1].AddPhysics(std::move(vp1));
 			   
 	entities[2].AddRenderable(std::move(w0));
 	entities[2].SetPosition(-5.0f, -0.5f, 5.0f);
@@ -78,6 +82,14 @@ Game::Game()
 	entities[7].AddRenderable(std::move(w3));
 	entities[7].SetPosition(-5.0f, 1.0f, 0.0f);
 	entities[7].AddPhysics(std::move(sp5));
+
+	entities[8].AddRenderable(std::move(zb1));
+	entities[8].SetPosition(-5.0f, 1.0f, 0.0f);
+	entities[8].AddPhysics(std::move(vp2));
+
+	entities[9].AddRenderable(std::move(zb2));
+	entities[9].SetPosition(-5.0f, 1.0f, 0.0f);
+	entities[9].AddPhysics(std::move(vp3));
 
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 200.0f, L"images//skybox0.png"));
