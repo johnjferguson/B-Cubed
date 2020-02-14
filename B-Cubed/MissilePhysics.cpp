@@ -15,7 +15,7 @@ MissilePhysics::MissilePhysics(PhysicsScene * ps, PxVec3& startPos, PxQuat& star
 	mis = createDynamic(PxTransform(startPos + forward * 2.0f), PxBoxGeometry(1.0, 1.0, 1.0), startVel, ps);
 	mis->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 
-	mis->setLinearVelocity(forward * 20.0f + startVel);
+	mis->setLinearVelocity(forward * 50.0f + startVel);
 	ps->gScene->addActor(*mis);
 }
 

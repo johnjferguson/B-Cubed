@@ -181,11 +181,12 @@ void VehiclePhysics::Update(DirectX::XMFLOAT3 & pos, DirectX::XMMATRIX & transfo
 	transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
 
 	std::stringstream ss;
-	ss << "Velocity of ball (x,y,z) = (" << (abs(vel.x) < 0.1 ? 0.0f : vel.x) << "," << (abs(vel.y) < 0.1 ? 0.0f : vel.y) << "," << (abs(vel.z) < 0.1 ? 0.0f : vel.z) << ")";
+	ss << "Velocity of vehicle (x,y,z) = (" << (abs(vel.x) < 0.1 ? 0.0f : vel.x) << "," << (abs(vel.y) < 0.1 ? 0.0f : vel.y) << "," << (abs(vel.z) < 0.1 ? 0.0f : vel.z) << ")";
 	Gui::AddText(ss.str());
 	std::stringstream bb;
 	bb << "Position of vehicle (x,y,z) = (" << vehicle_position.x << "," << vehicle_position.y << "," << vehicle_position.z << ")";
 	Gui::AddText(bb.str());
+	Gui::AddText("");
 	stepPhysics();
 }
 
@@ -321,11 +322,9 @@ void VehiclePhysics::stepPhysics()
 	//incrementDrivingMode(timestep);
 	if (gameController.IsPressed(Controller::Button::A))
 	{
-		Gui::AddText("A is pressed");
 	}
 	else
 	{
-		Gui::AddText("A is not pressed");
 	}
 
 	if (boost)
@@ -337,12 +336,9 @@ void VehiclePhysics::stepPhysics()
 			}
 		}
 		bOnPress = false;
-
-		Gui::AddText("B is pressed");
 	}
 	else
 	{
-		Gui::AddText("B is not pressed");
 		bOnPress = true;
 	}
 	if (boosting) {
@@ -358,7 +354,6 @@ void VehiclePhysics::stepPhysics()
 
 	if (blast)
 	{
-		Gui::AddText("Y is pressed");
 		if (readyToFire > 60 && yOnPress) {
 			PxQuat transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			//DirectX::XMMATRIX transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
@@ -372,16 +367,13 @@ void VehiclePhysics::stepPhysics()
 	}
 	else
 	{
-		Gui::AddText("Y is not pressed");
 		yOnPress = true;
 	}
 	if (gameController.IsPressed(Controller::Button::X))
 	{
-		Gui::AddText("X is pressed");
 	}
 	else
 	{
-		Gui::AddText("X is not pressed");
 	}
 	
 	if (reverse)

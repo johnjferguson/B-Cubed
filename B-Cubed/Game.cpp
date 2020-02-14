@@ -9,14 +9,14 @@
 
 Game::Game()
 	:
-	wnd(1280, 720, "B-Cubed"),
-	light(wnd.gfx, { 10.0f, 50.0f, 10.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 400.0f)
+	wnd(1280, 720, "B-Cubed"), 
+	light(wnd.gfx, { 10.0f, 40.0f, 10.0f, 1.0f }),
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 500.0f)
 {
 	entities = std::vector<Entity>(10);
 
 	//entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
-	std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//neonfloor.jpg");
+	std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
 	std::unique_ptr<Box> br = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//neonwall.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
@@ -38,8 +38,8 @@ Game::Game()
 	// Vehicle Physics
 	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, 10.0f, 0.0f);
 	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 0.f);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 10.f);
-	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 30.f, 20.f);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 25.f, 10.f);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 10.f, 20.f);
 
 	// Static Physics
 	std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -126,7 +126,6 @@ void Game::DoFrame()
 
 	Time dt = ft.Set();
 
-	Gui::AddText("Press ESC to TOGGLE Free Look Mode");
 	Gui::AddText("Press TAB to ROTATE Skyboxes");
 
 	// testing --------------------------------

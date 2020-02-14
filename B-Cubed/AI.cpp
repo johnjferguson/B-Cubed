@@ -72,7 +72,6 @@ void AI::update(physx::PxVec3 position, physx::PxVec3 velocity, DirectX::XMVECTO
 
 		// If Vehicle is within an adequate distance to its targeted point
 		float distance = distanceToPoint(position, point);
-		Gui::AddText("Distance: " + std::to_string(distance));
 
 		if (distance <= safeRange) {
 			targetPoint += 1;
@@ -92,8 +91,7 @@ void AI::update(physx::PxVec3 position, physx::PxVec3 velocity, DirectX::XMVECTO
 			dd += 360;
 		else if (dd > 180)
 			dd -= 360;
-		
-		Gui::AddText("Speed: " + std::to_string(speed));
+	
 
 		// Is car direction outside of allowed range
 		if (abs(dd) > directionRange) {
