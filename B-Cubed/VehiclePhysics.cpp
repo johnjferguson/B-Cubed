@@ -6,10 +6,10 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, float startPosX, float startPosZ)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ)
 	:
 	gameController(gameController),
-	ps(*ps)
+	px(*px)
 {
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
@@ -81,13 +81,13 @@ VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Gam
 		eDRIVE_MODE_NONE
 	};
 
-	initVehicle(ps);
+	initVehicle(px);
 }
 
-VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
 	:
 	gameController(gameController),
-	ps(*ps)
+	px(*px)
 {
 	VehiclePhysics::useAI = useAI;
 	if (useAI) {
@@ -168,55 +168,47 @@ VehiclePhysics::VehiclePhysics(PhysicsScene* ps, Controller& gameController, Gam
 		eDRIVE_MODE_NONE
 	};
 
-	initVehicle(ps);
+	initVehicle(px);
 }
 
-void VehiclePhysics::Update(DirectX::XMFLOAT3 & pos, DirectX::XMMATRIX & transform)
+void VehiclePhysics::Update(Entity* entity)
 {
-	PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-	PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+	PxTransform transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose();
 
-	pos = DirectX::XMFLOAT3(vehicle_position.x, vehicle_position.y, vehicle_position.z);
-	PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-	transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
+	PxVec3 position = transform.p;
+	entity->SetPosition(position.x, position.y, position.z);
 
-	std::stringstream ss;
-	ss << "Velocity of vehicle (x,y,z) = (" << (abs(vel.x) < 0.1 ? 0.0f : vel.x) << "," << (abs(vel.y) < 0.1 ? 0.0f : vel.y) << "," << (abs(vel.z) < 0.1 ? 0.0f : vel.z) << ")";
-	Gui::AddText(ss.str());
-	std::stringstream bb;
-	bb << "Position of vehicle (x,y,z) = (" << vehicle_position.x << "," << vehicle_position.y << "," << vehicle_position.z << ")";
-	Gui::AddText(bb.str());
-	Gui::AddText("");
+	PxQuat quint = transform.q;
+	entity->SetTransform(DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)));
+
 	stepPhysics();
 }
 
-void VehiclePhysics::initVehicle(PhysicsScene* ps)
+void VehiclePhysics::initVehicle(Physics* px)
 {
-	
-	/////////////////////////////////////////////
 
-	PxInitVehicleSDK(*ps->gPhysics);
+	PxInitVehicleSDK(*GetPhysics(px));
 	PxVehicleSetBasisVectors(PxVec3(0, 1, 0), PxVec3(0, 0, 1));
 	PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
 
 	//Create the batched scene queries for the suspension raycasts.
-	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, ps->gAllocator);
-	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, ps->gScene);
+	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, *GetAllocator(px));
+	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, GetScene(px));
 
 	//Create the friction table for each combination of tire and surface type.
-	gFrictionPairs = createFrictionPairs(ps->gMaterial);
+	gFrictionPairs = createFrictionPairs(GetMaterial(px));
 
 	//Create a plane to drive on.
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, ps->gMaterial, ps->gPhysics);
-	ps->gScene->addActor(*gGroundPlane);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
+	GetScene(px)->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
-	VehicleDesc vehicleDesc = initVehicleDesc(ps);
-	gVehicle4W = createVehicle4W(vehicleDesc, ps->gPhysics, ps->gCooking);
+	VehicleDesc vehicleDesc = initVehicleDesc(px);
+	gVehicle4W = createVehicle4W(vehicleDesc, GetPhysics(px), GetCooking(px));
 	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), startPosZ), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
-	ps->gScene->addActor(*gVehicle4W->getRigidDynamicActor());
+	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	//Set the vehicle to rest in first gear.
 	//Set the vehicle to use auto-gears.
@@ -229,7 +221,7 @@ void VehiclePhysics::initVehicle(PhysicsScene* ps)
 	//startBrakeMode();
 }
 
-snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene* ps)
+snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 {
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
@@ -256,7 +248,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene* ps)
 	vehicleDesc.chassisDims = chassisDims;
 	vehicleDesc.chassisMOI = chassisMOI;
 	vehicleDesc.chassisCMOffset = chassisCMOffset;
-	vehicleDesc.chassisMaterial = ps->gMaterial;
+	vehicleDesc.chassisMaterial = GetMaterial(px);
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_CHASSIS, COLLISION_FLAG_CHASSIS_AGAINST, 0, 0);
 
 	vehicleDesc.wheelMass = wheelMass;
@@ -264,7 +256,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(PhysicsScene* ps)
 	vehicleDesc.wheelWidth = wheelWidth;
 	vehicleDesc.wheelMOI = wheelMOI;
 	vehicleDesc.numWheels = nbWheels;
-	vehicleDesc.wheelMaterial = ps->gMaterial;
+	vehicleDesc.wheelMaterial = GetMaterial(px);
 	vehicleDesc.chassisSimFilterData = PxFilterData(COLLISION_FLAG_WHEEL, COLLISION_FLAG_WHEEL_AGAINST, 0, 0);
 
 	return vehicleDesc;
@@ -395,9 +387,9 @@ void VehiclePhysics::stepPhysics()
 	gVehicleInputData.setAnalogSteer(steer);
 
 	// TEMP: just testing stuff since I don't have xbox controller
-	//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-	//gVehicleInputData.setAnalogAccel(true);
-	//gVehicleInputData.setAnalogSteer(0.5f);
+	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+	gVehicleInputData.setAnalogAccel(true);
+	gVehicleInputData.setAnalogSteer(0.5f);
 	// --------------------------------------------------------
 	//"Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
 		//rt.x << "," << rt.y << ")";
@@ -419,7 +411,7 @@ void VehiclePhysics::stepPhysics()
 	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
 
 	//Vehicle update.
-	const PxVec3 grav = ps.gScene->getGravity();
+	const PxVec3 grav = GetScene(&px)->getGravity();
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);

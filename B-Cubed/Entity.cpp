@@ -95,7 +95,7 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 
 void Entity::UpdatePhysics()
 {
-	physicsComponent->Update(pos, transform);
+	physicsComponent->Update(this);
 }
 
 void Entity::SetPosition(float x, float y, float z)

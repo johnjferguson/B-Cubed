@@ -11,7 +11,6 @@
 #include "physx/include/snippetutils/SnippetUtils.h"
 #include <vector>
 #include <DirectXMath.h>
-#include "PhysicsScene.h"
 #include "Controller.h"
 #include <vector>
 #include "Entity.h"
@@ -32,11 +31,11 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, float startPosX, float startPosZ);
-	VehiclePhysics(PhysicsScene* ps, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ);
-	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
-	void initVehicle(PhysicsScene* ps);
-	snippetvehicle::VehicleDesc initVehicleDesc(PhysicsScene* ps);
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ);
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ);
+	virtual void Update(Entity* entity) override;
+	void initVehicle(Physics* ps);
+	snippetvehicle::VehicleDesc initVehicleDesc(Physics* ps);
 	void releaseAllControls();
 	void stepPhysics();
 private:
@@ -64,7 +63,7 @@ private:
 
 	int								readyToFire = 0;
 	Controller& gameController;
-	PhysicsScene& ps;
+	Physics& px;
 	std::vector<physx::PxF32>		 gSteerVsForwardSpeedData;
 	physx::PxFixedSizeLookupTable<8> gSteerVsForwardSpeedTable;
 	physx::PxVehicleKeySmoothingData gKeySmoothingData;

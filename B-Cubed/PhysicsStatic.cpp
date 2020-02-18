@@ -1,30 +1,33 @@
 #include "PhysicsStatic.h"
-#include <DirectXMath.h>
 #include "physx/vehicle4W/snippetvehiclecommon/SnippetVehicleFilterShader.h"
 
 using namespace physx;
+using namespace snippetvehicle;
 
-PhysicsStatic::PhysicsStatic(PhysicsScene * phy, const physx::PxVec3 & position, const physx::PxVec3 & dimensions)
+PhysicsStatic::PhysicsStatic(Physics* px, const PxTransform & transform, const PxVec3 & dimensions)
 {
-	
+	gRigidStatic = PxCreateStatic(*GetPhysics(px), transform, PxBoxGeometry(dimensions), *GetMaterial(px));
 
-
-	PxTransform transform = PxTransform(position);
-	gRigidStatic = PxCreateStatic(*phy->gPhysics, transform, PxBoxGeometry(dimensions), *phy->gMaterial);
-
-	PxFilterData obstFilterData(snippetvehicle::COLLISION_FLAG_OBSTACLE, snippetvehicle::COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
+	PxFilterData obstFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
 	PxShape* shapes[1];
 	gRigidStatic->getShapes(shapes, 1);
 	shapes[0]->setSimulationFilterData(obstFilterData);
 
-	phy->gScene->addActor(*gRigidStatic);
+	GetScene(px)->addActor(*gRigidStatic);
 }
 
-void PhysicsStatic::Update(DirectX::XMFLOAT3 & pos_in, DirectX::XMMATRIX & transform)
+PhysicsStatic::~PhysicsStatic()
 {
-	PxVec3 pos = gRigidStatic->getGlobalPose().p;
-	PxQuat quat = gRigidStatic->getGlobalPose().q;
+	gRigidStatic->release();
+}
 
-	pos_in = DirectX::XMFLOAT3(pos.x, pos.y, pos.z);
-	transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quat.x, quat.y, quat.z, quat.w));
+void PhysicsStatic::Update(Entity* entity)
+{
+	PxTransform transform = gRigidStatic->getGlobalPose();
+
+	PxVec3 position = transform.p;
+	entity->SetPosition(position.x, position.y, position.z);
+
+	PxQuat quint = transform.q;
+	entity->SetTransform(DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)));
 }

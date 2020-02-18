@@ -9,7 +9,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "RenderTexture.h"
-#include "PhysicsScene.h"
+#include "Physics.h"
 
 class Game
 {
@@ -18,15 +18,16 @@ public:
 	int Start();
 	void DoFrame();
 	void DoInput();
-	std::vector<Entity> entities;
 	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel);
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy
 	Gui gui;
 	Window wnd;
-	//Physics physics;
-	PhysicsScene ps;
+	//physics;
+	Physics ps;
+
+	std::vector<Entity> entities;
 	FrameTimer ft;
 	std::unique_ptr<FollowCamera> cam0;
 private:

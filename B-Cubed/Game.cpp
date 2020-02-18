@@ -7,6 +7,8 @@
 #include "MissilePhysics.h"
 #include "PhysicsStatic.h"
 
+using namespace physx;
+
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
@@ -42,14 +44,14 @@ Game::Game()
 	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 10.f, 20.f);
 
 	// Static Physics
-	std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 0.0f, 0.0f), physx::PxVec3(100.0f, 1.0f, 100.0f));
-	std::unique_ptr<PhysicsStatic> sp1 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(3.0f, 2.0f, 6.0f), physx::PxVec3(5.0f,0.5f,5.0f));
+	std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
+	std::unique_ptr<PhysicsStatic> sp1 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(3.0f, 2.0f, 6.0f)), physx::PxVec3(5.0f,0.5f,5.0f));
 
 	// Static Physics Cont. (Walls)
-	std::unique_ptr<PhysicsStatic> sp2 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(-50.0f, 2.5f, 0.0f), physx::PxVec3(0.5f, 10.0f, 50.0f));
-	std::unique_ptr<PhysicsStatic> sp3 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 2.5f, 50.0f), physx::PxVec3(50.0f, 10.0f, 0.5f));
-	std::unique_ptr<PhysicsStatic> sp4 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(50.0f, 2.5f, 0.0f), physx::PxVec3(0.5f, 10.0f, 50.0f));
-	std::unique_ptr<PhysicsStatic> sp5 = std::make_unique<PhysicsStatic>(&ps, physx::PxVec3(0.0f, 2.5f, -50.0f), physx::PxVec3(50.0f, 10.0f, 0.5f));
+	std::unique_ptr<PhysicsStatic> sp2 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
+	std::unique_ptr<PhysicsStatic> sp3 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 2.5f, 50.0f)), physx::PxVec3(50.0f, 10.0f, 0.5f));
+	std::unique_ptr<PhysicsStatic> sp4 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
+	std::unique_ptr<PhysicsStatic> sp5 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 2.5f, -50.0f)), physx::PxVec3(50.0f, 10.0f, 0.5f));
 
 	entities[0].AddRenderable(std::move(bl));
 	entities[0].SetPosition(30.0f, 0.0f, 0.0f);
@@ -99,9 +101,9 @@ Game::Game()
 
 	cam0 = std::make_unique<FollowCamera>();
 	cam0->SetTarget(entities[4]);
-	//std::unique_ptr<FreeCamera> cam1 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
+	std::unique_ptr<FreeCamera> cam1 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
 	cameras.push_back(std::move(cam0));
-	//cameras.push_back(std::move(cam1));
+	cameras.push_back(std::move(cam1));
 
 }
 
@@ -121,19 +123,25 @@ void Game::DoFrame()
 {
 	wnd.gfx.StartFrame();
 	gui.Begin("B-Cubed gui window");
-
-	DoInput();
-
+	
 	Time dt = ft.Set();
 
-	Gui::AddText("Press TAB to ROTATE Skyboxes");
+	// update physics
+	for (int i = 0; i < entities.size(); i++) {
+		entities[i].UpdatePhysics();
+	}
 
-	// testing --------------------------------
+	// simulate has to be done after physics is updated since vehicle has its own update function
+	ps.Simulate(dt);
+
+	// input
+	DoInput();
+
 	DirectX::XMMATRIX cameraTransform = cameras[activeCamera]->GetTransform(dt);
 	
+	// shadow rendering
 	renderTexture.SetRenderTarget(wnd.gfx.GetContext());
 	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
-
 
 	for (auto& e : entities)
 	{
@@ -144,7 +152,7 @@ void Game::DoFrame()
 	wnd.gfx.ResetRenderTargetView();
 	wnd.gfx.ResetViewPort();
 	
-
+	// bind the depth texture to the pixel shader
 	wnd.gfx.GetContext()->PSSetShaderResources(1, 1, renderTexture.GetShaderResourceView());
 
 	for (auto& e : entities)
@@ -152,11 +160,6 @@ void Game::DoFrame()
 		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
 	}
 
-
-	//physx::PxVec3 pos = physics.GetPosition();
-	//entities[5].SetTransform(physics.GetTransform());
-	//entities[5].SetPosition(pos.x, pos.y, pos.z);
-	
 	struct Transform
 	{
 		DirectX::XMMATRIX world;
@@ -177,19 +180,12 @@ void Game::DoFrame()
 	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
 	skyboxes[iSkybox]->Render(wnd.gfx);
 	
-	for (int i = 0; i < entities.size(); i++) {
-		entities[i].UpdatePhysics();
-	}
 	
-	cam0 = std::make_unique<FollowCamera>();
-	cam0->SetTarget(entities[4]);
-	cameras.pop_back();
-	cameras.push_back(std::move(cam0));
-	
-	ps.Update(dt);
-	//physics.Update(dt(), wnd.clr);
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
+
+	// fetch the physics results for the next frame
+	ps.Fetch();
 
 	gui.End();
 	wnd.gfx.EndFrame();
@@ -226,7 +222,8 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 {
 	entities.push_back(Entity());
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, startPos, startRot, startVel);
+	//std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, startPos, startRot, startVel);
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, PxTransform(startPos), startVel, PxVec3(1.0f, 1.0f, 1.0f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));

@@ -1,12 +1,13 @@
 #pragma once
 #include "PhysicsComponent.h"
-#include "PhysicsScene.h"
+#include "Entity.h"
 
 class PhysicsStatic : public PhysicsComponent
 {
 public:
-	PhysicsStatic(PhysicsScene* phy, const physx::PxVec3& position, const physx::PxVec3& dimensions);
-	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
-private:
+	PhysicsStatic(Physics* px, const physx::PxTransform& transform, const physx::PxVec3& dimensions);
+	virtual ~PhysicsStatic();
+	virtual void Update(Entity* entity) override;
+protected:
 	physx::PxRigidStatic* gRigidStatic;
 };

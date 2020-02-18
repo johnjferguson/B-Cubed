@@ -1,25 +1,12 @@
 #pragma once
-#include "PhysicsComponent.h"
-#include "physx/include/PxPhysicsAPI.h"
-#include "Time.h"
-#include "physx/vehicle4W/snippetcommon/SnippetPVD.h"
-#include "physx/include/vehicle/PxVehicleUtil.h"
-#include "physx/include/snippetutils/SnippetUtils.h"
-#include <vector>
-#include <DirectXMath.h>
-#include "PhysicsScene.h"
-#include <vector>
+#include "PhysicsDynamic.h"
 #include "Entity.h"
-#include "Game.h"
 
-class MissilePhysics : public PhysicsComponent
+class MissilePhysics : public PhysicsDynamic
 {
 public:
-	MissilePhysics(PhysicsScene* ps, physx::PxVec3& startPos, physx::PxQuat& startRot, physx::PxVec3& startVel);
-	virtual void Update(DirectX::XMFLOAT3& pos, DirectX::XMMATRIX& transform) override;
+	MissilePhysics(Physics* px, const physx::PxTransform& transform, const physx::PxVec3& velocity, const physx::PxVec3& dimensions);
+	virtual ~MissilePhysics() = default;
+	virtual void Update(Entity* entity) override;
 private:
-	physx::PxRigidDynamic* createDynamic(const physx::PxTransform& t, const physx::PxGeometry& geometry, const physx::PxVec3& velocity, PhysicsScene* ps);
-private:
-	physx::PxRigidDynamic* mis;
-	PhysicsScene& ps;
 };
