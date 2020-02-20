@@ -21,7 +21,7 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 
 	bias = 0.001f;
 
-	color = float4(0.2f,0.2f,0.2f,1.0f);
+	color = float4(0.4f,0.4f,0.4f,1.0f);
 
 	projectTexCoord.x = lightViewPosition.x / lightViewPosition.w / 2.0f + 0.5f;
 	projectTexCoord.y = -lightViewPosition.y / lightViewPosition.w / 2.0f + 0.5f;

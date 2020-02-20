@@ -34,7 +34,6 @@ Physics::Physics()
 	}
 	gMaterial = gPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
-
 }
 
 Physics::~Physics()

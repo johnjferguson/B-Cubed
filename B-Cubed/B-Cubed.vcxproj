@@ -182,6 +182,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PhysicsDynamic.cpp" />
+    <ClCompile Include="PhysicsGround.cpp" />
     <ClCompile Include="PhysicsStatic.cpp" />
     <ClCompile Include="physx\vehicle4W\snippetvehicle4w\SnippetVehicle4WRender.cpp" />
     <ClCompile Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicle4WCreate.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysicsDynamic.h" />
+    <ClInclude Include="PhysicsGround.h" />
     <ClInclude Include="PhysicsStatic.h" />
     <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleConcurrency.h" />
     <ClInclude Include="physx\vehicle4W\snippetvehiclecommon\SnippetVehicleCreate.h" />

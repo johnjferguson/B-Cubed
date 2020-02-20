@@ -27,6 +27,16 @@ void Renderable::AddDepthBind(std::unique_ptr<Bindable> bind)
 	depthBindables.push_back(std::move(bind));
 }
 
+const std::vector<DirectX::XMFLOAT3>& Renderable::GetVertices() const
+{
+	return m_vertices;
+}
+
+const std::vector<unsigned short>& Renderable::GetIndices() const
+{
+	return m_indices;
+}
+
 void Renderable::Render(Graphics & gfx)
 {
 	assert(pIndexBuffer != nullptr && "no index buffer renderable");

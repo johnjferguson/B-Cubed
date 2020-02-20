@@ -24,10 +24,8 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned short> indices;
-	//vertices.reserve(pMesh->mNumVertices);
-	//indices.reserve(pMesh->mNumFaces * 3);
 
-	for (int i = 0; i < pModel->mNumMeshes; i++)
+	for (int i = 1; i < pModel->mNumMeshes; i++)
 	{
 		const auto pMesh = pModel->mMeshes[i];
 		int k = vertices.size();
@@ -42,6 +40,9 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 				}
 			);
+
+			// add all the vertex point to renderable
+			m_vertices.push_back({ pMesh->mVertices[j].x *scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z * scale });
 		}
 		for (unsigned int j = 0; j < pMesh->mNumFaces; j++)
 		{
@@ -63,6 +64,10 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 	AddBind(std::make_unique<VertexBuffer>(gfx, vertices));
 	AddBind(std::make_unique<IndexBuffer>(gfx, indices));
+
+	// add indices to renderable
+	m_indices = std::move(indices);
+
 	AddBind(std::make_unique<Texture>(gfx, L"images//neonwall.jpg"));
 
 	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderTexture.cso");

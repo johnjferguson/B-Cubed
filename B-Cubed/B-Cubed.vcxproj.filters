@@ -199,7 +199,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsGround.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>Header Files\Renderables</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsGround.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
