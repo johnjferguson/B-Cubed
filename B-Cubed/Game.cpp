@@ -29,10 +29,10 @@ Game::Game()
 	std::unique_ptr<Box> w3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 100.0f, 5.0f), L"images//neonwall.jpg");
 
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//voli.jpg");
-	std::unique_ptr<Box> nb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
-	std::unique_ptr<Box> zb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
-	std::unique_ptr<Box> zb1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
-	std::unique_ptr<Box> zb2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(3.5f, 2.5f, 2.0f), L"images//holovehicle.jpg");
+	std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	std::unique_ptr<Mesh> zb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	std::unique_ptr<Mesh> zb1 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	std::unique_ptr<Mesh> zb2 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component

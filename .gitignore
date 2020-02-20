@@ -51,6 +51,7 @@ artifacts/
 *.ilk
 *.meta
 *.obj
+!B-Cubed/models/*.obj
 *.pch
 *.pdb
 *.pgc
