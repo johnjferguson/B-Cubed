@@ -199,9 +199,9 @@ void VehiclePhysics::initVehicle(Physics* px)
 	gFrictionPairs = createFrictionPairs(GetMaterial(px));
 
 	//Create a plane to drive on.
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
-	GetScene(px)->addActor(*gGroundPlane);
+	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
+	//GetScene(px)->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
@@ -387,9 +387,9 @@ void VehiclePhysics::stepPhysics()
 	gVehicleInputData.setAnalogSteer(steer);
 
 	// TEMP: just testing stuff since I don't have xbox controller
-	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
-	gVehicleInputData.setAnalogAccel(true);
-	gVehicleInputData.setAnalogSteer(0.5f);
+	//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+	//gVehicleInputData.setAnalogAccel(true);
+	//gVehicleInputData.setAnalogSteer(0.2f);
 	// --------------------------------------------------------
 	//"Left Trigger (x,y): (" << lt.x << "," << lt.y << ") Right Trigger (x,y): (" <<
 		//rt.x << "," << rt.y << ")";

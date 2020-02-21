@@ -63,6 +63,7 @@ static PxConvexMesh* createConvexMesh(const PxVec3* verts, const PxU32 numVerts,
 {
 	// Create descriptor for convex mesh
 	PxConvexMeshDesc convexDesc;
+
 	convexDesc.points.count			= numVerts;
 	convexDesc.points.stride		= sizeof(PxVec3);
 	convexDesc.points.data			= verts;

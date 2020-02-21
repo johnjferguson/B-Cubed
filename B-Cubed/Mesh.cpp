@@ -25,6 +25,14 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	std::vector<Vertex> vertices;
 	std::vector<unsigned short> indices;
 
+	std::vector<DirectX::XMFLOAT2> temp = 
+	{
+		{0.0f, 0.0f},
+		{0.0f, 1.0f},
+		{1.0f, 1.0f},
+		{1.0f, 0.0f}
+	};
+
 	for (int i = 1; i < pModel->mNumMeshes; i++)
 	{
 		const auto pMesh = pModel->mMeshes[i];
@@ -36,7 +44,7 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 				{
 					{pMesh->mVertices[j].x *scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z * scale},
 					*reinterpret_cast<dx::XMFLOAT3*>(&pMesh->mNormals[j]),
-					{0.0f, 0.0f}
+					temp[j % 4]
 
 				}
 			);

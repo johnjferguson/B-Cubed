@@ -8,20 +8,26 @@ using namespace snippetvehicle;
 
 PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform, const std::vector<DirectX::XMFLOAT3>& vertices, const std::vector<unsigned short>& indices)
 {
+	gRigidStatic = GetPhysics(px)->createRigidStatic(transform);
+
 	PxTriangleMeshDesc tmd;
+
 	tmd.points.data = reinterpret_cast<const void*>(vertices.data());
 	tmd.points.count = (PxU32)vertices.size();
 	tmd.points.stride = (PxU32)sizeof(DirectX::XMFLOAT3);
 
-	tmd.triangles.data = reinterpret_cast<const void*>(indices.data());
-	tmd.triangles.count = (PxU32)indices.size();
-	tmd.triangles.stride = (PxU32)sizeof(unsigned short);
+	tmd.flags = PxMeshFlag::Enum::e16_BIT_INDICES;
 
-	tmd.flags = PxMeshFlag::e16_BIT_INDICES;
+	tmd.triangles.data = reinterpret_cast<const void*>(indices.data());
+	tmd.triangles.count = (PxU32)indices.size() / 3u;
+	tmd.triangles.stride = 3 * sizeof(unsigned short);
+
+	bool w = tmd.isValid();
 
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	PxFilterData qryFilterData;
 	qryFilterData.word3 = static_cast<PxU32>(DRIVABLE_SURFACE);
+
 
 	PxDefaultMemoryOutputStream buf;
 	PxTriangleMesh* pMesh;
@@ -35,7 +41,7 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 		shape->setSimulationFilterData(groundPlaneSimFilterData);
 		shape->setLocalPose(transform);
 
-		gRigidStatic = PxCreateStatic(*GetPhysics(px), transform, *shape);
+		GetScene(px)->addActor(*gRigidStatic);
 	}
 	else
 	{
@@ -46,5 +52,7 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 
 void PhysicsGround::Update(Entity * entity)
 {
+	gRigidStatic->userData = (void*)entity;
+
 	PhysicsStatic::Update(entity);
 }
