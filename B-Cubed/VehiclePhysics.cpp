@@ -14,7 +14,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
 	VehiclePhysics::startPosZ = startPosZ;
-
+	
 	gSteerVsForwardSpeedData =
 	{
 		0.0f,		0.75f,
@@ -26,7 +26,19 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32
 	};
-
+	/*
+	gSteerVsForwardSpeedData =
+	{
+		40.0f,		20.75f,
+		10.0f,		20.75f,
+		35.0f,		20.125f,
+		125.0f,		20.1f,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32,
+		PX_MAX_F32, PX_MAX_F32
+	};
+	*/
 	gSteerVsForwardSpeedTable = PxFixedSizeLookupTable<8>(gSteerVsForwardSpeedData.data(), 4);
 	gKeySmoothingData =
 	{
@@ -209,6 +221,12 @@ void VehiclePhysics::initVehicle(Physics* px)
 	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), startPosZ), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
+
+	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
+	eng.mPeakTorque = 500000.f;
+
+
+	gVehicle4W->mDriveSimData.setEngineData(eng);
 
 	//Set the vehicle to rest in first gear.
 	//Set the vehicle to use auto-gears.

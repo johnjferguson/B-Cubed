@@ -17,6 +17,7 @@ Game::Game()
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 500.0f)
 {
 	entities = std::vector<Entity>(10);
+	entities.reserve(1100);
 
 	//std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//simpletrack.obj");
 
@@ -193,7 +194,10 @@ void Game::DoFrame()
 	
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
-
+	/*
+	cam0 = std::make_unique<FollowCamera>();
+	cam0->SetTarget(entities[4]);
+	*/
 	// fetch the physics results for the next frame
 	ps.Fetch();
 
@@ -233,7 +237,14 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	entities.push_back(Entity());
 
 	//std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, startPos, startRot, startVel);
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, PxTransform(startPos), startVel, PxVec3(1.0f, 1.0f, 1.0f));
+
+	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(startRot.x, startRot.y, startRot.z, startRot.w)).r[2];
+	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+	PxTransform missileTrans = PxTransform(startPos + forward * 2.0f);
+	PxVec3 missileVel = forward * 50.0f + startVel;
+
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(1.0f, 1.0f, 1.0f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));

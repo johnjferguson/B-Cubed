@@ -8,6 +8,13 @@
 class Entity
 {
 public:
+	enum class Type
+	{
+		MISSILE,
+		VEHICLE,
+		DEFAULT
+	};
+public:
 	Entity();
 	void AddRenderable(std::unique_ptr<Renderable> pRenderable);
 	void AddPhysics(std::unique_ptr<PhysicsComponent> pPhysics);
@@ -26,4 +33,5 @@ private:
 	// position vector and rotation matrix for object
 	DirectX::XMFLOAT3 pos;
 	DirectX::XMMATRIX transform;
+	Entity::Type type = Entity::Type::DEFAULT;
 };

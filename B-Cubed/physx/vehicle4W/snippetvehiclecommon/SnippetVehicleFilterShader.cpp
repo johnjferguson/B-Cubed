@@ -50,6 +50,10 @@ PxFilterFlags VehicleFilterShader
 		return PxFilterFlag::eSUPPRESS;
 
 	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+	pairFlags |= PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT
+		| PxPairFlag::eNOTIFY_TOUCH_FOUND
+		| PxPairFlag::eNOTIFY_TOUCH_PERSISTS
+		| PxPairFlag::eNOTIFY_CONTACT_POINTS;
 	pairFlags |= PxPairFlags(PxU16(filterData0.word2 | filterData1.word2));
 
 	return PxFilterFlags();
