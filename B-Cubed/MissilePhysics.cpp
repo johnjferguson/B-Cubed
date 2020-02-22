@@ -12,7 +12,7 @@ MissilePhysics::MissilePhysics(Physics* px, const PxTransform& transform, const 
 
 void MissilePhysics::Update(Entity* entity)
 {
-	gRigidDynamic->userData = (void*)entity;
+	
 	//Entity* e = (Entity*)gRigidDynamic->userData;
 
 	PhysicsDynamic::Update(entity);

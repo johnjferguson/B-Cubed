@@ -14,6 +14,7 @@ public:
 		VEHICLE,
 		DEFAULT
 	};
+
 public:
 	Entity();
 	void AddRenderable(std::unique_ptr<Renderable> pRenderable);
@@ -21,6 +22,10 @@ public:
 	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light);
 	void RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightProjection, const Light& light);
 	void UpdatePhysics();
+	void SetType(Entity::Type typeIn);
+	Entity::Type GetType();
+	void MarkForDeath();
+	bool IsMarkedForDeath();
 
 	void SetPosition(float x, float y, float z);
 	const DirectX::XMFLOAT3& GetPosition() const;
@@ -34,4 +39,5 @@ private:
 	DirectX::XMFLOAT3 pos;
 	DirectX::XMMATRIX transform;
 	Entity::Type type = Entity::Type::DEFAULT;
+	bool markedForDeath = false;
 };

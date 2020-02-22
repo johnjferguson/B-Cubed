@@ -185,6 +185,8 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 
 void VehiclePhysics::Update(Entity* entity)
 {
+	gVehicle4W->getRigidDynamicActor()->userData = (void*)entity;
+
 	PxTransform transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose();
 
 	PxVec3 position = transform.p;

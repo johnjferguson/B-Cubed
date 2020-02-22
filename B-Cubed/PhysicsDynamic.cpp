@@ -27,6 +27,8 @@ PhysicsDynamic::~PhysicsDynamic()
 
 void PhysicsDynamic::Update(Entity * entity)
 {
+	gRigidDynamic->userData = (void*)entity;
+
 	PxTransform transform = gRigidDynamic->getGlobalPose();
 
 	PxVec3 position = transform.p;

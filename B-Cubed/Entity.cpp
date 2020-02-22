@@ -105,6 +105,26 @@ void Entity::UpdatePhysics()
 		physicsComponent->Update(this);
 }
 
+void Entity::SetType(Entity::Type typeIn)
+{
+	type = typeIn;
+}
+
+Entity::Type Entity::GetType()
+{
+	return type;
+}
+
+void Entity::MarkForDeath()
+{
+	markedForDeath = true;
+}
+
+bool Entity::IsMarkedForDeath()
+{
+	return markedForDeath;
+}
+
 void Entity::SetPosition(float x, float y, float z)
 {
 	pos = DirectX::XMFLOAT3(x,y,z);

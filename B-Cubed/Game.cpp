@@ -1,5 +1,6 @@
 #include "Game.h"
 #include <sstream>
+#include <algorithm>
 #include "Box.h"
 #include "SkyBox.h"
 #include <DirectXMath.h>
@@ -201,6 +202,10 @@ void Game::DoFrame()
 	// fetch the physics results for the next frame
 	ps.Fetch();
 
+	std::vector<Entity>::const_iterator iter = std::partition(entities.begin(), entities.end(), [](Entity& e) {return !e.IsMarkedForDeath(); });
+
+	entities.erase(iter, entities.end());
+
 	gui.End();
 	wnd.gfx.EndFrame();
 }
@@ -241,13 +246,15 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(startRot.x, startRot.y, startRot.z, startRot.w)).r[2];
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 
-	PxTransform missileTrans = PxTransform(startPos + forward * 2.0f);
+	PxTransform missileTrans = PxTransform(startPos + forward * 4.0f);
+	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
 	PxVec3 missileVel = forward * 50.0f + startVel;
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(1.0f, 1.0f, 1.0f));
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.1f, 0.1f, 0.1f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));
 	Game::entities[entities.size()-1].SetPosition(startPos.x, startPos.y, startPos.z);
 	Game::entities[entities.size()-1].AddPhysics(std::move(vp2)); 
+	Game::entities[entities.size()-1].SetType(Entity::Type::MISSILE); 
 }

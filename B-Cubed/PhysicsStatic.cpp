@@ -23,6 +23,8 @@ PhysicsStatic::~PhysicsStatic()
 
 void PhysicsStatic::Update(Entity* entity)
 {
+	gRigidStatic->userData = (void*)entity;
+
 	PxTransform transform = gRigidStatic->getGlobalPose();
 
 	PxVec3 position = transform.p;

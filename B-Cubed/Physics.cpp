@@ -1,6 +1,7 @@
 #include "Physics.h"
 #include <vector>
 #include "physx/vehicle4W/snippetvehiclecommon/SnippetVehicleFilterShader.h"
+#include "Entity.h"
 
 #define PVD_HOST "127.0.0.1"
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
@@ -42,6 +43,23 @@ class ContactReportCallback : public PxSimulationEventCallback
 	{
 		PX_UNUSED((pairHeader));
 		std::vector<PxContactPairPoint> contactPoints;
+
+		PxRigidActor* actor0 = pairHeader.actors[0];
+		PxRigidActor* actor1 = pairHeader.actors[1];
+
+		Entity* entity0 = (Entity*)actor0->userData;
+		Entity* entity1 = (Entity*)actor1->userData;
+
+		if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
+		{
+			if (entity0->GetType() == Entity::Type::MISSILE) {
+				entity0->MarkForDeath();
+			}
+			else {
+				entity1->MarkForDeath();
+			}
+		}
+
 
 		for (PxU32 i = 0; i < nbPairs; i++)
 		{
