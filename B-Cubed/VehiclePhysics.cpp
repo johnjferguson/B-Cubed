@@ -225,16 +225,34 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 500000.f;
+	eng.mPeakTorque = 1000.f;
+	eng.mMaxOmega = 1000;
+	//eng.mTorqueCurve = 1;
+	eng.mMOI = 0.1;
 
+	PxVehicleAckermannGeometryData acker = gVehicle4W->mDriveSimData.getAckermannGeometryData();
+	acker.mAccuracy = 1.0;
+
+	// Higer Values = More Toque To Wheels
+	PxVehicleClutchData clu = gVehicle4W->mDriveSimData.getClutchData();
+	clu.mStrength = 30;
 
 	gVehicle4W->mDriveSimData.setEngineData(eng);
+	gVehicle4W->mDriveSimData.setAckermannGeometryData(acker);
+	gVehicle4W->mDriveSimData.setClutchData(clu);
+
+	PxVehicleGearsData gearShift = gVehicle4W->mDriveSimData.getGearsData();;
+	gearShift.mSwitchTime = 0.0f;
+	gVehicle4W->mDriveSimData.setGearsData(gearShift);
 
 	//Set the vehicle to rest in first gear.
 	//Set the vehicle to use auto-gears.
 	gVehicle4W->setToRestState();
-	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+	gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eSECOND);
 	gVehicle4W->mDriveDynData.setUseAutoGears(true);
+
+	//PxVehicleAutoBoxData mAutoBox;
+	//gVehicle4W->mDriveSimData.getAutoBoxData
 
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
