@@ -112,7 +112,7 @@ Physics::Physics()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	gMaterial = gPhysics->createMaterial(1.5f, 1.5f, 0.6f);
+	gMaterial = gPhysics->createMaterial(2.5f, 2.5f, 1.6f);
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 }
 

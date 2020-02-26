@@ -19,7 +19,7 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 	float lightIntensity;
 	float4 textureColor;
 
-	bias = 0.001f;
+	bias = 0.01f;
 
 	color = float4(0.6f,0.6f,0.6f,1.0f);
 

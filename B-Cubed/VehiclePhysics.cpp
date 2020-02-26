@@ -19,8 +19,8 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	{
 		0.0f,		0.75f,
 		5.0f,		0.75f,
-		30.0f,		0.125f,
-		120.0f,		0.1f,
+		30.0f,		0.3f,
+		120.0f,		0.3f,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
@@ -195,6 +195,13 @@ void VehiclePhysics::Update(Entity* entity)
 	PxQuat quint = transform.q;
 	entity->SetTransform(DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)));
 
+	auto j = gVehicle4W->mDriveDynData.getCurrentGear();
+	auto p = gVehicle4W->mDriveDynData.getEngineRotationSpeed();
+
+	std::stringstream ss;
+	ss << int(j) << "   :  " << (int)p;
+	Gui::AddText(ss.str().c_str());
+
 	stepPhysics();
 }
 
@@ -264,7 +271,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1500.0f;
+	const PxF32 chassisMass = 3500.0f;
 	const PxVec3 chassisDims(2.5f, 2.0f, 5.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
@@ -414,7 +421,7 @@ void VehiclePhysics::stepPhysics()
 	}
 	else if (accel)
 	{
-		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		gVehicleInputData.setAnalogAccel(true);
 	}
 	else

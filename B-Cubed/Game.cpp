@@ -14,8 +14,8 @@ using namespace physx;
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
-	light(wnd.gfx, { 10.0f, 200.0f, 10.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 500.0f)
+	light(wnd.gfx, { 10.0f, 100.0f, 10.0f, 1.0f }),
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
 {
 	entities = std::vector<Entity>(10);
 	entities.reserve(1100);
@@ -106,10 +106,10 @@ Game::Game()
 	entities[9].AddPhysics(std::move(vp3));
 
 	// skyboxes
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 400.0f, L"images//skybox0.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 400.0f, L"images//skybox1.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 400.0f, L"images//skybox2.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 400.0f, L"images//skybox3.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox1.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox2.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox3.png"));
 
 	cam0 = std::make_unique<FollowCamera>();
 	cam0->SetTarget(entities[4]);
@@ -172,6 +172,9 @@ void Game::DoFrame()
 		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
 	}
 
+	DirectX::XMFLOAT3 car_pos = entities[4].GetPosition();
+	light.SetPosition(DirectX::XMFLOAT4(car_pos.x + 0.0f, car_pos.y + 30.0f, car_pos.z, 5.0f));
+
 	struct Transform
 	{
 		DirectX::XMMATRIX world;
@@ -186,7 +189,7 @@ void Game::DoFrame()
 	{
 		DirectX::XMMatrixIdentity(),
 		cameraTransform,
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 400.0f)
+		DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 700.0f)
 	};
 
 	skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
