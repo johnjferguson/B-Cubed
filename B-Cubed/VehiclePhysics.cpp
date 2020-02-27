@@ -197,9 +197,10 @@ void VehiclePhysics::Update(Entity* entity)
 
 	auto j = gVehicle4W->mDriveDynData.getCurrentGear();
 	auto p = gVehicle4W->mDriveDynData.getEngineRotationSpeed();
+	auto m = gVehicle4W->computeForwardSpeed();
 
 	std::stringstream ss;
-	ss << int(j) << "   :  " << (int)p;
+	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
 	stepPhysics();
@@ -415,14 +416,22 @@ void VehiclePhysics::stepPhysics()
 	
 	if (reverse)
 	{
-		//releaseAllControls();
-		gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
-		gVehicleInputData.setAnalogAccel(true);
+		if ((int)gVehicle4W->computeForwardSpeed() <= 1) {
+			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eREVERSE);
+			gVehicleInputData.setAnalogAccel(true);
+			gVehicleInputData.setAnalogBrake(false);
+		}
+		else {
+			gVehicleInputData.setAnalogBrake(true);
+		}
 	}
 	else if (accel)
 	{
-		//gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		if ((int)gVehicle4W->computeForwardSpeed() <= 1) {
+			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
+		}
 		gVehicleInputData.setAnalogAccel(true);
+		gVehicleInputData.setAnalogBrake(false);
 	}
 	else
 	{
