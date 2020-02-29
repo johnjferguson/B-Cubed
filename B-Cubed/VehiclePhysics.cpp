@@ -457,7 +457,8 @@ void VehiclePhysics::stepPhysics()
 	PxVehicleSuspensionRaycasts(gBatchQuery, 1, vehicles, raycastResultsSize, raycastResults);
 
 	//Vehicle update.
-	const PxVec3 grav = GetScene(&px)->getGravity();
+	//const PxVec3 grav = GetScene(&px)->getGravity();
+	const PxVec3 grav = PxVec3(0.0, -20, 0.0);
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
