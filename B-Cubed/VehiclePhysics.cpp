@@ -31,14 +31,14 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	gKeySmoothingData =
 	{
 		{
-			6.0f,	//rise rate eANALOG_INPUT_ACCEL
-			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
+			3.0f,	//rise rate eANALOG_INPUT_ACCEL
+			9.0f,	//rise rate eANALOG_INPUT_BRAKE		
 			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
 			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
 			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
 		},
 		{
-			10.0f,	//fall rate eANALOG_INPUT_ACCEL
+			15.0f,	//fall rate eANALOG_INPUT_ACCEL
 			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
 			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
 			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
@@ -264,20 +264,20 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1500.0f;
+	const PxF32 chassisMass = 1260.0f;
 	const PxVec3 chassisDims(4.0f, 2.0f, 5.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
-		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.8f*chassisMass / 12.0f,
+		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.7f*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.y*chassisDims.y)*chassisMass / 12.0f);
 	const PxVec3 chassisCMOffset(0.0f, -chassisDims.y*0.5f + 0.65, 0.2f);
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 40.0f;
+	const PxF32 wheelMass = 100.0f;
 	const PxF32 wheelRadius = 0.6f;
 	const PxF32 wheelWidth = 1.0f;
-	const PxF32 wheelMOI = 0.2f*wheelMass*wheelRadius*wheelRadius;
+	const PxF32 wheelMOI = 0.3f*wheelMass*wheelRadius*wheelRadius;
 	const PxU32 nbWheels = 4;
 
 	VehicleDesc vehicleDesc;
