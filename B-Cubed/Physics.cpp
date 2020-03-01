@@ -2,6 +2,7 @@
 #include <vector>
 #include "physx/vehicle4W/snippetvehiclecommon/SnippetVehicleFilterShader.h"
 #include "Entity.h"
+#include "Sound.h"
 
 #define PVD_HOST "127.0.0.1"
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
@@ -54,6 +55,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 		{
 			if (entity0->GetType() == Entity::Type::MISSILE) {
 				entity0->MarkForDeath();
+				Sound::Play("sounds//yoshi.wav");
 			}
 			else {
 				entity1->MarkForDeath();

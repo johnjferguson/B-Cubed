@@ -10,6 +10,7 @@
 #include "RenderTexture.h"
 #include "Physics.h"
 #include "Mesh.h"
+#include "Sound.h"
 
 class Game
 {
@@ -24,6 +25,7 @@ private:
 	// some dependancy
 	Gui gui;
 	Window wnd;
+	Sound sound;
 	//physics;
 	Physics ps;
 
