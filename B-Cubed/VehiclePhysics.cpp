@@ -221,8 +221,8 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 800.f;
-	eng.mMaxOmega = 500;
+	eng.mPeakTorque = 700.f;
+	eng.mMaxOmega = 400;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -277,7 +277,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	const PxF32 wheelMass = 100.0f;
 	const PxF32 wheelRadius = 0.6f;
 	const PxF32 wheelWidth = 1.0f;
-	const PxF32 wheelMOI = 0.3f*wheelMass*wheelRadius*wheelRadius;
+	const PxF32 wheelMOI = 0.4f*wheelMass*wheelRadius*wheelRadius;
 	const PxU32 nbWheels = 4;
 
 	VehicleDesc vehicleDesc;
@@ -422,6 +422,13 @@ void VehiclePhysics::stepPhysics()
 		if ((int)gVehicle4W->computeForwardSpeed() <= 1) {
 			gVehicle4W->mDriveDynData.forceGearChange(PxVehicleGearsData::eFIRST);
 		}
+		else if ((int)gVehicle4W->computeForwardSpeed() >= 1 && (int)gVehicle4W->computeForwardSpeed() <= 30) {
+			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+			gVehicle4W->getRigidDynamicActor()->addForce(10000.f * forward);
+		}
 		gVehicleInputData.setAnalogAccel(true);
 		gVehicleInputData.setAnalogBrake(false);
 	}
@@ -458,7 +465,7 @@ void VehiclePhysics::stepPhysics()
 
 	//Vehicle update.
 	//const PxVec3 grav = GetScene(&px)->getGravity();
-	const PxVec3 grav = PxVec3(0.0, -20, 0.0);
+	const PxVec3 grav = PxVec3(0.0, -18, 0.0);
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
