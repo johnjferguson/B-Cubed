@@ -249,9 +249,16 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(startRot.x, startRot.y, startRot.z, startRot.w)).r[2];
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 
-	PxTransform missileTrans = PxTransform(startPos + forward * 4.0f);
+	PxTransform missileTrans;
+
+	if (startVel.magnitude() <= 40) {
+		missileTrans = PxTransform(startPos + forward * 4.0f);
+	}
+	else {
+		missileTrans = PxTransform(startPos + forward * 15.0f);
+	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
-	PxVec3 missileVel = forward * 50.0f + startVel;
+	PxVec3 missileVel = (forward * 70.f + startVel);
 
 	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.5f, 0.5f, 0.5f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");

@@ -31,7 +31,6 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ);
 	VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ);
 	virtual void Update(Entity* entity) override;
 	void initVehicle(Physics* ps);
@@ -61,7 +60,10 @@ private:
 	bool							aOnPress = true;
 	bool							xOnPress = true;
 
-	int								readyToFire = 0;
+	int								abilityCharges = 0;
+	int								rechargeTime = 0;
+	int								abilityTime = 0;
+
 	Controller& gameController;
 	Physics& px;
 	std::vector<physx::PxF32>		 gSteerVsForwardSpeedData;

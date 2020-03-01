@@ -13,7 +13,10 @@ MissilePhysics::MissilePhysics(Physics* px, const PxTransform& transform, const 
 void MissilePhysics::Update(Entity* entity)
 {
 	
-	//Entity* e = (Entity*)gRigidDynamic->userData;
+	PxVec3 v = gRigidDynamic->getLinearVelocity().getNormalized();
+	if (v.y > 0.f) {
+		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 72.f);
+	}
 
 	PhysicsDynamic::Update(entity);
 }

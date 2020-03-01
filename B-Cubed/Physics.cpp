@@ -54,11 +54,22 @@ class ContactReportCallback : public PxSimulationEventCallback
 		if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
 		{
 			if (entity0->GetType() == Entity::Type::MISSILE) {
-				entity0->MarkForDeath();
-				Sound::Play("sounds//yoshi.wav");
+				if (entity0->NumberofHits() >= 3) {
+					entity0->MarkForDeath();
+				}
+				else {
+					Sound::Play("sounds//yoshi.wav");
+					entity0->IncreaseHit();
+				}
 			}
 			else {
-				entity1->MarkForDeath();
+				if (entity1->NumberofHits() > 3) {
+					entity1->MarkForDeath();
+				}
+				else {
+					Sound::Play("sounds//yoshi.wav");
+					entity1->IncreaseHit();
+				}
 			}
 		}
 

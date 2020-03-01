@@ -144,3 +144,13 @@ const DirectX::XMMATRIX & Entity::GetTransform() const
 {
 	return transform;
 }
+
+void Entity::IncreaseHit()
+{
+	hit++;
+}
+
+const int Entity::NumberofHits() const
+{
+	return hit;
+}

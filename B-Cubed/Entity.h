@@ -27,6 +27,9 @@ public:
 	void MarkForDeath();
 	bool IsMarkedForDeath();
 
+	void IncreaseHit();
+	const int NumberofHits() const;
+
 	void SetPosition(float x, float y, float z);
 	const DirectX::XMFLOAT3& GetPosition() const;
 	void SetTransform(const DirectX::XMMATRIX& transform_in);
@@ -40,4 +43,5 @@ private:
 	DirectX::XMMATRIX transform;
 	Entity::Type type = Entity::Type::DEFAULT;
 	bool markedForDeath = false;
+	int hit = 0;
 };
