@@ -34,6 +34,10 @@ public:
 	const DirectX::XMFLOAT3& GetPosition() const;
 	void SetTransform(const DirectX::XMMATRIX& transform_in);
 	const DirectX::XMMATRIX& GetTransform() const;
+	bool CanParry();
+	bool CanBlock();
+	void ResetBarrier();
+	void CountBarrier();
 private:
 	std::unique_ptr<PhysicsComponent> physicsComponent = nullptr;
 	std::unique_ptr<Renderable> renderable = nullptr;
@@ -44,4 +48,5 @@ private:
 	Entity::Type type = Entity::Type::DEFAULT;
 	bool markedForDeath = false;
 	int hit = 0;
+	int	barrierTime = 0;
 };

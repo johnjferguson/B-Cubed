@@ -145,6 +145,33 @@ const DirectX::XMMATRIX & Entity::GetTransform() const
 	return transform;
 }
 
+bool Entity::CanParry()
+{
+	if (barrierTime < 10) {
+		return true;
+	}
+
+	return false;
+}
+
+bool Entity::CanBlock()
+{
+	if (barrierTime < 60) {
+		return true;
+	}
+	return false;
+}
+
+void Entity::ResetBarrier()
+{
+	barrierTime = 0;
+}
+
+void Entity::CountBarrier()
+{
+	barrierTime++;
+}
+
 void Entity::IncreaseHit()
 {
 	hit++;
@@ -154,3 +181,5 @@ const int Entity::NumberofHits() const
 {
 	return hit;
 }
+
+

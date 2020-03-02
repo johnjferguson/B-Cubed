@@ -114,7 +114,7 @@ void VehiclePhysics::Update(Entity* entity)
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
-	stepPhysics();
+	stepPhysics(entity);
 }
 
 void VehiclePhysics::initVehicle(Physics* px)
@@ -242,7 +242,7 @@ void VehiclePhysics::releaseAllControls()
 	}
 }
 
-void VehiclePhysics::stepPhysics()
+void VehiclePhysics::stepPhysics(Entity* entity)
 {
 	bool accel;
 	bool reverse;
@@ -266,14 +266,13 @@ void VehiclePhysics::stepPhysics()
 
 		blast = gameController.IsPressed(Controller::Button::Y);
 		boost = gameController.IsPressed(Controller::Button::B);
+		barrier = gameController.IsPressed(Controller::Button::A);
 	}
 
 	const PxF32 timestep = 1.0f / 60.0f;
 
-	Gui::AddText("abilityTime");
-	Gui::AddText("rechargeTime");
-
 	abilityTime++;
+	entity->CountBarrier();
 
 	//If full charge we don't start counting
 	if (abilityCharges >= 3) {
@@ -291,11 +290,17 @@ void VehiclePhysics::stepPhysics()
 	
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
-	if (gameController.IsPressed(Controller::Button::A))
+	if (barrier)
 	{
+		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
+			entity->ResetBarrier();
+		}
+
+		aOnPress = false;
 	}
 	else
 	{
+		aOnPress = true;
 	}
 
 	if (boost)

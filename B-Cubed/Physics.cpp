@@ -51,7 +51,16 @@ class ContactReportCallback : public PxSimulationEventCallback
 		Entity* entity0 = (Entity*)actor0->userData;
 		Entity* entity1 = (Entity*)actor1->userData;
 
-		if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
+
+		if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
+		{
+
+		}
+		else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
+		{
+
+		}
+		else if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
 		{
 			if (entity0->GetType() == Entity::Type::MISSILE) {
 				if (entity0->NumberofHits() >= 3) {

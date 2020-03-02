@@ -36,7 +36,7 @@ public:
 	void initVehicle(Physics* ps);
 	snippetvehicle::VehicleDesc initVehicleDesc(Physics* ps);
 	void releaseAllControls();
-	void stepPhysics();
+	void stepPhysics(Entity* entity);
 private:
 	void applyBoost();
 private:

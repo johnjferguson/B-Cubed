@@ -15,7 +15,7 @@ void MissilePhysics::Update(Entity* entity)
 	
 	PxVec3 v = gRigidDynamic->getLinearVelocity().getNormalized();
 	if (v.y > 0.f) {
-		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 72.f);
+		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 75.f);
 	}
 
 	PhysicsDynamic::Update(entity);
