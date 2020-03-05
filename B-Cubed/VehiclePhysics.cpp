@@ -146,8 +146,8 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 700.f;
-	eng.mMaxOmega = 400;
+	eng.mPeakTorque = 800.f;
+	eng.mMaxOmega = 500;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -189,8 +189,9 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1260.0f;
-	const PxVec3 chassisDims(4.0f, 3.0f, 5.0f);
+	//const PxF32 chassisMass = 1260.0f;
+	const PxF32 chassisMass = 2200.0f;
+	const PxVec3 chassisDims(4.0f, 3.0f, 5.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
