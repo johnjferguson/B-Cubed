@@ -58,7 +58,7 @@ void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const Direct
 		renderable->UpdatePixel(gfx, pc);
 
 		renderable->Render(gfx);
-	}
+	} 
 }
 
 void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightProjection, const Light& light)
@@ -170,6 +170,26 @@ void Entity::ResetBarrier()
 void Entity::CountBarrier()
 {
 	barrierTime++;
+}
+
+void Entity::SetBounceBack(bool set)
+{
+	bounceBack = set;
+}
+
+void Entity::SetSpinOut(bool set)
+{
+	spinOut = set;
+}
+
+bool Entity::GetBounceBack() const
+{
+	return bounceBack;
+}
+
+bool Entity::GetSpinOut() const
+{
+	return spinOut;
 }
 
 void Entity::IncreaseHit()

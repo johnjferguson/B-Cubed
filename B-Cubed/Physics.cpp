@@ -54,11 +54,20 @@ class ContactReportCallback : public PxSimulationEventCallback
 
 		if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
 		{
-
+			if (entity0->CanParry()) {
+				
+			}
+			else if (entity0->CanBlock()) {
+				entity1->MarkForDeath();
+			}
+			else {
+				entity1->MarkForDeath();
+				//spin out aswell
+			}
 		}
 		else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
 		{
-
+			entity0->MarkForDeath();
 		}
 		else if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
 		{
@@ -134,7 +143,7 @@ Physics::Physics()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	gMaterial = gPhysics->createMaterial(5.0f, 5.0f, 1.6f);
+	gMaterial = gPhysics->createMaterial(5.0f, 5.0f, 0.2f);
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 }
 

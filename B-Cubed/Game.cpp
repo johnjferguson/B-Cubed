@@ -72,6 +72,7 @@ Game::Game()
 	entities[1].AddRenderable(std::move(zb));
 	entities[1].SetPosition(0.0f, 1.0f, 10.0f);
 	entities[1].AddPhysics(std::move(vp1));
+	entities[1].SetType(Entity::Type::VEHICLE);
 			   
 	entities[2].AddRenderable(std::move(w0));
 	entities[2].SetPosition(-5.0f, -0.5f, 5.0f);
@@ -84,6 +85,7 @@ Game::Game()
 	entities[4].AddRenderable(std::move(nb));
 	entities[4].SetPosition(10.0f, 1.0f, 0.0f);
 	entities[4].AddPhysics(std::move(vp0));
+	entities[4].SetType(Entity::Type::VEHICLE);
 			   
 	entities[5].AddRenderable(std::move(br));
 	entities[5].SetPosition(0.0f, 1.0f, -5.0f);
@@ -100,10 +102,12 @@ Game::Game()
 	entities[8].AddRenderable(std::move(zb1));
 	entities[8].SetPosition(-5.0f, 1.0f, 0.0f);
 	entities[8].AddPhysics(std::move(vp2));
+	entities[8].SetType(Entity::Type::VEHICLE);
 
 	entities[9].AddRenderable(std::move(zb2));
 	entities[9].SetPosition(-5.0f, 1.0f, 0.0f);
 	entities[9].AddPhysics(std::move(vp3));
+	entities[9].SetType(Entity::Type::VEHICLE);
 
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
@@ -260,7 +264,7 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
 	PxVec3 missileVel = (forward * 75.f + startVel);
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.5f, 0.5f, 0.5f));
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.3f, 0.3f, 0.3f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));
