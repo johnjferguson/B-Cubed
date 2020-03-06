@@ -19,7 +19,7 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 	tmd.flags = PxMeshFlag::Enum::e16_BIT_INDICES;
 
 	tmd.triangles.data = reinterpret_cast<const void*>(indices.data());
-	tmd.triangles.count = (PxU32)indices.size() / 3u;
+	tmd.triangles.count = (PxU32)indices.size() / 3;
 	tmd.triangles.stride = 3 * sizeof(unsigned short);
 
 	bool w = tmd.isValid();

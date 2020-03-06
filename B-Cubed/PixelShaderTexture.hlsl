@@ -10,7 +10,7 @@ cbuffer CBuf
 
 float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosition : TEXCOORD1, float3 lightPos : TEXCOORD2) : SV_TARGET
 {
-
+	
 	float bias;
 	float4 color;
 	float2 projectTexCoord;
@@ -19,9 +19,9 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 	float lightIntensity;
 	float4 textureColor;
 
-	bias = 0.01f;
+	bias = 0.001f;
 
-	color = float4(0.6f,0.6f,0.6f,1.0f);
+	color = float4(0.5f,0.5f,0.5f,1.0f);
 
 	projectTexCoord.x = lightViewPosition.x / lightViewPosition.w / 2.0f + 0.5f;
 	projectTexCoord.y = -lightViewPosition.y / lightViewPosition.w / 2.0f + 0.5f;
@@ -40,16 +40,18 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 
 			if (lightIntensity > 0.0f)
 			{
-				color += (float4(0.2f,0.2f,0.2f,1.0f) * lightIntensity);
+				color += (float4(0.4f,0.4f,0.4f,1.0f) * lightIntensity);
 
 				color = saturate(color);
 			}
 		}
 	}
+	
 
 	textureColor = shaderTexture.Sample(SampleTypeClamp, tex);
 
 	color = color * textureColor;
+	color = textureColor;
 
 	return color;
 

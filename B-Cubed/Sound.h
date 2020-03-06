@@ -31,6 +31,11 @@ private:
 	{
 	public:
 		Source(ALuint source, ALuint buffer);
+		// need this move constructor to stop calling the destructor on source and buffer before setting them to nullptr
+		Source(Source&& rhs);
+		Source(Source&) = delete;
+		Source& operator=(Source&) = delete;
+		~Source();
 		void Play();
 	private:
 		ALuint source;
@@ -38,6 +43,9 @@ private:
 	};
 public:
 	Sound();
+	~Sound();
+	Sound(Sound&) = delete;
+	Sound& operator=(Sound&) = delete;
 	static void Play(const std::string& file_path);
 private:
 	static bool Load(const std::string& file_path);

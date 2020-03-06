@@ -15,22 +15,31 @@ Sound::Sound()
 
 	if (!device)
 		std::cerr << "error sound constructor constext" << std::endl;
+
+}
+
+Sound::~Sound()
+{
+	if (context != NULL && device != NULL)
+	{
+		alcDestroyContext(context);
+		alcCloseDevice(device);
+	}
 }
 
 void Sound::Play(const std::string & file_path)
 {
-	bool good = true;
 	std::unordered_map<std::string, Source>::iterator iter = soundMap.find(file_path);
 
 	if (iter == soundMap.end())
 	{
-		good = Load(file_path);
+		Load(file_path);
+		iter = soundMap.find(file_path);
 	}
-
-	if (good)
-	{
+	
+	if (iter != soundMap.end())
 		iter->second.Play();
-	}
+	
 }
 
 bool Sound::Load(const std::string & path)
@@ -93,7 +102,11 @@ bool Sound::Load(const std::string & path)
 	alSourcefv(source, AL_VELOCITY, SourceVel);
 	alSourcei(source, AL_LOOPING, AL_FALSE);
 
-	soundMap.insert({ path, Source(source, buffer) });
+	soundMap.emplace(path, std::move(Source{ source, buffer }));
+
+	// clean up
+	file.close();
+	delete[] buf;
 
 	return true;
 }
@@ -103,6 +116,24 @@ Sound::Source::Source(ALuint source, ALuint buffer)
 	source(source),
 	buffer(buffer)
 {
+}
+
+Sound::Source::Source(Source && rhs)
+{
+	source = rhs.source;
+	buffer = rhs.buffer;
+
+	rhs.source = NULL;
+	rhs.buffer = NULL;
+}
+
+Sound::Source::~Source()
+{
+	if (source != NULL && buffer != NULL)
+	{
+		alDeleteBuffers(1, &buffer);
+		alDeleteSources(1, &source);
+	}
 }
 
 void Sound::Source::Play()

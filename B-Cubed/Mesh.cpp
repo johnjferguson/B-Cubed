@@ -16,9 +16,8 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	};
 
 	Assimp::Importer imp;
-	auto pModel = imp.ReadFile(path.c_str(),
-		aiProcess_Triangulate |
-		aiProcess_JoinIdenticalVertices
+	auto pModel = imp.ReadFile(path.c_str(), 
+		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices
 	);
 
 
@@ -29,22 +28,21 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	{
 		{0.0f, 0.0f},
 		{0.0f, 1.0f},
-		{1.0f, 1.0f},
-		{1.0f, 0.0f}
+		{1.0f, 1.0f}
 	};
 
-	for (int i = 1; i < pModel->mNumMeshes; i++)
+	for (int i = 0; i < pModel->mNumMeshes; i++)
 	{
 		const auto pMesh = pModel->mMeshes[i];
-		int k = vertices.size();
+		//int k = vertices.size();
 
 		for (unsigned int j = 0; j < pMesh->mNumVertices; j++)
 		{
 			vertices.push_back(
 				{
-					{pMesh->mVertices[j].x *scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z * scale},
+					{pMesh->mVertices[j].x*scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z*scale},
 					*reinterpret_cast<dx::XMFLOAT3*>(&pMesh->mNormals[j]),
-					temp[j % 4]
+					temp[j % 3]
 
 				}
 			);
@@ -57,15 +55,14 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 			const auto& face = pMesh->mFaces[j];
 			if (face.mNumIndices == 3)
 			{
-				indices.push_back(k + face.mIndices[0]);
-				indices.push_back(k + face.mIndices[1]);
-				indices.push_back(k + face.mIndices[2]);
+				indices.push_back(face.mIndices[0]);
+				indices.push_back(face.mIndices[1]);
+				indices.push_back(face.mIndices[2]);
 
-				indices.push_back(k + face.mIndices[0]);
-				indices.push_back(k + face.mIndices[2]);
-				indices.push_back(k + face.mIndices[1]);
+				indices.push_back(face.mIndices[0]);
+				indices.push_back(face.mIndices[2]);
+				indices.push_back(face.mIndices[1]);
 			}
-
 		}
 	}
 

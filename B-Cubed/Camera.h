@@ -26,7 +26,7 @@ private:
 	DirectX::XMVECTOR pos;
 	float maxTurnSpeed = 2.0f;
 	float mouseDeadzone = 0.05f;
-	float moveSpeed = 8.0f;
+	float moveSpeed = 100.0f;
 	float pitch = -3.14f;
 	float roll = 1.0f;
 	bool inputEnabled = true;
