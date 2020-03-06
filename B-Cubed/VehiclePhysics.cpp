@@ -6,11 +6,21 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
 	:
 	gameController(gameController),
 	px(*px)
 {
+	VehiclePhysics::useAI = useAI;
+	if (useAI) {
+		std::vector<physx::PxVec3> p;
+		p.push_back(physx::PxVec3(30.f, 0.f, 30.f));
+		p.push_back(physx::PxVec3(-30.f, 0.f, 30.f));
+		p.push_back(physx::PxVec3(-30.f, 0.f, -30.f));
+		p.push_back(physx::PxVec3(30.f, 0.f, -30.f));
+		VehiclePhysics::ai = AI::AI(p);
+	}
+
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
 	VehiclePhysics::startPosZ = startPosZ;
@@ -19,7 +29,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	{
 		0.0f,		0.75f,
 		5.0f,		0.75f,
-		30.0f,		0.75f,
+		30.0f,		0.2f,
 		120.0f,		0.75f,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
@@ -39,93 +49,6 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 		},
 		{
 			15.0f,	//fall rate eANALOG_INPUT_ACCEL
-			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
-			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
-			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
-		}
-	};
-
-	gPadSmoothingData =
-	{
-		{
-			6.0f,	//rise rate eANALOG_INPUT_ACCEL
-			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
-			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
-		},
-		{
-			10.0f,	//fall rate eANALOG_INPUT_ACCEL
-			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
-			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
-			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
-			5.0f	//fall rate eANALOG_INPUT_STEER_RIGHT
-		}
-	};
-
-	gDriveModeOrder =
-	{
-		eDRIVE_MODE_BRAKE,
-		eDRIVE_MODE_ACCEL_FORWARDS,
-		eDRIVE_MODE_BRAKE,
-		eDRIVE_MODE_ACCEL_REVERSE,
-		eDRIVE_MODE_BRAKE,
-		eDRIVE_MODE_HARD_TURN_LEFT,
-		eDRIVE_MODE_BRAKE,
-		eDRIVE_MODE_HARD_TURN_RIGHT,
-		eDRIVE_MODE_ACCEL_FORWARDS,
-		eDRIVE_MODE_HANDBRAKE_TURN_LEFT,
-		eDRIVE_MODE_ACCEL_FORWARDS,
-		eDRIVE_MODE_HANDBRAKE_TURN_RIGHT,
-		eDRIVE_MODE_NONE
-	};
-
-	initVehicle(px);
-}
-
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
-	:
-	gameController(gameController),
-	px(*px)
-{
-	VehiclePhysics::useAI = useAI;
-	if (useAI) {
-		std::vector<physx::PxVec3> p;
-		p.push_back(physx::PxVec3(30.f, 0.f, 30.f));
-		p.push_back(physx::PxVec3(-30.f, 0.f, 30.f));
-		p.push_back(physx::PxVec3(-30.f, 0.f, -30.f));
-		p.push_back(physx::PxVec3(30.f, 0.f, -30.f));
-		VehiclePhysics::ai = AI::AI(p);
-	}
-	VehiclePhysics::game = game;
-	VehiclePhysics::startPosX = startPosX;
-	VehiclePhysics::startPosZ = startPosZ;
-
-	gSteerVsForwardSpeedData =
-	{
-		0.0f,		0.75f,
-		5.0f,		0.75f,
-		30.0f,		0.125f,
-		120.0f,		0.1f,
-		PX_MAX_F32, PX_MAX_F32,
-		PX_MAX_F32, PX_MAX_F32,
-		PX_MAX_F32, PX_MAX_F32,
-		PX_MAX_F32, PX_MAX_F32
-	};
-
-	gSteerVsForwardSpeedTable = PxFixedSizeLookupTable<8>(gSteerVsForwardSpeedData.data(), 4);
-	gKeySmoothingData =
-	{
-		{
-			6.0f,	//rise rate eANALOG_INPUT_ACCEL
-			6.0f,	//rise rate eANALOG_INPUT_BRAKE		
-			6.0f,	//rise rate eANALOG_INPUT_HANDBRAKE	
-			2.5f,	//rise rate eANALOG_INPUT_STEER_LEFT
-			2.5f,	//rise rate eANALOG_INPUT_STEER_RIGHT
-		},
-		{
-			10.0f,	//fall rate eANALOG_INPUT_ACCEL
 			10.0f,	//fall rate eANALOG_INPUT_BRAKE		
 			10.0f,	//fall rate eANALOG_INPUT_HANDBRAKE	
 			5.0f,	//fall rate eANALOG_INPUT_STEER_LEFT
@@ -191,7 +114,9 @@ void VehiclePhysics::Update(Entity* entity)
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
-	stepPhysics();
+
+
+	stepPhysics(entity);
 }
 
 void VehiclePhysics::initVehicle(Physics* px)
@@ -209,20 +134,20 @@ void VehiclePhysics::initVehicle(Physics* px)
 	gFrictionPairs = createFrictionPairs(GetMaterial(px));
 
 	//Create a plane to drive on.
-	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
-	//GetScene(px)->addActor(*gGroundPlane);
+    PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
+	GetScene(px)->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
 	gVehicle4W = createVehicle4W(vehicleDesc, GetPhysics(px), GetCooking(px));
-	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius + 1.0f), startPosZ), PxQuat(PxIdentity));
+	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f), startPosZ), PxQuat(PxIdentity));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 700.f;
-	eng.mMaxOmega = 400;
+	eng.mPeakTorque = 800.f;
+	eng.mMaxOmega = 500;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -253,6 +178,9 @@ void VehiclePhysics::initVehicle(Physics* px)
 
 	//PxVehicleAutoBoxData mAutoBox;
 	//gVehicle4W->mDriveSimData.getAutoBoxData
+	PxTransform com = gVehicle4W->getRigidDynamicActor()->getCMassLocalPose();
+	PxTransform offset = PxTransform(PxVec3(0.0, -1.5, 0.0) + com.p);
+	gVehicle4W->getRigidDynamicActor()->setCMassLocalPose(offset);
 
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
@@ -264,8 +192,10 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Set up the chassis mass, dimensions, moment of inertia, and center of mass offset.
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
-	const PxF32 chassisMass = 1260.0f;
-	const PxVec3 chassisDims(4.0f, 2.0f, 5.0f);
+	//const PxF32 chassisMass = 1260.0f;
+	const PxF32 chassisMass = 1800.0f;
+	const PxVec3 chassisDims(5.0f, 3.0f, 5.5f);
+	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.7f*chassisMass / 12.0f,
@@ -319,7 +249,7 @@ void VehiclePhysics::releaseAllControls()
 	}
 }
 
-void VehiclePhysics::stepPhysics()
+void VehiclePhysics::stepPhysics(Entity* entity)
 {
 	bool accel;
 	bool reverse;
@@ -343,26 +273,51 @@ void VehiclePhysics::stepPhysics()
 
 		blast = gameController.IsPressed(Controller::Button::Y);
 		boost = gameController.IsPressed(Controller::Button::B);
+		barrier = gameController.IsPressed(Controller::Button::A);
 	}
 
 	const PxF32 timestep = 1.0f / 60.0f;
-	readyToFire++;
+
+	abilityTime++;
+	entity->CountBarrier();
+
+	//If full charge we don't start counting
+	if (abilityCharges >= 3) {
+		rechargeTime = 0;
+	}
+	else {
+		rechargeTime++;
+	}
+
+	//Add an ability charge 
+	if (rechargeTime > 120 && abilityCharges < 3) {
+		abilityCharges++;
+		rechargeTime = 0;
+	}
 	
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
-	if (gameController.IsPressed(Controller::Button::A))
+	if (barrier)
 	{
+		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
+			entity->ResetBarrier();
+		}
+
+		aOnPress = false;
 	}
 	else
 	{
+		aOnPress = true;
 	}
 
 	if (boost)
 	{
-		if (bOnPress) {
+		if (abilityTime > 60 && abilityCharges > 0 && bOnPress) {
 			if (!boosting) {
 				boosting = true;
-				boostTimer = 30;
+				boostTimer = 60;
+				abilityTime = 0;
+				abilityCharges--;
 			}
 		}
 		bOnPress = false;
@@ -384,14 +339,14 @@ void VehiclePhysics::stepPhysics()
 
 	if (blast)
 	{
-		if (readyToFire > 60 && yOnPress) {
+		if (abilityTime > 60 && abilityCharges > 0 && yOnPress) {
 			PxQuat transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			//DirectX::XMMATRIX transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
 
 			game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p, transform, gVehicle4W->getRigidDynamicActor()->getLinearVelocity());
-			readyToFire = 0;
 
-
+			abilityTime = 0;
+			abilityCharges--;
 		}
 		yOnPress = false;
 	}
@@ -481,7 +436,10 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-	gVehicle4W->getRigidDynamicActor()->addForce(60000.f * forward);
+	gVehicle4W->getRigidDynamicActor()->addForce(40000.f * forward);
+	if (!gIsVehicleInAir) {
+		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
+	}
 }
 
 

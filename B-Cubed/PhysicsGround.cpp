@@ -24,9 +24,12 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 
 	bool w = tmd.isValid();
 
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	PxFilterData obstFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
 	PxFilterData qryFilterData;
-	qryFilterData.word3 = static_cast<PxU32>(DRIVABLE_SURFACE);
+	//qryFilterData.word3 = static_cast<PxU32>(DRIVABLE_SURFACE);
+
+	GetScene(px)->addActor(*gRigidStatic);
 
 
 	PxDefaultMemoryOutputStream buf;
@@ -38,7 +41,8 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 
 		PxShape* shape = PxRigidActorExt::createExclusiveShape(*gRigidStatic, PxTriangleMeshGeometry(pMesh), *GetMaterial(px));
 		shape->setQueryFilterData(qryFilterData);
-		shape->setSimulationFilterData(groundPlaneSimFilterData);
+		//shape->setSimulationFilterData(groundPlaneSimFilterData);
+		shape->setSimulationFilterData(obstFilterData);
 		shape->setLocalPose(transform);
 
 		GetScene(px)->addActor(*gRigidStatic);

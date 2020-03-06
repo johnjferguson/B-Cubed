@@ -27,10 +27,22 @@ public:
 	void MarkForDeath();
 	bool IsMarkedForDeath();
 
+	void IncreaseHit();
+	const int NumberofHits() const;
+
 	void SetPosition(float x, float y, float z);
 	const DirectX::XMFLOAT3& GetPosition() const;
 	void SetTransform(const DirectX::XMMATRIX& transform_in);
 	const DirectX::XMMATRIX& GetTransform() const;
+	bool CanParry();
+	bool CanBlock();
+	void ResetBarrier();
+	void CountBarrier();
+	void SetBounceBack(bool set);
+	void SetSpinOut(bool set);
+	bool GetBounceBack() const;
+	bool GetSpinOut() const;
+
 private:
 	std::unique_ptr<PhysicsComponent> physicsComponent = nullptr;
 	std::unique_ptr<Renderable> renderable = nullptr;
@@ -40,4 +52,8 @@ private:
 	DirectX::XMMATRIX transform;
 	Entity::Type type = Entity::Type::DEFAULT;
 	bool markedForDeath = false;
+	int hit = 0;
+	int	barrierTime = 0;
+	bool spinOut = false;
+	bool bounceBack = false;
 };
