@@ -178,6 +178,9 @@ void VehiclePhysics::initVehicle(Physics* px)
 
 	//PxVehicleAutoBoxData mAutoBox;
 	//gVehicle4W->mDriveSimData.getAutoBoxData
+	PxTransform com = gVehicle4W->getRigidDynamicActor()->getCMassLocalPose();
+	PxTransform offset = PxTransform(PxVec3(0.0, -1.5, 0.0) + com.p);
+	gVehicle4W->getRigidDynamicActor()->setCMassLocalPose(offset);
 
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
@@ -190,8 +193,8 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
-	const PxF32 chassisMass = 2200.0f;
-	const PxVec3 chassisDims(4.0f, 3.0f, 5.5f);
+	const PxF32 chassisMass = 1800.0f;
+	const PxVec3 chassisDims(5.0f, 3.0f, 5.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
