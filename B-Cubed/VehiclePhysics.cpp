@@ -196,7 +196,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
 	const PxF32 chassisMass = 1800.0f;
-	const PxVec3 chassisDims(5.0f, 3.0f, 5.5f);
+	const PxVec3 chassisDims(5.0f, 3.0f, 6.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
@@ -387,6 +387,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		}
 		else {
 			gVehicleInputData.setAnalogBrake(true);
+			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+			gVehicle4W->getRigidDynamicActor()->addForce(-35000.f * forward);
 		}
 	}
 	else if (accel)
