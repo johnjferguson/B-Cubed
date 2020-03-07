@@ -11,6 +11,7 @@
 #include "Physics.h"
 #include "Mesh.h"
 #include "Sound.h"
+#include "Overlay.h"
 
 class Game
 {
@@ -37,7 +38,10 @@ private:
 	std::vector<std::unique_ptr<Camera>> cameras;
 	RenderTexture renderTexture;
 	Light light;
+	Overlay overlay;
 private:
 	unsigned int iSkybox = 0u;
 	unsigned int activeCamera = 0u;
+	unsigned int numCharges = 0u;
+	unsigned int lapNumber = 0u;
 };

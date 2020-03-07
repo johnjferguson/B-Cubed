@@ -15,7 +15,8 @@ Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f),
+	overlay(wnd.gfx, wnd.GetWidth(), wnd.GetHeight())
 {
 	entities = std::vector<Entity>(10);
 	entities.reserve(110);
@@ -202,6 +203,7 @@ void Game::DoFrame()
 	
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
+	overlay.Draw(wnd.gfx,numCharges, lapNumber);
 	
 	// fetch the physics results for the next frame
 	ps.Fetch();
@@ -235,6 +237,14 @@ void Game::DoInput()
 			{
 				iSkybox = ++iSkybox % skyboxes.size();
 			}
+			break;
+		case VK_SPACE:
+			if (type == Keyboard::Event::Type::Press)
+				numCharges = ++numCharges % 4;
+			break;
+		case VK_SHIFT:
+			if (type == Keyboard::Event::Type::Press)
+				lapNumber = ++lapNumber % 3;
 			break;
 		}
 	}
