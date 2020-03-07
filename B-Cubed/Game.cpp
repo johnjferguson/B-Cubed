@@ -125,6 +125,8 @@ Game::Game()
 
 int Game::Start()
 {
+	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
 	while (true)
 	{
 		if (const auto eCode = wnd.ProcessMessages())
@@ -266,7 +268,7 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 		missileTrans = PxTransform(startPos + forward * 5.0f);
 	}
 	else {
-		missileTrans = PxTransform(startPos + forward * 17.0f);
+		missileTrans = PxTransform(startPos + forward * 13.0f);
 	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
 	PxVec3 missileVel = (forward * 75.f + startVel);

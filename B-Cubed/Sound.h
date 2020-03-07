@@ -48,7 +48,6 @@ public:
 	Sound(Sound&) = delete;
 	Sound& operator=(Sound&) = delete;
 	static void Play(const std::string& file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop);
-private:
 	static bool Load(const std::string& file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop);
 private:
 	ALCdevice* device;

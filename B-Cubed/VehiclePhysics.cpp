@@ -120,6 +120,9 @@ void VehiclePhysics::Update(Entity* entity)
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
 	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
 
+	PxVec3 cur_vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+	gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
+
 	stepPhysics(entity);
 }
 
@@ -335,7 +338,10 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
 			entity->ResetBarrier();
+			if (!useAI) {
+				Sound::Play("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
+			}
 			//spinOutTime = setSpinOutTime;
 		}
 
@@ -351,7 +357,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		if (abilityTime > setAbilityTime && abilityCharges > 0 && bOnPress) {
 			if (!boosting) {
 				boosting = true;
-				boostTimer = 60;
+				boostTimer = setBoostTime;
 				abilityTime = 0;
 				abilityCharges--;
 			}
@@ -378,6 +384,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		if (abilityTime > 60 && abilityCharges > 0 && yOnPress) {
 			PxQuat transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			//DirectX::XMMATRIX transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
+
+			if (!useAI) {
+				Sound::Play("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
+			}
 
 			game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p, transform, gVehicle4W->getRigidDynamicActor()->getLinearVelocity());
 
@@ -472,6 +483,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 void VehiclePhysics::applyBoost() {
 
+	if (boostTimer == setBoostTime - 1 && !useAI) {
+		Sound::Play("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
+	}
+
 	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
@@ -486,7 +502,7 @@ void VehiclePhysics::applyBoost() {
 void VehiclePhysics::spinOut()
 {
 	if (spinOutTime == setSpinOutTime && !useAI) {
-		Sound::Play("sounds//pipe.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+		Sound::Play("sounds//pipe.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	}
 
 	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
