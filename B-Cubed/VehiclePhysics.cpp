@@ -549,10 +549,14 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		checkPoint2 = false;
 		checkPoint3 = false;
 		entity->CountNumLaps();
+		if (entity->GetNumLaps() == 3) {
+			entity->haveWon++;
+
+		}
 	}
 
 	std::stringstream ss;
-	ss << checkPoint1 << "   :   " << checkPoint2 << "  :  " << checkPoint3 << " Laps: " << entity->GetNumLaps();
+	ss << checkPoint1 << "   :   " << checkPoint2 << "  :  " << checkPoint3 << " Laps: " << entity->GetNumLaps() << " Has Won: " << entity->haveWon;
 	Gui::AddText(ss.str().c_str());
 
 }

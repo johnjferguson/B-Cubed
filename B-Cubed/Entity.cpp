@@ -2,7 +2,7 @@
 #include "DirectXMath.h"
 #include "Gui.h"
 
-
+int Entity::haveWon = 0;
 
 Entity::Entity()
 	:
@@ -221,6 +221,16 @@ int Entity::GetNumLaps()
 void Entity::CountNumLaps()
 {
 	numLaps++;
+}
+
+int Entity::getFinishedIn()
+{
+	return finishedin;
+}
+
+void Entity::setFinishedIn(int placement)
+{
+	finishedin = placement;
 }
 
 void Entity::IncreaseHit()

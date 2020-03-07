@@ -50,6 +50,8 @@ public:
 	int GetNumLaps();
 	void CountNumLaps();
 	static int haveWon;
+	int getFinishedIn();
+	void setFinishedIn(int placement);
 public:
 	int lastHitCounter = 0;
 private:
@@ -70,4 +72,5 @@ private:
 	int numLaps = 0;
 	int setParryTime = 10;
 	int setBarrierTime = 60;
+	int finishedin = -1;
 };
