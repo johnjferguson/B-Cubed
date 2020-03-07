@@ -24,7 +24,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
 	VehiclePhysics::startPosZ = startPosZ;
-	
+
 	gSteerVsForwardSpeedData =
 	{
 		0.0f,		0.75f,
@@ -114,8 +114,9 @@ void VehiclePhysics::Update(Entity* entity)
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
+
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
-	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x/2, ang_vel.y/1.05, ang_vel.z/2));
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 2.5, ang_vel.y / 1.05, ang_vel.z / 2.5));
 
 	stepPhysics(entity);
 }
@@ -135,7 +136,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	gFrictionPairs = createFrictionPairs(GetMaterial(px));
 
 	//Create a plane to drive on.
-    PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
 	GetScene(px)->addActor(*gGroundPlane);
 
@@ -147,8 +148,8 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 1200.f;
-	eng.mMaxOmega = 800;
+	eng.mPeakTorque = 800.f;
+	eng.mMaxOmega = 500;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -182,10 +183,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	PxTransform com = gVehicle4W->getRigidDynamicActor()->getCMassLocalPose();
 	PxTransform offset = PxTransform(PxVec3(0.0, -1.5, 0.0) + com.p);
 	gVehicle4W->getRigidDynamicActor()->setCMassLocalPose(offset);
-	/*
-	PxReal damp = gVehicle4W->getRigidDynamicActor()->getAngularDamping();
-	gVehicle4W->getRigidDynamicActor()->setAngularDamping(damp + 6);
-	*/
+
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
 	//startBrakeMode();
@@ -197,8 +195,8 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
-	const PxF32 chassisMass = 2500.0f;
-	const PxVec3 chassisDims(4.5f, 3.0f, 7.5f);
+	const PxF32 chassisMass = 1800.0f;
+	const PxVec3 chassisDims(5.0f, 3.0f, 5.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
@@ -209,7 +207,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
 	const PxF32 wheelMass = 100.0f;
-	const PxF32 wheelRadius = 0.7f;
+	const PxF32 wheelRadius = 0.6f;
 	const PxF32 wheelWidth = 1.0f;
 	const PxF32 wheelMOI = 0.4f*wheelMass*wheelRadius*wheelRadius;
 	const PxU32 nbWheels = 4;
@@ -270,7 +268,8 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		accel = ai.getAcceleration();
 		reverse = ai.getBrake();
 		steer = ai.getSteering();
-	} else {
+	}
+	else {
 		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
 		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
 		steer = gameController.GetLeftStick().x;
@@ -298,7 +297,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		abilityCharges++;
 		rechargeTime = 0;
 	}
-	
+
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
 	if (barrier)
@@ -364,7 +363,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	else
 	{
 	}
-	
+
 	if (reverse)
 	{
 		if ((int)gVehicle4W->computeForwardSpeed() <= 1) {
@@ -424,7 +423,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	//Vehicle update.
 	//const PxVec3 grav = GetScene(&px)->getGravity();
-	const PxVec3 grav = PxVec3(0.0, -12, 0.0);
+	const PxVec3 grav = PxVec3(0.0, -18, 0.0);
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
@@ -442,8 +441,6 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	gVehicle4W->getRigidDynamicActor()->addForce(40000.f * forward);
 	if (!gIsVehicleInAir) {
-	//	gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
+		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
 	}
 }
-
-
