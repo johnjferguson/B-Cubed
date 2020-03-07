@@ -40,6 +40,7 @@ public:
 private:
 	void applyBoost();
 	void spinOut();
+	void checkLaps(Entity* entity);
 private:
 	float							startPosX;
 	float							startPosZ;
@@ -67,6 +68,10 @@ private:
 	int								spinOutTime = 0;
 
 	int								carNum;
+		
+	bool							checkPoint1 = false;
+	bool							checkPoint2 = false;
+	bool                            checkPoint3 = false;
 
 	Controller& gameController;
 	Physics& px;

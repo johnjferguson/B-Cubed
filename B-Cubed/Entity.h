@@ -47,6 +47,9 @@ public:
 	bool GetSpinOut() const;
 	int getNumCharges();
 	void setNumCharges(int x);
+	int GetNumLaps();
+	void CountNumLaps();
+	static int haveWon;
 public:
 	int lastHitCounter = 0;
 private:
@@ -64,7 +67,7 @@ private:
 	bool bounceBack = false;
 	int numCharges = 0;
 	physx::PxVec3 bounceDir;
-
+	int numLaps = 0;
 	int setParryTime = 10;
 	int setBarrierTime = 60;
 };

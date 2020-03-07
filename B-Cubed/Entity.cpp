@@ -213,6 +213,16 @@ void Entity::setNumCharges(int x)
 	numCharges = x;
 }
 
+int Entity::GetNumLaps()
+{
+	return numLaps;
+}
+
+void Entity::CountNumLaps()
+{
+	numLaps++;
+}
+
 void Entity::IncreaseHit()
 {
 	hit++;

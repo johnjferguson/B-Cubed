@@ -123,6 +123,8 @@ void VehiclePhysics::Update(Entity* entity)
 	PxVec3 cur_vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
 
+	checkLaps(entity);
+
 	stepPhysics(entity);
 }
 
@@ -520,4 +522,37 @@ void VehiclePhysics::spinOut()
 		gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 25.3, 0.0f));
 		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -10000.0f, 0));
 	}
+}
+
+void VehiclePhysics::checkLaps(Entity* entity)
+{
+	PxVec3 pos = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+
+	//Passed checkpoint 1
+	if (!checkPoint1 && !checkPoint2 && !checkPoint3 && (pos.x >= 235 && pos.x <= 260) && (pos.z >= 25 && pos.z <= 40)) {
+		checkPoint1 = true;
+	}
+
+	//Passed checkpoint 2
+	if (checkPoint1 && !checkPoint2 && !checkPoint3 && (pos.x >= -25 && pos.x <= -5) && (pos.z >= -145 && pos.z <= -105)) {
+		checkPoint2 = true;
+	}
+
+	//Passed checkpoint 3
+	if (checkPoint1 && checkPoint2 && !checkPoint3 && (pos.x >= -275 && pos.x <= -235) && (pos.z >= 55 && pos.z <= 75)) {
+		checkPoint3 = true;
+	}
+
+	//Passed checkpoint 4
+	if (checkPoint1 && checkPoint2 && checkPoint3 && (pos.x >= 70 && pos.x <= 80) && (pos.z >= 125 && pos.z <= 160)) {
+		checkPoint1 = false;
+		checkPoint2 = false;
+		checkPoint3 = false;
+		entity->CountNumLaps();
+	}
+
+	std::stringstream ss;
+	ss << checkPoint1 << "   :   " << checkPoint2 << "  :  " << checkPoint3 << " Laps: " << entity->GetNumLaps();
+	Gui::AddText(ss.str().c_str());
+
 }
