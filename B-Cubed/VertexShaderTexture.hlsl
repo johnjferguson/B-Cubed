@@ -15,6 +15,7 @@ struct VSOut
 	float4 lightViewPosition : TEXCOORD1;
 	float3 lightPos : TEXCOORD2;
 	float4 pos : SV_POSITION;
+	float4 worldPos : WORLDPOS;
 };
 
 
@@ -43,6 +44,7 @@ VSOut main( float4 pos : POSITION, float4 norm : NORMAL, float2 tex : TEXCOORD )
 	vso.norm = normalize(vso.norm);
 
 	worldPosition = mul(pos, world);
+	vso.worldPos = worldPosition;
 
 	vso.lightPos = lightPosition.xyz - worldPosition.xyz;
 

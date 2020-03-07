@@ -8,9 +8,9 @@ cbuffer CBuf
 };
 
 
-float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosition : TEXCOORD1, float3 lightPos : TEXCOORD2) : SV_TARGET
+float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosition : TEXCOORD1, float3 lightPos : TEXCOORD2, float4 worldPos : WORLDPOS) : SV_TARGET
 {
-
+	
 	float bias;
 	float4 color;
 	float2 projectTexCoord;
@@ -19,9 +19,12 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 	float lightIntensity;
 	float4 textureColor;
 
-	bias = 0.01f;
+	const float3 dirToL = lightPos;
 
-	color = float4(0.6f,0.6f,0.6f,1.0f);
+
+	bias = 0.001f;
+
+	color = float4(0.5f,0.5f,0.5f,1.0f);
 
 	projectTexCoord.x = lightViewPosition.x / lightViewPosition.w / 2.0f + 0.5f;
 	projectTexCoord.y = -lightViewPosition.y / lightViewPosition.w / 2.0f + 0.5f;
@@ -40,16 +43,32 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 
 			if (lightIntensity > 0.0f)
 			{
-				color += (float4(0.2f,0.2f,0.2f,1.0f) * lightIntensity);
+				color += (float4(0.5f,0.5f,0.5f,1.0f) * lightIntensity);
 
 				color = saturate(color);
 			}
 		}
 	}
+	else
+	{
+		lightIntensity = saturate(dot((float3)normal, lightPos));
+
+		if (lightIntensity > 0.0f)
+		{
+			color += (float4(0.4f, 0.4f, 0.4f, 1.0f) * lightIntensity);
+
+			color = saturate(color);
+		}
+	}
+	
+	const float3 w = normal * dot(dirToL, normal);
+	const float3 r = w * 2.0f - dirToL;
+	const float3 specular = pow(max(0.0f, dot(normalize(-r), normalize(worldPos))), 5);
 
 	textureColor = shaderTexture.Sample(SampleTypeClamp, tex);
 
 	color = color * textureColor;
+	//color = textureColor;
 
 	return color;
 

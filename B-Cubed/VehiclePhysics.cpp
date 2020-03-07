@@ -18,9 +18,9 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	
 	gSteerVsForwardSpeedData =
 	{
-		0.0f,		0.75f,
-		5.0f,		0.75f,
-		30.0f,		0.2f,
+		0.0f,		0.90f,
+		5.0f,		0.90f,
+		30.0f,		0.35f,
 		120.0f,		0.75f,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
@@ -113,8 +113,6 @@ void VehiclePhysics::Update(Entity* entity)
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
-
-
 	stepPhysics(entity);
 }
 
@@ -145,8 +143,8 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 800.f;
-	eng.mMaxOmega = 500;
+	eng.mPeakTorque = 900.f;
+	eng.mMaxOmega = 600;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -178,8 +176,11 @@ void VehiclePhysics::initVehicle(Physics* px)
 	//PxVehicleAutoBoxData mAutoBox;
 	//gVehicle4W->mDriveSimData.getAutoBoxData
 	PxTransform com = gVehicle4W->getRigidDynamicActor()->getCMassLocalPose();
-	PxTransform offset = PxTransform(PxVec3(0.0, -1.5, 0.0) + com.p);
+	PxTransform offset = PxTransform(PxVec3(0.0, -1.7, 0.0) + com.p);
 	gVehicle4W->getRigidDynamicActor()->setCMassLocalPose(offset);
+
+	PxReal damp = gVehicle4W->getRigidDynamicActor()->getAngularDamping();
+	gVehicle4W->getRigidDynamicActor()->setAngularDamping(damp + 5);
 
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
@@ -192,8 +193,8 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
-	const PxF32 chassisMass = 1800.0f;
-	const PxVec3 chassisDims(5.0f, 3.0f, 5.5f);
+	const PxF32 chassisMass = 2000.0f;
+	const PxVec3 chassisDims(4.5f, 4.0f, 7.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
@@ -203,11 +204,11 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 100.0f;
+	const PxF32 wheelMass = 50.0f;
 	const PxF32 wheelRadius = 0.6f;
-	const PxF32 wheelWidth = 1.0f;
-	const PxF32 wheelMOI = 0.4f*wheelMass*wheelRadius*wheelRadius;
-	const PxU32 nbWheels = 4;
+	const PxF32 wheelWidth = 0.7f;
+	const PxF32 wheelMOI = 0.5f*wheelMass*wheelRadius*wheelRadius;
+	const PxU32 nbWheels = 6;
 
 	VehicleDesc vehicleDesc;
 
@@ -414,7 +415,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	//Vehicle update.
 	//const PxVec3 grav = GetScene(&px)->getGravity();
-	const PxVec3 grav = PxVec3(0.0, -18, 0.0);
+	const PxVec3 grav = PxVec3(0.0, -12, 0.0);
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
@@ -432,7 +433,7 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	gVehicle4W->getRigidDynamicActor()->addForce(40000.f * forward);
 	if (!gIsVehicleInAir) {
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
+	//	gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
 	}
 }
 

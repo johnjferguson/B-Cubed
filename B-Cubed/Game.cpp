@@ -14,17 +14,17 @@ using namespace physx;
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
-	light(wnd.gfx, { 10.0f, 100.0f, 10.0f, 1.0f }),
+	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
 {
 	entities = std::vector<Entity>(10);
-	entities.reserve(1100);
+	entities.reserve(110);
 
 	//std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//simpletrack.obj");
 
 	//entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
 	//std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
-	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//simpletrack.obj");
+	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//evenbettertrack.obj");
 	std::unique_ptr<Box> br = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//neonwall.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
@@ -168,12 +168,15 @@ void Game::DoFrame()
 	DirectX::XMMATRIX cameraTransform = cameras[activeCamera]->GetTransform(dt);
 	
 	// shadow rendering
-	renderTexture.SetRenderTarget(wnd.gfx.GetContext());
+	renderTexture.SetRenderTarget(wnd.gfx.GetContext());	
 	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
+
+	auto pos = entities[4].GetPosition();
+	light.SetPosition(DirectX::XMFLOAT4(pos.x + 20.0f, pos.y + 50.0f, pos.z, 20.0f));
 
 	for (auto& e : entities)
 	{
-		e.RenderDepth(wnd.gfx, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
+		e.RenderDepth(wnd.gfx, light.LookAt({ pos.x, pos.y, pos.z }), renderTexture.GetPerspective(), light);
 	}
 	
 
@@ -185,11 +188,8 @@ void Game::DoFrame()
 
 	for (auto& e : entities)
 	{
-		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f,0.0f,0.0f }), renderTexture.GetPerspective(), light);
+		e.Render(wnd.gfx, cameraTransform, light.LookAt({ pos.x, pos.y, pos.z }), renderTexture.GetPerspective(), light);
 	}
-
-	DirectX::XMFLOAT3 car_pos = entities[4].GetPosition();
-	light.SetPosition(DirectX::XMFLOAT4(car_pos.x + 0.0f, car_pos.y + 30.0f, car_pos.z, 5.0f));
 
 	struct Transform
 	{
@@ -214,10 +214,7 @@ void Game::DoFrame()
 	
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
-	/*
-	cam0 = std::make_unique<FollowCamera>();
-	cam0->SetTarget(entities[4]);
-	*/
+	
 	// fetch the physics results for the next frame
 	ps.Fetch();
 
