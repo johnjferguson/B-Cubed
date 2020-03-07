@@ -1,12 +1,13 @@
-#include "AI.h";
+#include "AI.h"
 #include "Gui.h"
 
 AI::AI() {
 
 }
 
-AI::AI(std::vector<physx::PxVec3> p) {
+AI::AI(std::vector<physx::PxVec3> p, physx::PxVehicleDrive4W* c) {
 	path = p;
+	car = c;
 }
 
 AI::~AI() {
@@ -59,71 +60,128 @@ float AI::vectorToDegrees(DirectX::XMVECTOR dir) {
 	return deg;
 }
 
-void AI::update(physx::PxVec3 position, physx::PxVec3 velocity, DirectX::XMVECTOR direction) {
+void AI::doCalculations() {
+	physx::PxVec3 velocity = car->getRigidDynamicActor()->getLinearVelocity();
+	physx::PxVec3 position = car->getRigidDynamicActor()->getGlobalPose().p;
+	physx::PxQuat quint = car->getRigidDynamicActor()->getGlobalPose().q;
+	DirectX::XMVECTOR direction = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)).r[2];
+	
+	
+	speed = car->computeForwardSpeed(); //pow(pow(velocity.x, 2) + pow(velocity.y, 2) + pow(velocity.z, 2), 0.5f);
+	rpm = car->mDriveDynData.getEngineRotationSpeed();
+
+	if (path.size() > 0) {
+		point = path[targetPoint];
+
+		// Calculate distance to point
+		distance = distanceToPoint(position, point);
+
+		// Calculate direction variables
+		degToPoint = directionToPoint(position, point);
+		degFacing = vectorToDegrees(direction);
+		dirDiff = degToPoint - degFacing;
+		if (dirDiff < -180) {
+			dirDiff += 360;
+		} else if (dirDiff > 180) {
+			dirDiff -= 360;
+		}
+	}
+}
+
+void AI::update() {
 	// Clear all current inputs
 	accel = false;
 	brake = false;
 	steer = 0.f;
 
-	float speed = pow(pow(velocity.x, 2) + pow(velocity.y, 2) + pow(velocity.z, 2), 0.5f);
+	doCalculations();
 
-	if (path.size() > 0) {
-		physx::PxVec3 point = path[targetPoint];
+	Gui::AddText("AI Speed: " + std::to_string(speed) );
 
-		// If Vehicle is within an adequate distance to its targeted point
-		float distance = distanceToPoint(position, point);
+	switch (state) {
+		case DRIVE:
+			Gui::AddText("Current State: DRIVE");
+			drive();
+			break;
+		case TURN:
+			Gui::AddText("Current State: TURN");
+			turn();
+			break;
+		case REVERSE:
+			Gui::AddText("Current State: REVERSE");
+			reverse();
+			break;
+		default:
+			break;
+	}
+}
 
-		if (distance <= safeRange) {
-			targetPoint += 1;
+void AI::drive() {
+	if (distance <= safeRange) {
+		targetPoint += 1;
 
-			if (targetPoint >= path.size())
-				targetPoint = 0;
-
-			// Update point after finding new target
-			point = path[targetPoint];
+		if (targetPoint >= path.size()) {
+			targetPoint = 0;
 		}
 
-		// Ensure car is facing point
-		float deg = directionToPoint(position, point);
-		float facing = vectorToDegrees(direction);
-		float dd = deg - facing; // Direction difference
-		if (dd < -180)
-			dd += 360;
-		else if (dd > 180)
-			dd -= 360;
-	
+		state = TURN;
 
-		// Is car direction outside of allowed range
-		if (abs(dd) > directionRange) {
-			if (dd > 0) {
-				// GOAL: Decrease direction
-				// Requires tweaking
-				accel = true;
-				steer = -0.4f;
-			}
-			else {
-				// GOAL: Increase direction
-
-				accel = true;
-				steer = 0.4f;
-			}
+	} else {
+		if (distance > slowRange) {
+			// GOAL: Go fast
+			accel = true;
 		} else {
-			//
-			// AT THIS POINT THE CAR SHOULD BE FACING THE POINT WITHIN ALLOWED RANGE
-			//
-
-			// Calculate Movement
-			if (distanceToPoint(position, point) > slowRange) {
-				// GOAL: Go fast
-
+			// GOAL: Slowdown to adequate speed for turning before entering safeRange
+			if (speed < 4) {
 				accel = true;
-			} else {
-				// GOAL: Slowdown to adequate speed for turning before entering safeRange
-
-				if (speed < 4)
-					accel = true;
 			}
 		}
+
+		if (isStuck()) {
+			state = REVERSE;
+		}
+	}
+}
+
+bool AI::isStuck() {
+	return (rpm > 90 && abs(speed) < 0.1f);
+}
+
+void AI::turn() {
+	accel = true;
+	if (abs(dirDiff) > directionRange) {
+		if (dirDiff > 0) {
+			// GOAL: Decrease direction
+			steer = -0.4f;
+		}
+		else {
+			// GOAL: Increase direction
+			steer = 0.4f;
+		}
+
+		if (isStuck()) {
+			state = REVERSE;
+		}
+	} else {
+		state = DRIVE;
+	}
+}
+
+void AI::reverse() {
+	brake = true;
+
+	if (abs(dirDiff) > directionRange) {
+		if (dirDiff > 0) {
+			// GOAL: Decrease direction
+			steer = 0.4f;
+		}
+		else {
+			// GOAL: Increase direction
+			steer = -0.4f;
+		}
+	}
+	else {
+		state = DRIVE;
 	}
 }
 

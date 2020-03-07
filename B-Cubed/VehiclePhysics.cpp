@@ -6,20 +6,11 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ)
 	:
 	gameController(gameController),
 	px(*px)
 {
-	VehiclePhysics::useAI = useAI;
-	if (useAI) {
-		std::vector<physx::PxVec3> p;
-		p.push_back(physx::PxVec3(30.f, 0.f, 30.f));
-		p.push_back(physx::PxVec3(-30.f, 0.f, 30.f));
-		p.push_back(physx::PxVec3(-30.f, 0.f, -30.f));
-		p.push_back(physx::PxVec3(30.f, 0.f, -30.f));
-		VehiclePhysics::ai = AI::AI(p);
-	}
 
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
@@ -92,6 +83,14 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	};
 
 	initVehicle(px);
+}
+
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosZ)
+	:
+	VehiclePhysics(px, gameController, game, startPosX, startPosZ) 
+{
+	VehiclePhysics::useAI = true;
+	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
 }
 
 void VehiclePhysics::Update(Entity* entity)
@@ -256,12 +255,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	float steer;
 
 	if (useAI) {
-		PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-		PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
-		PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-		DirectX::XMVECTOR dirVec = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)).r[2];
-
-		ai.update(vehicle_position, vel, dirVec);
+		ai.update();
 
 		accel = ai.getAcceleration();
 		reverse = ai.getBrake();
