@@ -44,7 +44,7 @@ public:
 	bool GetBounceBack() const;
 	bool GetSpinOut() const;
 	int getNumCharges();
-	int setNumCharges(int x);
+	void setNumCharges(int x);
 public:
 	int lastHitCounter = 0;
 private:

@@ -197,7 +197,7 @@ int Entity::getNumCharges()
 	return numCharges;
 }
 
-int Entity::setNumCharges(int x)
+void Entity::setNumCharges(int x)
 {
 	numCharges = x;
 }
