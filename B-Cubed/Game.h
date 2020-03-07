@@ -20,6 +20,8 @@ public:
 	void DoFrame();
 	void DoInput();
 	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel);
+public:
+	unsigned int gameCounter = 0u;
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy

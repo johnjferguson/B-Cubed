@@ -89,7 +89,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 					entity0->MarkForDeath();
 				}
 				else if (entity0->lastHitCounter > 5){
-					Sound::Play("sounds//yoshi.wav");
+					Sound::Play("sounds//yoshi.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 					entity0->IncreaseHit();
 					entity0->lastHitCounter = 0;
 				}
@@ -99,7 +99,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 					entity1->MarkForDeath();
 				}
 				else if (entity1->lastHitCounter > 5){
-					Sound::Play("sounds//yoshi.wav");
+					Sound::Play("sounds//yoshi.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 					entity1->IncreaseHit();
 					entity1->lastHitCounter = 0;
 				}

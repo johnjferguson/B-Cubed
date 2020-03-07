@@ -6,11 +6,12 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ, int carNum)
 	:
 	gameController(gameController),
 	px(*px)
 {
+	VehiclePhysics::carNum = carNum;
 	VehiclePhysics::useAI = useAI;
 	if (useAI) {
 		std::vector<physx::PxVec3> p;
@@ -117,7 +118,7 @@ void VehiclePhysics::Update(Entity* entity)
 	entity->setNumCharges(abilityCharges);
 
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
-	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 2.5, ang_vel.y / 1.05, ang_vel.z / 2.5));
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
 
 	stepPhysics(entity);
 }
@@ -144,7 +145,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
 	gVehicle4W = createVehicle4W(vehicleDesc, GetPhysics(px), GetCooking(px));
-	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f), startPosZ), PxQuat(PxIdentity));
+	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f), startPosZ), PxQuat(0, -0.707, 0, -0.707));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
@@ -197,7 +198,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
 	const PxF32 chassisMass = 1800.0f;
-	const PxVec3 chassisDims(5.0f, 3.0f, 6.5f);
+	const PxVec3 chassisDims(4.5f, 3.0f, 6.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
@@ -254,30 +255,47 @@ void VehiclePhysics::releaseAllControls()
 
 void VehiclePhysics::stepPhysics(Entity* entity)
 {
-	bool accel;
-	bool reverse;
-	float steer;
+	bool accel = false;
+	bool reverse = false;
+	float steer = 0;
 
-	if (useAI) {
-		PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-		PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
-		PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-		DirectX::XMVECTOR dirVec = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)).r[2];
 
-		ai.update(vehicle_position, vel, dirVec);
+	PxVec3 pos = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+	PxQuat qua = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 
-		accel = ai.getAcceleration();
-		reverse = ai.getBrake();
-		steer = ai.getSteering();
+	if (!useAI) {
+		std::stringstream ss;
+		ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
+		Gui::AddText(ss.str().c_str());
+
+		std::stringstream oo;
+		oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
+		Gui::AddText(oo.str().c_str());
 	}
-	else {
-		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
-		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
-		steer = gameController.GetLeftStick().x;
 
-		blast = gameController.IsPressed(Controller::Button::Y);
-		boost = gameController.IsPressed(Controller::Button::B);
-		barrier = gameController.IsPressed(Controller::Button::A);
+	if (game->gameCounter > 250) {
+
+		if (useAI) {
+			PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+			PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+			PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			DirectX::XMVECTOR dirVec = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)).r[2];
+
+			ai.update(vehicle_position, vel, dirVec);
+
+			accel = ai.getAcceleration();
+			reverse = ai.getBrake();
+			steer = ai.getSteering();
+		}
+		else {
+			accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
+			reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
+			steer = gameController.GetLeftStick().x;
+
+			blast = gameController.IsPressed(Controller::Button::Y);
+			boost = gameController.IsPressed(Controller::Button::B);
+			barrier = gameController.IsPressed(Controller::Button::A);
+		}
 	}
 
 	const PxF32 timestep = 1.0f / 60.0f;
@@ -467,8 +485,8 @@ void VehiclePhysics::applyBoost() {
 
 void VehiclePhysics::spinOut()
 {
-	if (spinOutTime == 30) {
-		Sound::Play("sounds//yoshi.wav");
+	if (spinOutTime == 30 && !useAI) {
+		Sound::Play("sounds//pipe.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	}
 
 	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
@@ -483,7 +501,7 @@ void VehiclePhysics::spinOut()
 	}
 	else {
 		PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
-		gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 33, 0.0f));
+		gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 25.3, 0.0f));
 		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -10000.0f, 0));
 	}
 }

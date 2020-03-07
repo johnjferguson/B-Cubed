@@ -45,10 +45,10 @@ Game::Game()
 	// create physics component
 
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, -10.0f, 140.0f);
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -30.f, 140.f);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -25.f, 140.f);
-	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -10.f, -140.f);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, -15.0f, 130.0f, 0);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 1.6f, 136.6f, 1);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 18.3f, 143.2f, 2);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 35.f, 150.f, 3);
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -137,6 +137,7 @@ int Game::Start()
 
 void Game::DoFrame()
 {
+
 	wnd.gfx.StartFrame();
 	gui.Begin("B-Cubed gui window");
 	
@@ -209,6 +210,15 @@ void Game::DoFrame()
 	std::vector<Entity>::const_iterator iter = std::partition(entities.begin(), entities.end(), [](Entity& e) {return !e.IsMarkedForDeath(); });
 
 	entities.erase(iter, entities.end());
+
+	if (gameCounter == 0) {
+		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	}
+	else if (gameCounter == 240) {
+		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
+	}
+
+	gameCounter++;
 
 	gui.End();
 	wnd.gfx.EndFrame();

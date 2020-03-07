@@ -31,7 +31,7 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ);
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ, int carNum);
 	virtual void Update(Entity* entity) override;
 	void initVehicle(Physics* ps);
 	snippetvehicle::VehicleDesc initVehicleDesc(Physics* ps);
@@ -65,6 +65,8 @@ private:
 	int								rechargeTime = 0;
 	int								abilityTime = 0;
 	int								spinOutTime = 0;
+
+	int								carNum;
 
 	Controller& gameController;
 	Physics& px;
