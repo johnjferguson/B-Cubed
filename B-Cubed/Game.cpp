@@ -253,19 +253,19 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	PxTransform missileTrans;
 
 	if (startVel.magnitude() <= 40) {
-		missileTrans = PxTransform(startPos + forward * 4.0f);
+		missileTrans = PxTransform(startPos + forward * 5.0f);
 	}
 	else {
-		missileTrans = PxTransform(startPos + forward * 15.0f);
+		missileTrans = PxTransform(startPos + forward * 17.0f);
 	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
 	PxVec3 missileVel = (forward * 75.f + startVel);
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.5f, 0.5f, 0.5f));
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.8f, 0.8f, 0.8f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));
-	Game::entities[entities.size()-1].SetPosition(startPos.x, startPos.y, startPos.z);
+	Game::entities[entities.size()-1].SetPosition(startPos.x + forward.x, startPos.y, startPos.z + forward.z);
 	Game::entities[entities.size()-1].AddPhysics(std::move(vp2)); 
 	Game::entities[entities.size()-1].SetType(Entity::Type::MISSILE); 
 }

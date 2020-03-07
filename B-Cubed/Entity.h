@@ -28,6 +28,7 @@ public:
 	bool IsMarkedForDeath();
 
 	void IncreaseHit();
+	void ResetHit();
 	const int NumberofHits() const;
 
 	void SetPosition(float x, float y, float z);
@@ -42,7 +43,10 @@ public:
 	void SetSpinOut(bool set);
 	bool GetBounceBack() const;
 	bool GetSpinOut() const;
-
+	int getNumCharges();
+	void setNumCharges(int x);
+public:
+	int lastHitCounter = 0;
 private:
 	std::unique_ptr<PhysicsComponent> physicsComponent = nullptr;
 	std::unique_ptr<Renderable> renderable = nullptr;
@@ -56,4 +60,5 @@ private:
 	int	barrierTime = 0;
 	bool spinOut = false;
 	bool bounceBack = false;
+	int numCharges = 0;
 };

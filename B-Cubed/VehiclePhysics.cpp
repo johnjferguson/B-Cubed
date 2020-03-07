@@ -24,7 +24,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
 	VehiclePhysics::startPosZ = startPosZ;
-	
+
 	gSteerVsForwardSpeedData =
 	{
 		0.0f,		0.75f,
@@ -114,7 +114,10 @@ void VehiclePhysics::Update(Entity* entity)
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
+	entity->setNumCharges(abilityCharges);
 
+	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 2.5, ang_vel.y / 1.05, ang_vel.z / 2.5));
 
 	stepPhysics(entity);
 }
@@ -134,7 +137,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	gFrictionPairs = createFrictionPairs(GetMaterial(px));
 
 	//Create a plane to drive on.
-    PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
 	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
 	GetScene(px)->addActor(*gGroundPlane);
 
@@ -194,7 +197,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
 	const PxF32 chassisMass = 1800.0f;
-	const PxVec3 chassisDims(5.0f, 3.0f, 5.5f);
+	const PxVec3 chassisDims(5.0f, 3.0f, 6.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
@@ -266,7 +269,8 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		accel = ai.getAcceleration();
 		reverse = ai.getBrake();
 		steer = ai.getSteering();
-	} else {
+	}
+	else {
 		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
 		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
 
@@ -297,13 +301,27 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		abilityCharges++;
 		rechargeTime = 0;
 	}
-	
+
+	//If hit with a bullet vehicle will spinout
+	if (entity->GetSpinOut()) {
+		spinOutTime = 30;
+		entity->SetSpinOut(false);
+	}
+
+	if (spinOutTime > 0) {
+		spinOut();
+		spinOutTime--;
+	}
+
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
 	if (barrier)
 	{
+
 		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
 			entity->ResetBarrier();
+
+			spinOutTime = 30;
 		}
 
 		aOnPress = false;
@@ -363,7 +381,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	else
 	{
 	}
-	
+
 	if (reverse)
 	{
 		if ((int)gVehicle4W->computeForwardSpeed() <= 1) {
@@ -373,6 +391,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		}
 		else {
 			gVehicleInputData.setAnalogBrake(true);
+			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+			gVehicle4W->getRigidDynamicActor()->addForce(-35000.f * forward);
 		}
 	}
 	else if (accel)
@@ -441,8 +464,29 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	gVehicle4W->getRigidDynamicActor()->addForce(40000.f * forward);
 	if (!gIsVehicleInAir) {
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
+		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
 	}
 }
 
+void VehiclePhysics::spinOut()
+{
+	if (spinOutTime == 30) {
+		Sound::Play("sounds//yoshi.wav");
+	}
 
+	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+	//gVehicle4W->getRigidDynamicActor()->addForce(-40000.f * forward);
+
+	if (spinOutTime == 1) {
+
+	}
+	else {
+		PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
+		gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 33, 0.0f));
+		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -10000.0f, 0));
+	}
+}
