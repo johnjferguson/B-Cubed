@@ -54,27 +54,36 @@ class ContactReportCallback : public PxSimulationEventCallback
 
 		if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
 		{
-			entity1->SetBounceBack(true);
+
 			if (entity0->CanParry()) {
-				
+				entity1->SetBounceBack(true);
 			}
 			else if (entity0->CanBlock()) {
-				//entity1->MarkForDeath();
+				entity1->MarkForDeath();
 			}
 			else {
-				//entity1->MarkForDeath();
-				//spin out aswell
+				entity1->MarkForDeath();
+				entity0->SetSpinOut(true);
 			}
 		}
 		else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
 		{
-			entity1->SetBounceBack(true);
+			if (entity1->CanParry()) {
+				entity0->SetBounceBack(true);
+			}
+			else if (entity1->CanBlock()) {
+				entity0->MarkForDeath();
+			}
+			else {
+				entity0->MarkForDeath();
+				entity1->SetSpinOut(true);
+			}
 			//entity0->MarkForDeath();
 		}
 		else if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
 		{
 			if (entity0->GetType() == Entity::Type::MISSILE) {
-				if (entity0->NumberofHits() > 3) {
+				if (entity0->NumberofHits() > 4) {
 					entity0->MarkForDeath();
 				}
 				else {
@@ -83,7 +92,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 				}
 			}
 			else {
-				if (entity1->NumberofHits() > 3) {
+				if (entity1->NumberofHits() > 4) {
 					entity1->MarkForDeath();
 				}
 				else {

@@ -298,12 +298,26 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		rechargeTime = 0;
 	}
 
+	//If hit with a bullet vehicle will spinout
+	if (entity->GetSpinOut()) {
+		spinOutTime = 30;
+		entity->SetSpinOut(false);
+	}
+
+	if (spinOutTime > 0) {
+		spinOut();
+		spinOutTime--;
+	}
+
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
 	//incrementDrivingMode(timestep);
 	if (barrier)
 	{
+
 		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
 			entity->ResetBarrier();
+
+			spinOutTime = 30;
 		}
 
 		aOnPress = false;
@@ -441,6 +455,27 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	gVehicle4W->getRigidDynamicActor()->addForce(40000.f * forward);
 	if (!gIsVehicleInAir) {
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
+		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
+	}
+}
+
+void VehiclePhysics::spinOut()
+{
+	Gui::AddText("I am spinning out");
+
+	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+
+	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
+	//gVehicle4W->getRigidDynamicActor()->addForce(-40000.f * forward);
+
+	if (spinOutTime == 1) {
+
+	}
+	else {
+		PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
+		gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 33, 0.0f));
+		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -10000.0f, 0));
 	}
 }

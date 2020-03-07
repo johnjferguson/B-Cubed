@@ -39,6 +39,7 @@ public:
 	void stepPhysics(Entity* entity);
 private:
 	void applyBoost();
+	void spinOut();
 private:
 	float							startPosX;
 	float							startPosZ;
@@ -63,6 +64,7 @@ private:
 	int								abilityCharges = 0;
 	int								rechargeTime = 0;
 	int								abilityTime = 0;
+	int								spinOutTime = 0;
 
 	Controller& gameController;
 	Physics& px;
