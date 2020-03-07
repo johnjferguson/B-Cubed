@@ -42,4 +42,6 @@ private:
 	const class Entity* entity = nullptr;
 	const float followZ = 15.0f;
 	const float followY = 6.0f;
+	DirectX::XMVECTOR previous_vz = DirectX::XMVectorZero();
+	float radianPerSecond = 1.607f;
 };

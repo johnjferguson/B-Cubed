@@ -45,9 +45,5 @@ void Light::SetPosition(const DirectX::XMFLOAT4 & newPos)
 
 DirectX::XMMATRIX Light::LookAt(const DirectX::XMFLOAT3& target) const
 {
-	DirectX::XMVECTOR look = DirectX::XMVectorSubtract(DirectX::XMVectorSet(target.x, target.y, target.z, 0.0f),
-													   DirectX::XMVectorSet(pos.x, pos.y, pos.z, 0.0f));
-	look = DirectX::XMVector3Normalize(look);
-
-	return DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(pos.x, pos.y, pos.z, pos.w), look, DirectX::XMVectorSet(0.0f,1.0f,0.0f,0.0f));
+	return DirectX::XMMatrixLookAtLH(DirectX::XMVectorSet(pos.x, pos.y, pos.z, pos.w), DirectX::XMLoadFloat3(&target), DirectX::XMVectorSet(0.0f,1.0f,0.0f,0.0f));
 }

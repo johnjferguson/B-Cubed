@@ -73,7 +73,10 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	// add indices to renderable
 	m_indices = std::move(indices);
 
-	AddBind(std::make_unique<Texture>(gfx, L"images//neonwall.jpg"));
+	if (path == "models//vehicle.obj")
+		AddBind(std::make_unique<Texture>(gfx, L"images//green.jpg"));
+	else
+		AddBind(std::make_unique<Texture>(gfx, L"images//neonwall.jpg"));
 
 	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderTexture.cso");
 	ID3DBlob* vertexBlob = pVertexShader->GetBlob();
