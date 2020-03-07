@@ -187,6 +187,17 @@ bool Entity::GetBounceBack() const
 	return bounceBack;
 }
 
+void Entity::SetBounceDir(physx::PxVec3 dir)
+{
+	bounceDir = dir;
+}
+
+physx::PxVec3 Entity::GetBounceDir() const
+{
+	return bounceDir;
+}
+
+
 bool Entity::GetSpinOut() const
 {
 	return spinOut;

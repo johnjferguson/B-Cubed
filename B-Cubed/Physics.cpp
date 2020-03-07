@@ -54,8 +54,8 @@ class ContactReportCallback : public PxSimulationEventCallback
 
 		if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
 		{
-
 			if (entity0->CanParry()) {
+			//if (true) {
 				entity1->SetBounceBack(true);
 				entity1->ResetHit();
 			}
@@ -70,6 +70,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 		else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
 		{
 			if (entity1->CanParry()) {
+			//if (true) {
 				entity0->SetBounceBack(true);
 				entity0->ResetHit();
 			}

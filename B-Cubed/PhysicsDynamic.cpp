@@ -17,6 +17,8 @@ PhysicsDynamic::PhysicsDynamic(Physics* px, const physx::PxTransform& transform,
 	gRigidDynamic->getShapes(shapes, 1);
 	shapes[0]->setSimulationFilterData(obstFilterData);
 
+	gRigidDynamic->setMass(1);
+
 	GetScene(px)->addActor(*gRigidDynamic);
 }
 

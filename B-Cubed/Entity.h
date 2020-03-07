@@ -42,6 +42,8 @@ public:
 	void SetBounceBack(bool set);
 	void SetSpinOut(bool set);
 	bool GetBounceBack() const;
+	void SetBounceDir(physx::PxVec3 dir);
+	physx::PxVec3 GetBounceDir() const;
 	bool GetSpinOut() const;
 	int getNumCharges();
 	void setNumCharges(int x);
@@ -61,4 +63,5 @@ private:
 	bool spinOut = false;
 	bool bounceBack = false;
 	int numCharges = 0;
+	physx::PxVec3 bounceDir;
 };
