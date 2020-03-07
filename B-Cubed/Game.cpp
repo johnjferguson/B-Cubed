@@ -14,11 +14,11 @@ using namespace physx;
 Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
-	light(wnd.gfx, { 10.0f, 30.0f, 10.0f, 1.0f }),
+	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
 {
 	entities = std::vector<Entity>(10);
-	entities.reserve(1100);
+	entities.reserve(110);
 
 	//std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//simpletrack.obj");
 
@@ -160,10 +160,11 @@ void Game::DoFrame()
 	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
 
 	auto pos = entities[4].GetPosition();
+	light.SetPosition(DirectX::XMFLOAT4(pos.x + 20.0f, pos.y + 50.0f, pos.z, 20.0f));
 
 	for (auto& e : entities)
 	{
-		e.RenderDepth(wnd.gfx, light.LookAt({ 0.0f, 0.0f, 0.0f }), renderTexture.GetPerspective(), light);
+		e.RenderDepth(wnd.gfx, light.LookAt({ pos.x, pos.y, pos.z }), renderTexture.GetPerspective(), light);
 	}
 	
 
@@ -175,12 +176,8 @@ void Game::DoFrame()
 
 	for (auto& e : entities)
 	{
-		//e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f, 0.0f, 0.0f }), renderTexture.GetPerspective(), light);
-		e.Render(wnd.gfx, cameraTransform, light.LookAt({ 0.0f, 0.0f, 0.0f }), DirectX::XMMatrixIdentity(), light);
+		e.Render(wnd.gfx, cameraTransform, light.LookAt({ pos.x, pos.y, pos.z }), renderTexture.GetPerspective(), light);
 	}
-
-	DirectX::XMFLOAT3 car_pos = entities[4].GetPosition();
-	light.SetPosition(DirectX::XMFLOAT4(car_pos.x + 30.0f, car_pos.y + 30.0f, car_pos.z, 10.0f));
 
 	struct Transform
 	{
