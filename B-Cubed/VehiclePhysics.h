@@ -88,4 +88,8 @@ private:
 
 	bool boosting;	// is true when vehicle is currently boosting
 	int boostTimer; // counts down while boosting -> boosting stops at 0
+
+	const int setSpinOutTime = 30;   //how long a spinout lasts
+	const int setAbilityTime = 60;   //how often player can use an ability
+	const int setRechargeTime = 120; //how often player gets an ability charge
 };

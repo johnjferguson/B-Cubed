@@ -147,7 +147,7 @@ const DirectX::XMMATRIX & Entity::GetTransform() const
 
 bool Entity::CanParry()
 {
-	if (barrierTime < 10) {
+	if (barrierTime < setParryTime) {
 		return true;
 	}
 
@@ -156,7 +156,7 @@ bool Entity::CanParry()
 
 bool Entity::CanBlock()
 {
-	if (barrierTime < 60) {
+	if (barrierTime < setBarrierTime) {
 		return true;
 	}
 	return false;

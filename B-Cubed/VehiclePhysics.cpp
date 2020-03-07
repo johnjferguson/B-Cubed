@@ -312,14 +312,14 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	}
 
 	//Add an ability charge 
-	if (rechargeTime > 120 && abilityCharges < 3) {
+	if (rechargeTime > setRechargeTime && abilityCharges < 3) {
 		abilityCharges++;
 		rechargeTime = 0;
 	}
 
 	//If hit with a bullet vehicle will spinout
 	if (entity->GetSpinOut()) {
-		spinOutTime = 30;
+		spinOutTime = setSpinOutTime;
 		entity->SetSpinOut(false);
 	}
 
@@ -336,7 +336,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
 			entity->ResetBarrier();
 
-			spinOutTime = 30;
+			//spinOutTime = setSpinOutTime;
 		}
 
 		aOnPress = false;
@@ -348,7 +348,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	if (boost)
 	{
-		if (abilityTime > 60 && abilityCharges > 0 && bOnPress) {
+		if (abilityTime > setAbilityTime && abilityCharges > 0 && bOnPress) {
 			if (!boosting) {
 				boosting = true;
 				boostTimer = 60;
@@ -485,7 +485,7 @@ void VehiclePhysics::applyBoost() {
 
 void VehiclePhysics::spinOut()
 {
-	if (spinOutTime == 30 && !useAI) {
+	if (spinOutTime == setSpinOutTime && !useAI) {
 		Sound::Play("sounds//pipe.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	}
 

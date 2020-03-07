@@ -64,4 +64,7 @@ private:
 	bool bounceBack = false;
 	int numCharges = 0;
 	physx::PxVec3 bounceDir;
+
+	int setParryTime = 10;
+	int setBarrierTime = 60;
 };
