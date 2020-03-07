@@ -192,9 +192,24 @@ bool Entity::GetSpinOut() const
 	return spinOut;
 }
 
+int Entity::getNumCharges()
+{
+	return numCharges;
+}
+
+int Entity::setNumCharges(int x)
+{
+	numCharges = x;
+}
+
 void Entity::IncreaseHit()
 {
 	hit++;
+}
+
+void Entity::ResetHit()
+{
+	hit = 0;
 }
 
 const int Entity::NumberofHits() const

@@ -114,6 +114,7 @@ void VehiclePhysics::Update(Entity* entity)
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	Gui::AddText(ss.str().c_str());
 
+	entity->setNumCharges(abilityCharges);
 
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
 	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 2.5, ang_vel.y / 1.05, ang_vel.z / 2.5));
@@ -466,7 +467,9 @@ void VehiclePhysics::applyBoost() {
 
 void VehiclePhysics::spinOut()
 {
-	Gui::AddText("I am spinning out");
+	if (spinOutTime == 30) {
+		Sound::Play("sounds//yoshi.wav");
+	}
 
 	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];

@@ -27,6 +27,8 @@ void MissilePhysics::Update(Entity* entity)
 		entity->SetBounceBack(false);
 	}
 
+	entity->lastHitCounter++;
+
 	PhysicsDynamic::Update(entity);
 	/*
 	gRigidDynamic->userData = (void*)entity;

@@ -57,6 +57,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 
 			if (entity0->CanParry()) {
 				entity1->SetBounceBack(true);
+				entity1->ResetHit();
 			}
 			else if (entity0->CanBlock()) {
 				entity1->MarkForDeath();
@@ -70,6 +71,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 		{
 			if (entity1->CanParry()) {
 				entity0->SetBounceBack(true);
+				entity0->ResetHit();
 			}
 			else if (entity1->CanBlock()) {
 				entity0->MarkForDeath();
@@ -83,21 +85,23 @@ class ContactReportCallback : public PxSimulationEventCallback
 		else if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE) 
 		{
 			if (entity0->GetType() == Entity::Type::MISSILE) {
-				if (entity0->NumberofHits() > 4) {
+				if (entity0->NumberofHits() > 3) {
 					entity0->MarkForDeath();
 				}
-				else {
+				else if (entity0->lastHitCounter > 5){
 					Sound::Play("sounds//yoshi.wav");
 					entity0->IncreaseHit();
+					entity0->lastHitCounter = 0;
 				}
 			}
 			else {
-				if (entity1->NumberofHits() > 4) {
+				if (entity1->NumberofHits() > 3) {
 					entity1->MarkForDeath();
 				}
-				else {
+				else if (entity1->lastHitCounter > 5){
 					Sound::Play("sounds//yoshi.wav");
 					entity1->IncreaseHit();
+					entity1->lastHitCounter = 0;
 				}
 			}
 		}
