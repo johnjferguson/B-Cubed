@@ -6,21 +6,12 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ, int carNum)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ, int carNum)
 	:
 	gameController(gameController),
 	px(*px)
 {
 	VehiclePhysics::carNum = carNum;
-	VehiclePhysics::useAI = useAI;
-	if (useAI) {
-		std::vector<physx::PxVec3> p;
-		p.push_back(physx::PxVec3(30.f, 0.f, 30.f));
-		p.push_back(physx::PxVec3(-30.f, 0.f, 30.f));
-		p.push_back(physx::PxVec3(-30.f, 0.f, -30.f));
-		p.push_back(physx::PxVec3(30.f, 0.f, -30.f));
-		VehiclePhysics::ai = AI::AI(p);
-	}
 
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
@@ -93,6 +84,14 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	};
 
 	initVehicle(px);
+}
+
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosZ, int carNum)
+	:
+	VehiclePhysics(px, gameController, game, startPosX, startPosZ, carNum) 
+{
+	VehiclePhysics::useAI = true;
+	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
 }
 
 void VehiclePhysics::Update(Entity* entity)
@@ -263,7 +262,6 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	bool accel = false;
 	bool reverse = false;
 	float steer = 0;
-
 
 	PxVec3 pos = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
 	PxQuat qua = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;

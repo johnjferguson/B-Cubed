@@ -31,7 +31,9 @@ public:
 		eDRIVE_MODE_BRAKE,
 		eDRIVE_MODE_NONE
 	};
-	VehiclePhysics(Physics* px, Controller& gameController, Game* game, bool useAI, float startPosX, float startPosZ, int carNum);
+	
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ, int carNum);
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosZ, int carNum);
 	virtual void Update(Entity* entity) override;
 	void initVehicle(Physics* ps);
 	snippetvehicle::VehicleDesc initVehicleDesc(Physics* ps);

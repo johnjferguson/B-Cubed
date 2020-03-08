@@ -46,10 +46,18 @@ Game::Game()
 	// create physics component
 
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, -15.0f, 130.0f, 0);
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 1.6f, 136.6f, 1);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 18.3f, 143.2f, 2);
-	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 35.f, 150.f, 3);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, 0.0f, 140.0f, 0);
+
+	std::vector<physx::PxVec3> aipath;
+	aipath.push_back({ 180.f, 1.f, 140.f });
+	aipath.push_back({ 240.f, 1.f, 80.f });
+	aipath.push_back({ 234.f, 1.f, -106.f });
+	aipath.push_back({ -180.f, 1.f, -123.f });
+	aipath.push_back({ -250.f, 1.f, -60.f });
+	aipath.push_back({ -231.f, 1.f, 128.f });
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -30.f, 145.f, 1);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -20.f, 140.f, 2);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 135.f, 3);
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -70,6 +78,7 @@ Game::Game()
 	entities[0].SetPosition(30.0f, 0.0f, 0.0f);
 	entities[0].AddPhysics(std::move(sp0));
 
+	// AI Car
 	entities[1].AddRenderable(std::move(zb));
 	entities[1].SetPosition(0.0f, 1.0f, 10.0f);
 	entities[1].AddPhysics(std::move(vp1));
@@ -83,8 +92,9 @@ Game::Game()
 	entities[3].SetPosition(5.0f, -0.5f, 5.0f);
 	entities[3].AddPhysics(std::move(sp3));
 
+	// Player Car
 	entities[4].AddRenderable(std::move(nb));
-	entities[4].SetPosition(10.0f, 1.0f, 0.0f);
+	entities[4].SetPosition(-5.0f, 1.0f, 10.0f);
 	entities[4].AddPhysics(std::move(vp0));
 	entities[4].SetType(Entity::Type::VEHICLE);
 			   
@@ -100,13 +110,15 @@ Game::Game()
 	entities[7].SetPosition(-5.0f, 1.0f, 0.0f);
 	entities[7].AddPhysics(std::move(sp5));
 
+	// AI Car
 	entities[8].AddRenderable(std::move(zb1));
-	entities[8].SetPosition(-5.0f, 1.0f, 0.0f);
+	entities[8].SetPosition(-5.0f, 1.0f, 10.0f);
 	entities[8].AddPhysics(std::move(vp2));
 	entities[8].SetType(Entity::Type::VEHICLE);
 
+	// AI Car
 	entities[9].AddRenderable(std::move(zb2));
-	entities[9].SetPosition(-5.0f, 1.0f, 0.0f);
+	entities[9].SetPosition(-5.0f, 1.0f, 10.0f);
 	entities[9].AddPhysics(std::move(vp3));
 	entities[9].SetType(Entity::Type::VEHICLE);
 
