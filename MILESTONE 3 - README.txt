@@ -11,6 +11,8 @@ Physics
 Rendering
 - Consistent Shadow Mapping
 - Colorful Textures
+- Starting Line
+- Vehicle Changes Texture when using Barrier
 
 Camera
 - Camera has Delayed Following

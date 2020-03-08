@@ -551,7 +551,7 @@ void VehiclePhysics::checkLaps(Entity* entity)
 	}
 
 	//Passed checkpoint 4
-	if (checkPoint1 && checkPoint2 && checkPoint3 && (pos.x >= 70 && pos.x <= 80) && (pos.z >= 125 && pos.z <= 160)) {
+	if (checkPoint1 && checkPoint2 && checkPoint3 && (pos.x >= -15 && pos.x <= -5) && (pos.z >= 125 && pos.z <= 160)) {
 		checkPoint1 = false;
 		checkPoint2 = false;
 		checkPoint3 = false;
