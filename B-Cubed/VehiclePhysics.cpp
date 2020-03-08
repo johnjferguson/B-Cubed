@@ -112,7 +112,7 @@ void VehiclePhysics::Update(Entity* entity)
 
 	std::stringstream ss;
 	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
-	Gui::AddText(ss.str().c_str());
+	//Gui::AddText(ss.str().c_str());
 
 	entity->setNumCharges(abilityCharges);
 
@@ -273,7 +273,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 		std::stringstream oo;
 		oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
-		Gui::AddText(oo.str().c_str());
+		//Gui::AddText(oo.str().c_str());
 	}
 
 	if (game->gameCounter > 250) {
@@ -289,8 +289,14 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			accel = ai.getAcceleration();
 			reverse = ai.getBrake();
 			steer = ai.getSteering();
+
+			blast = ai.getBlast();
+			boost = ai.getBoost();
+			barrier = ai.getBarrier();
 		}
 		else {
+			PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+
 			accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
 			reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
 			steer = gameController.GetLeftStick().x;
@@ -369,7 +375,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		bOnPress = true;
 	}
 	if (boosting) {
-		Gui::AddText("Currently Boosting");
+		//Gui::AddText("Currently Boosting");
 		if (boostTimer < 0) {
 			boosting = false;
 		}

@@ -1,6 +1,9 @@
 #include "AI.h"
 #include "Gui.h"
 
+#include <stdlib.h> // rand
+#include <sstream> // stringstream
+
 AI::AI() {
 
 }
@@ -8,6 +11,8 @@ AI::AI() {
 AI::AI(std::vector<physx::PxVec3> p, physx::PxVehicleDrive4W* c) {
 	path = p;
 	car = c;
+
+	fetchPoint();
 }
 
 AI::~AI() {
@@ -60,6 +65,22 @@ float AI::vectorToDegrees(DirectX::XMVECTOR dir) {
 	return deg;
 }
 
+void AI::nextPoint() {
+	targetPoint += 1;
+
+	if (targetPoint >= path.size()) {
+		targetPoint = 0;
+	}
+
+	fetchPoint();
+}
+
+void AI::fetchPoint() {
+	point = path[targetPoint];
+	//point.x += rand() % 5 - 2; // Add random range [-2, 2]
+	//point.z += rand() % 5 - 2; // Add random range [-2, 2]
+}
+
 void AI::doCalculations() {
 	physx::PxVec3 velocity = car->getRigidDynamicActor()->getLinearVelocity();
 	physx::PxVec3 position = car->getRigidDynamicActor()->getGlobalPose().p;
@@ -71,8 +92,6 @@ void AI::doCalculations() {
 	rpm = car->mDriveDynData.getEngineRotationSpeed();
 
 	if (path.size() > 0) {
-		point = path[targetPoint];
-
 		// Calculate distance to point
 		distance = distanceToPoint(position, point);
 
@@ -88,59 +107,106 @@ void AI::doCalculations() {
 	}
 }
 
+void AI::selectState() {
+	if (stateLock > 0) {
+		stateLock -= 1;
+	} else {
+		if (isStuck() && state != REVERSE) {
+			stateLock = 120; // ~60/sec
+			state = REVERSE;
+		} else {
+			if (abs(dirDiff) > directionRange) {
+				state = TURN;
+				stateLock = 4;
+			}
+			else {
+				state = DRIVE;
+				stateLock = 4;
+			}
+		}
+	}
+	
+
+	std::stringstream ss;
+	ss << "AI(speed=" << speed << ", " << "stateLock=" << stateLock << ", state=" << state << ", point=" << (int)point.x << ", " << (int)point.y << ", " << (int)point.z << ")";
+	Gui::AddText(ss.str().c_str());
+}
+
+void AI::abilitySelect() {
+	if (currCD > 0) {
+		currCD -= 1;
+	} else {
+		int total = abilities[0] + abilities[1] + abilities[2];
+		if (total > 0) {
+			int k = rand() % total + 1;
+
+			if (k <= abilities[0]) {
+				boost = true;
+			}
+			else if (k > abilities[0] && k <= abilities[0] + abilities[1]) {
+				barrier = true;
+			}
+			else {
+				blast = true;
+			}
+
+			currCD = abilityCD;
+		}
+	}
+}
+
 void AI::update() {
 	// Clear all current inputs
 	accel = false;
 	brake = false;
 	steer = 0.f;
 
-	doCalculations();
+	boost = false;
+	barrier = false;
+	blast = false;
 
-	//Gui::AddText("AI Speed: " + std::to_string(speed) );
+	abilities[0] = 0; // Boost
+	abilities[1] = 10; // Barrier
+	abilities[2] = 0; // Blast
+
+	// Do Brain stuff
+	doCalculations();
+	selectState();
+
+	if (distance <= safeRange) {
+		nextPoint();
+	}
 
 	switch (state) {
 		case DRIVE:
-			Gui::AddText("Current State: DRIVE");
 			drive();
 			break;
 		case TURN:
-			Gui::AddText("Current State: TURN");
 			turn();
 			break;
 		case REVERSE:
-			Gui::AddText("Current State: REVERSE");
 			reverse();
 			break;
 		default:
 			break;
 	}
+
+	
+	abilitySelect();
+
 }
 
 void AI::drive() {
-	if (distance <= safeRange) {
-		targetPoint += 1;
-
-		if (targetPoint >= path.size()) {
-			targetPoint = 0;
-		}
-
-		state = TURN;
-
-	} else {
-		if (distance > slowRange) {
-			// GOAL: Go fast
-			accel = true;
-		} else {
-			// GOAL: Slowdown to adequate speed for turning before entering safeRange
-			if (speed < 4) {
-				accel = true;
-			}
-		}
-
-		if (isStuck()) {
-			state = REVERSE;
-		}
+	accel = true;
+	
+	if (distance < slowRange && speed > 30) {
+		// GOAL: Slowdown to adequate speed for turning before entering safeRange
+		accel = false;
+	} else if (distance > boostRange) {
+		abilities[0] = 90;
 	}
+
+
 }
 
 bool AI::isStuck() {
@@ -148,40 +214,34 @@ bool AI::isStuck() {
 }
 
 void AI::turn() {
-	accel = true;
-	if (abs(dirDiff) > directionRange) {
-		if (dirDiff > 0) {
-			// GOAL: Decrease direction
-			steer = -0.4f;
-		}
-		else {
-			// GOAL: Increase direction
-			steer = 0.4f;
-		}
 
-		if (isStuck()) {
-			state = REVERSE;
-		}
+	if (speed > turnSpeed) {
+		brake = true;
 	} else {
-		state = DRIVE;
+		accel = true;
+	}
+	
+	abilities[2] = 5;
+	
+	if (dirDiff > 0) {
+		// GOAL: Decrease direction
+		steer = -steerSpeed;
+	} else {
+		// GOAL: Increase direction
+		steer = steerSpeed;
 	}
 }
 
 void AI::reverse() {
+	abilities[2] = 0;
 	brake = true;
 
-	if (abs(dirDiff) > directionRange) {
-		if (dirDiff > 0) {
-			// GOAL: Decrease direction
-			steer = 0.4f;
-		}
-		else {
-			// GOAL: Increase direction
-			steer = -0.4f;
-		}
-	}
-	else {
-		state = DRIVE;
+	if (dirDiff > 0) {
+		// GOAL: Increase direction
+		steer = steerSpeed;
+	} else {
+		// GOAL: Decrease direction
+		steer = -steerSpeed;
 	}
 }
 
@@ -195,4 +255,16 @@ bool AI::getBrake() {
 
 float AI::getSteering() {
 	return steer;
+}
+
+bool AI::getBoost() {
+	return boost;
+}
+
+bool AI::getBarrier() {
+	return barrier;
+}
+
+bool AI::getBlast() {
+	return blast;
 }
