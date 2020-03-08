@@ -20,14 +20,22 @@ void MissilePhysics::Update(Entity* entity)
 		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 75.f);
 		//gRigidDynamic->setLinearVelocity(vHorizontal * 75.f);
 	}
-
+	
 	if (entity->GetBounceBack()) {
 
-		gRigidDynamic->setLinearVelocity(PxVec3(-v.x, 0.0, -v.z) * 75.f);
+		PxVec3 bounceDir = entity->GetBounceDir();
+		gRigidDynamic->setLinearVelocity(PxVec3(-bounceDir.x, 0.0, -bounceDir.z));
+		PxVec3 currentPos = gRigidDynamic->getGlobalPose().p;
+		gRigidDynamic->setGlobalPose(PxTransform(currentPos - bounceDir * 0.01));
 		entity->SetBounceBack(false);
 	}
+	
+	entity->lastHitCounter++;
+
+	entity->SetBounceDir(gRigidDynamic->getLinearVelocity());
 
 	PhysicsDynamic::Update(entity);
+
 	/*
 	gRigidDynamic->userData = (void*)entity;
 

@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include "openal/include/AL/al.h"
 #include "openal/include/AL/alc.h"
+#include "physx/include/PxPhysicsAPI.h"
 
 class Sound
 {
@@ -46,9 +47,8 @@ public:
 	~Sound();
 	Sound(Sound&) = delete;
 	Sound& operator=(Sound&) = delete;
-	static void Play(const std::string& file_path);
-private:
-	static bool Load(const std::string& file_path);
+	static void Play(const std::string& file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop);
+	static bool Load(const std::string& file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop);
 private:
 	ALCdevice* device;
 	ALCcontext* context;

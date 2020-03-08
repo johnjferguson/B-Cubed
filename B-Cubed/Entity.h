@@ -28,6 +28,7 @@ public:
 	bool IsMarkedForDeath();
 
 	void IncreaseHit();
+	void ResetHit();
 	const int NumberofHits() const;
 
 	void SetPosition(float x, float y, float z);
@@ -41,8 +42,18 @@ public:
 	void SetBounceBack(bool set);
 	void SetSpinOut(bool set);
 	bool GetBounceBack() const;
+	void SetBounceDir(physx::PxVec3 dir);
+	physx::PxVec3 GetBounceDir() const;
 	bool GetSpinOut() const;
-
+	int getNumCharges();
+	void setNumCharges(int x);
+	int GetNumLaps();
+	void CountNumLaps();
+	static int haveWon;
+	int getFinishedIn();
+	void setFinishedIn(int placement);
+public:
+	int lastHitCounter = 0;
 private:
 	std::unique_ptr<PhysicsComponent> physicsComponent = nullptr;
 	std::unique_ptr<Renderable> renderable = nullptr;
@@ -56,4 +67,10 @@ private:
 	int	barrierTime = 0;
 	bool spinOut = false;
 	bool bounceBack = false;
+	int numCharges = 0;
+	physx::PxVec3 bounceDir;
+	int numLaps = 0;
+	int setParryTime = 10;
+	int setBarrierTime = 60;
+	int finishedin = -1;
 };

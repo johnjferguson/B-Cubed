@@ -15,7 +15,8 @@ Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f),
+	overlay(wnd.gfx, wnd.GetWidth(), wnd.GetHeight())
 {
 	entities = std::vector<Entity>(10);
 	entities.reserve(110);
@@ -45,7 +46,7 @@ Game::Game()
 	// create physics component
 
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, 0.0f, 140.0f);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, 0.0f, 140.0f, 0);
 
 	std::vector<physx::PxVec3> aipath;
 	aipath.push_back({ 180.f, 1.f, 140.f });
@@ -54,9 +55,9 @@ Game::Game()
 	aipath.push_back({ -180.f, 1.f, -123.f });
 	aipath.push_back({ -250.f, 1.f, -60.f });
 	aipath.push_back({ -231.f, 1.f, 128.f });
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -30.f, 145.f);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -20.f, 140.f);
-	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 135.f);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -30.f, 145.f, 1);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -20.f, 140.f, 2);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 135.f, 3);
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -137,6 +138,8 @@ Game::Game()
 
 int Game::Start()
 {
+	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
 	while (true)
 	{
 		if (const auto eCode = wnd.ProcessMessages())
@@ -149,6 +152,7 @@ int Game::Start()
 
 void Game::DoFrame()
 {
+
 	wnd.gfx.StartFrame();
 	gui.Begin("B-Cubed gui window");
 	
@@ -214,6 +218,7 @@ void Game::DoFrame()
 	
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
+	overlay.Draw(wnd.gfx, entities[4].getNumCharges(), entities[4].GetNumLaps());
 	
 	// fetch the physics results for the next frame
 	ps.Fetch();
@@ -221,6 +226,15 @@ void Game::DoFrame()
 	std::vector<Entity>::const_iterator iter = std::partition(entities.begin(), entities.end(), [](Entity& e) {return !e.IsMarkedForDeath(); });
 
 	entities.erase(iter, entities.end());
+
+	if (gameCounter == 0) {
+		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	}
+	else if (gameCounter == 240) {
+		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
+	}
+
+	gameCounter++;
 
 	gui.End();
 	wnd.gfx.EndFrame();
@@ -265,19 +279,19 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	PxTransform missileTrans;
 
 	if (startVel.magnitude() <= 40) {
-		missileTrans = PxTransform(startPos + forward * 4.0f);
+		missileTrans = PxTransform(startPos + forward * 5.0f);
 	}
 	else {
-		missileTrans = PxTransform(startPos + forward * 15.0f);
+		missileTrans = PxTransform(startPos + forward * 13.0f);
 	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
 	PxVec3 missileVel = (forward * 75.f + startVel);
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.5f, 0.5f, 0.5f));
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.8f, 0.8f, 0.8f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	Game::entities[entities.size()-1].AddRenderable(std::move(vb));
-	Game::entities[entities.size()-1].SetPosition(startPos.x, startPos.y, startPos.z);
+	Game::entities[entities.size()-1].SetPosition(startPos.x + forward.x, startPos.y, startPos.z + forward.z);
 	Game::entities[entities.size()-1].AddPhysics(std::move(vp2)); 
 	Game::entities[entities.size()-1].SetType(Entity::Type::MISSILE); 
 }

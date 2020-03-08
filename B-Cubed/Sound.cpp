@@ -27,13 +27,13 @@ Sound::~Sound()
 	}
 }
 
-void Sound::Play(const std::string & file_path)
+void Sound::Play(const std::string & file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop)
 {
 	std::unordered_map<std::string, Source>::iterator iter = soundMap.find(file_path);
 
 	if (iter == soundMap.end())
 	{
-		Load(file_path);
+		Load(file_path, gain, listenerPos, sourcePos, loop);
 		iter = soundMap.find(file_path);
 	}
 	
@@ -42,7 +42,7 @@ void Sound::Play(const std::string & file_path)
 	
 }
 
-bool Sound::Load(const std::string & path)
+bool Sound::Load(const std::string & path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop)
 {
 	std::ifstream file(path, std::ios::binary);
 
@@ -97,10 +97,15 @@ bool Sound::Load(const std::string & path)
 
 	alSourcei(source, AL_BUFFER, buffer);
 	alSourcef(source,AL_PITCH, 1.0f);
-	alSourcef(source, AL_GAIN, 1.0f);
+	alSourcef(source, AL_GAIN, gain);
 	alSourcefv(source, AL_POSITION, SourcePos);
 	alSourcefv(source, AL_VELOCITY, SourceVel);
-	alSourcei(source, AL_LOOPING, AL_FALSE);
+	if (loop) {
+		alSourcei(source, AL_LOOPING, AL_TRUE);
+	}
+	else {
+		alSourcei(source, AL_LOOPING, AL_FALSE);
+	}
 
 	soundMap.emplace(path, std::move(Source{ source, buffer }));
 

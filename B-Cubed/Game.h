@@ -11,6 +11,7 @@
 #include "Physics.h"
 #include "Mesh.h"
 #include "Sound.h"
+#include "Overlay.h"
 
 class Game
 {
@@ -20,6 +21,8 @@ public:
 	void DoFrame();
 	void DoInput();
 	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel);
+public:
+	unsigned int gameCounter = 0u;
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy
@@ -37,6 +40,7 @@ private:
 	std::vector<std::unique_ptr<Camera>> cameras;
 	RenderTexture renderTexture;
 	Light light;
+	Overlay overlay;
 private:
 	unsigned int iSkybox = 0u;
 	unsigned int activeCamera = 0u;
