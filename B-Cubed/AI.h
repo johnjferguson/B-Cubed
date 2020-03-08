@@ -2,6 +2,7 @@
 #include <vector>
 #include "physx/include/PxPhysicsAPI.h"
 #include <DirectXMath.h>
+#include <stdlib.h> // rand
 
 class AI {
 	private:
@@ -27,15 +28,15 @@ class AI {
 		int slowRange = 0; // Distance from point where AI will drive slower (to not drive past/make turning easier)
 		int directionRange = 4; // Maximal degrees error margin
 		float steerSpeed = 0.8f; // How much the wheels turn [0.f, 1.f]
-		int turnSpeed = 50; // Max speed for turning (AI will brake if above)
+		int turnSpeed = rand() % 20 + 40; // Max speed for turning (AI will brake if above) (50 is good)
 
 		// Abilities
 		int abilityCD = 60;
 		int currCD = 0;
 
-		int boostRange = 80; // Distance from point for AI to boost
-		int boostChanceDrive = 100;
-		int boostChanceTurn = 15;
+		int boostRange = rand() % 30 + 70; // Distance from point for AI to boost 80
+		int boostChanceDrive = rand() % 80 + 20;
+		int boostChanceTurn = rand() % 20;
 
 
 		// Chance to use ability = i / sum
@@ -54,6 +55,7 @@ class AI {
 		float dirDiff = 0.f; // The difference between the above 2 degrees
 
 		int stateLock = 0; // Gets set above 0 to stay in the state for x amount of update calls
+		int sleepTime = rand() % 80;
 
 		// Output
 		bool accel = false;
