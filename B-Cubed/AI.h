@@ -26,14 +26,16 @@ class AI {
 		int safeRange = 26; // Distance from point that considers reaching said point
 		int slowRange = 0; // Distance from point where AI will drive slower (to not drive past/make turning easier)
 		int directionRange = 4; // Maximal degrees error margin
-		float steerSpeed = 0.6f; // How much the wheels turn [0.f, 1.f]
+		float steerSpeed = 0.8f; // How much the wheels turn [0.f, 1.f]
 		int turnSpeed = 50; // Max speed for turning (AI will brake if above)
 
 		// Abilities
 		int abilityCD = 60;
 		int currCD = 0;
-		int boostRange = 100; // Distance from point for AI to boost
 
+		int boostRange = 80; // Distance from point for AI to boost
+		int boostChanceDrive = 100;
+		int boostChanceTurn = 15;
 
 
 		// Chance to use ability = i / sum

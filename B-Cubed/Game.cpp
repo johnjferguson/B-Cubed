@@ -46,22 +46,9 @@ Game::Game()
 	// create physics component
 
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, 0.0f, 140.0f, 0);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -20.0f, 133.0f, 0);
 
 	std::vector<physx::PxVec3> aipath;
-	/*
-	aipath.push_back({ 167.f, -10.f, 147.f });
-	aipath.push_back({ 215.f, -10.f, 117.f });
-	aipath.push_back({ 258.f, -10.f, -15.f });
-	aipath.push_back({ 226.f, -10.f, -95.f });
-	aipath.push_back({ 160.f, -10.f, -124.f });
-	aipath.push_back({ -146.f, -10.f, -128.f });
-	aipath.push_back({ -223.f, -10.f, -97.f });
-	aipath.push_back({ -254.f, -10.f, -40.f });
-	aipath.push_back({ -251.f, -10.f, 80.f });
-	aipath.push_back({ -196.f, -10.f, 132.f });
-	aipath.push_back({ -203.f, -10.f, 130.f });*/
-
 	aipath.push_back({ 158, -10, 144 });
 	aipath.push_back({ 212, -10, 119 });
 	aipath.push_back({ 251, -10, 44 });
@@ -75,9 +62,9 @@ Game::Game()
 	aipath.push_back({ - 237, -10, 104 });
 	aipath.push_back({ - 174, -10, 139 });
 
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 147.f, 1);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -20.f, 154.f, 2);
-	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 10.f, 133.f, 3);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 140.f, 1);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 0.f, 147.f, 2);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 10.f, 154.f, 3);
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -160,6 +147,10 @@ Game::Game()
 int Game::Start()
 {
 	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 	while (true)
 	{

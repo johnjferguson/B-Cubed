@@ -128,7 +128,7 @@ void AI::selectState() {
 	
 
 	std::stringstream ss;
-	ss << "AI(speed=" << speed << ", " << "stateLock=" << stateLock << ", state=" << state << ", point=" << (int)point.x << ", " << (int)point.y << ", " << (int)point.z << ")";
+	ss << "AI(speed=" << (int) speed << ", " << "stateLock=" << stateLock << ", state=" << state << ", point=" << (int)point.x << ", " << (int)point.y << ", " << (int)point.z << ")";
 	Gui::AddText(ss.str().c_str());
 }
 
@@ -166,7 +166,7 @@ void AI::update() {
 	blast = false;
 
 	abilities[0] = 0; // Boost
-	abilities[1] = 10; // Barrier
+	abilities[1] = 2; // Barrier
 	abilities[2] = 5; // Blast
 
 	// Do Brain stuff
@@ -203,7 +203,7 @@ void AI::drive() {
 		// GOAL: Slowdown to adequate speed for turning before entering safeRange
 		accel = false;
 	} else if (distance > boostRange) {
-		abilities[0] = 90;
+		abilities[0] = boostChanceDrive;
 	}
 
 
@@ -219,6 +219,10 @@ void AI::turn() {
 		brake = true;
 	} else {
 		accel = true;
+	}
+
+	if (distance > boostRange) {
+		abilities[0] = boostChanceTurn;
 	}
 	
 	if (dirDiff > 0) {
