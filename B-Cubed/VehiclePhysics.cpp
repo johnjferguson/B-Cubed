@@ -284,7 +284,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			PxQuat quint = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			DirectX::XMVECTOR dirVec = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)).r[2];
 
-			ai.update(vehicle_position, vel, dirVec);
+			ai.update();
 
 			accel = ai.getAcceleration();
 			reverse = ai.getBrake();

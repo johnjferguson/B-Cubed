@@ -23,7 +23,7 @@ float AI::distanceToPoint(physx::PxVec3 position, physx::PxVec3 goal) {
 	float py = goal.y;
 	float pz = goal.z;
 
-	return pow(pow(px - x, 2) + pow(py - y, 2) + pow(pz - z, 2), 0.5f);
+	return (float) pow(pow(px - x, 2) + pow(py - y, 2) + pow(pz - z, 2), 0.5f);
 }
 
 float AI::directionToPoint(physx::PxVec3 position, physx::PxVec3 goal) {
@@ -37,7 +37,7 @@ float AI::directionToPoint(physx::PxVec3 position, physx::PxVec3 goal) {
 	float dx = px - x;
 	float dz = pz - z;
 
-	float deg = atan(dz / dx) * 180.f / 3.14159f;
+	float deg = (float) atan(dz / dx) * 180.f / 3.14159f;
 
 	if (dx < 0)
 		deg += 180;
@@ -51,7 +51,7 @@ float AI::vectorToDegrees(DirectX::XMVECTOR dir) {
 	float x = DirectX::XMVectorGetX(dir);
 	float z = DirectX::XMVectorGetZ(dir);
 
-	float deg = atan(z / x) * 180.f / 3.14159f;
+	float deg = (float) atan(z / x) * 180.f / 3.14159f;
 	if (x < 0)
 		deg += 180;
 	else if (x > 0 && z < 0)
