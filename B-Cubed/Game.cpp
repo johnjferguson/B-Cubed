@@ -176,7 +176,7 @@ void Game::DoFrame()
 	renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
 
 	auto pos = entities[4].GetPosition();
-	light.SetPosition(DirectX::XMFLOAT4(pos.x + 20.0f, pos.y + 50.0f, pos.z, 20.0f));
+	light.SetPosition(DirectX::XMFLOAT4(pos.x + 20.0f, pos.y + 53.0f, pos.z, 0.0f));
 
 	for (auto& e : entities)
 	{
