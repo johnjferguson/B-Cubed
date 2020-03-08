@@ -32,7 +32,7 @@ class AI {
 		// Abilities
 		int abilityCD = 60;
 		int currCD = 0;
-		int boostRange = 120; // Distance from point for AI to boost
+		int boostRange = 100; // Distance from point for AI to boost
 
 
 

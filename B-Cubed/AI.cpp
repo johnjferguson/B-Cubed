@@ -167,7 +167,7 @@ void AI::update() {
 
 	abilities[0] = 0; // Boost
 	abilities[1] = 10; // Barrier
-	abilities[2] = 0; // Blast
+	abilities[2] = 5; // Blast
 
 	// Do Brain stuff
 	doCalculations();
@@ -220,8 +220,6 @@ void AI::turn() {
 	} else {
 		accel = true;
 	}
-	
-	abilities[2] = 5;
 	
 	if (dirDiff > 0) {
 		// GOAL: Decrease direction
