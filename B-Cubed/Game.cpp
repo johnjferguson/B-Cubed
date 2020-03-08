@@ -15,8 +15,7 @@ Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f),
-	overlay(wnd.gfx, wnd.GetWidth(), wnd.GetHeight())
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
 {
 	entities = std::vector<Entity>(10);
 	entities.reserve(110);
@@ -46,10 +45,10 @@ Game::Game()
 	// create physics component
 
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, -10.0f, 140.0f);
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -30.f, 140.f);
-	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -25.f, 140.f);
-	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, -10.f, -140.f);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, false, -15.0f, 130.0f, 0);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 1.6f, 136.6f, 1);
+	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 18.3f, 143.2f, 2);
+	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, true, 35.f, 150.f, 3);
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
@@ -126,6 +125,8 @@ Game::Game()
 
 int Game::Start()
 {
+	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
 	while (true)
 	{
 		if (const auto eCode = wnd.ProcessMessages())
@@ -138,6 +139,7 @@ int Game::Start()
 
 void Game::DoFrame()
 {
+
 	wnd.gfx.StartFrame();
 	gui.Begin("B-Cubed gui window");
 	
@@ -203,7 +205,6 @@ void Game::DoFrame()
 	
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
-	overlay.Draw(wnd.gfx,numCharges, lapNumber);
 	
 	// fetch the physics results for the next frame
 	ps.Fetch();
@@ -211,6 +212,15 @@ void Game::DoFrame()
 	std::vector<Entity>::const_iterator iter = std::partition(entities.begin(), entities.end(), [](Entity& e) {return !e.IsMarkedForDeath(); });
 
 	entities.erase(iter, entities.end());
+
+	if (gameCounter == 0) {
+		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	}
+	else if (gameCounter == 240) {
+		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
+	}
+
+	gameCounter++;
 
 	gui.End();
 	wnd.gfx.EndFrame();
@@ -238,14 +248,6 @@ void Game::DoInput()
 				iSkybox = ++iSkybox % skyboxes.size();
 			}
 			break;
-		case VK_SPACE:
-			if (type == Keyboard::Event::Type::Press)
-				numCharges = ++numCharges % 4;
-			break;
-		case VK_SHIFT:
-			if (type == Keyboard::Event::Type::Press)
-				lapNumber = ++lapNumber % 3;
-			break;
 		}
 	}
 }
@@ -266,7 +268,7 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 		missileTrans = PxTransform(startPos + forward * 5.0f);
 	}
 	else {
-		missileTrans = PxTransform(startPos + forward * 17.0f);
+		missileTrans = PxTransform(startPos + forward * 13.0f);
 	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
 	PxVec3 missileVel = (forward * 75.f + startVel);

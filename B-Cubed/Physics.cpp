@@ -54,9 +54,10 @@ class ContactReportCallback : public PxSimulationEventCallback
 
 		if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
 		{
-
 			if (entity0->CanParry()) {
+			//if (true) {
 				entity1->SetBounceBack(true);
+				Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				entity1->ResetHit();
 			}
 			else if (entity0->CanBlock()) {
@@ -70,7 +71,9 @@ class ContactReportCallback : public PxSimulationEventCallback
 		else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
 		{
 			if (entity1->CanParry()) {
+			//if (true) {
 				entity0->SetBounceBack(true);
+				Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				entity0->ResetHit();
 			}
 			else if (entity1->CanBlock()) {
@@ -89,7 +92,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 					entity0->MarkForDeath();
 				}
 				else if (entity0->lastHitCounter > 5){
-					Sound::Play("sounds//yoshi.wav");
+					Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 					entity0->IncreaseHit();
 					entity0->lastHitCounter = 0;
 				}
@@ -99,7 +102,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 					entity1->MarkForDeath();
 				}
 				else if (entity1->lastHitCounter > 5){
-					Sound::Play("sounds//yoshi.wav");
+					Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 					entity1->IncreaseHit();
 					entity1->lastHitCounter = 0;
 				}

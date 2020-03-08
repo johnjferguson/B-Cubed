@@ -2,7 +2,7 @@
 #include "DirectXMath.h"
 #include "Gui.h"
 
-
+int Entity::haveWon = 0;
 
 Entity::Entity()
 	:
@@ -147,7 +147,7 @@ const DirectX::XMMATRIX & Entity::GetTransform() const
 
 bool Entity::CanParry()
 {
-	if (barrierTime < 10) {
+	if (barrierTime < setParryTime) {
 		return true;
 	}
 
@@ -156,7 +156,7 @@ bool Entity::CanParry()
 
 bool Entity::CanBlock()
 {
-	if (barrierTime < 60) {
+	if (barrierTime < setBarrierTime) {
 		return true;
 	}
 	return false;
@@ -187,6 +187,17 @@ bool Entity::GetBounceBack() const
 	return bounceBack;
 }
 
+void Entity::SetBounceDir(physx::PxVec3 dir)
+{
+	bounceDir = dir;
+}
+
+physx::PxVec3 Entity::GetBounceDir() const
+{
+	return bounceDir;
+}
+
+
 bool Entity::GetSpinOut() const
 {
 	return spinOut;
@@ -200,6 +211,26 @@ int Entity::getNumCharges()
 void Entity::setNumCharges(int x)
 {
 	numCharges = x;
+}
+
+int Entity::GetNumLaps()
+{
+	return numLaps;
+}
+
+void Entity::CountNumLaps()
+{
+	numLaps++;
+}
+
+int Entity::getFinishedIn()
+{
+	return finishedin;
+}
+
+void Entity::setFinishedIn(int placement)
+{
+	finishedin = placement;
 }
 
 void Entity::IncreaseHit()
