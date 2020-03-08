@@ -1,7 +1,6 @@
 #include "AI.h"
 #include "Gui.h"
 
-#include <stdlib.h> // rand
 #include <sstream> // stringstream
 
 AI::AI() {
@@ -77,8 +76,8 @@ void AI::nextPoint() {
 
 void AI::fetchPoint() {
 	point = path[targetPoint];
-	//point.x += rand() % 5 - 2; // Add random range [-2, 2]
-	//point.z += rand() % 5 - 2; // Add random range [-2, 2]
+	point.x += rand() % 5 - 2; // Add random range [-2, 2]
+	point.z += rand() % 5 - 2; // Add random range [-2, 2]
 }
 
 void AI::doCalculations() {
@@ -165,35 +164,38 @@ void AI::update() {
 	barrier = false;
 	blast = false;
 
-	abilities[0] = 0; // Boost
-	abilities[1] = 2; // Barrier
-	abilities[2] = 5; // Blast
+	if (sleepTime > 0) {
+		sleepTime--;
+	} else {
+		abilities[0] = 0; // Boost
+		abilities[1] = 2; // Barrier
+		abilities[2] = 5; // Blast
 
-	// Do Brain stuff
-	doCalculations();
-	selectState();
+		// Do Brain stuff
+		doCalculations();
+		selectState();
 
-	if (distance <= safeRange) {
-		nextPoint();
+		if (distance <= safeRange) {
+			nextPoint();
+		}
+
+		switch (state) {
+			case DRIVE:
+				drive();
+				break;
+			case TURN:
+				turn();
+				break;
+			case REVERSE:
+				reverse();
+				break;
+			default:
+				break;
+		}
+
+
+		abilitySelect();
 	}
-
-	switch (state) {
-		case DRIVE:
-			drive();
-			break;
-		case TURN:
-			turn();
-			break;
-		case REVERSE:
-			reverse();
-			break;
-		default:
-			break;
-	}
-
-	
-	abilitySelect();
-
 }
 
 void AI::drive() {
