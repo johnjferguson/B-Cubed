@@ -23,6 +23,11 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.25f, -0.75f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar3.png"));
 	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.25f, -0.75f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar4.png"));
 
+	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f,1.2f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place1.png"));
+	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f,1.2f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place2.png"));
+	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f,1.2f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place3.png"));
+	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f,1.2f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place4.png"));
+
 	map = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.43f, -0.23f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\map.png");
 
 	lapNumber.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.5f, 1.05f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\1outof3.png"));
@@ -30,9 +35,15 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 	lapNumber.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.5f, 1.05f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\3outof3.png"));
 }
 
-void Overlay::Draw(Graphics & gfx, unsigned short numCharges, unsigned short nLap)
+void Overlay::Draw(Graphics & gfx, unsigned short numCharges, unsigned short nLap, int place)
 {
-	chargeBar[numCharges]->Render(gfx);
-	lapNumber[nLap]->Render(gfx);
+	chargeBar[numCharges % 4]->Render(gfx);
+	lapNumber[nLap % 3]->Render(gfx);
 	map->Render(gfx);
+
+	if (place > 0)
+	{
+		int j;
+		nPlace[place - 1]->Render(gfx);
+	}
 }
