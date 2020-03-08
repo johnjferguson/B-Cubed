@@ -34,10 +34,11 @@ void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const Direct
 			DirectX::XMFLOAT4 lightPosition;
 		};
 
-		struct PixelConstant
+		struct Effect
 		{
-			DirectX::XMFLOAT4 light;
-		};
+			int i;
+			int j[3];
+		}effect;
 	
 		VertexConstant vc
 		{
@@ -49,13 +50,21 @@ void Entity::Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const Direct
 			light.GetPosition()
 		};
 
-		PixelConstant pc
+		if (CanParry() && type == Type::VEHICLE)
 		{
-			light.GetPosition()
-		};
+			effect.i = 1;
+		}
+		else if (CanBlock() && type == Type::VEHICLE)
+		{
+			effect.i = 2;
+		}
+		else
+		{
+			effect.i = 0;
+		}
 
 		renderable->UpdateVertex(gfx, vc);
-		renderable->UpdatePixel(gfx, pc);
+		renderable->UpdatePixel(gfx, effect);
 
 		renderable->Render(gfx);
 	} 
@@ -93,7 +102,7 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 		};
 
 		renderable->UpdateVertex(gfx, vc);
-		renderable->UpdatePixel(gfx, pc);
+		//renderable->UpdatePixel(gfx, pc);
 
 		renderable->RenderDepth(gfx);
 	}

@@ -102,14 +102,15 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 		DirectX::XMFLOAT4 lightPosition;
 	}vertexConstant;
 
-	struct PixelConstant
+	struct Effect
 	{
-		DirectX::XMFLOAT4 light;
-	}pixelConstant;
+		int effect;
+		int j[3];
+	}effect;
 
 	// constant buffers
 	AddBind(std::make_unique<VertexConstantBuffer>(gfx, vertexConstant));
-	AddBind(std::make_unique<PixelConstantBuffer>(gfx, pixelConstant));
+	AddBind(std::make_unique<PixelConstantBuffer>(gfx, effect));
 
 	AddBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	AddBind(std::make_unique<Sampler>(gfx));
@@ -128,6 +129,7 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 		{ "NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		{ "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 }
 	};
+
 	AddDepthBind(std::make_unique<InputLayout>(gfx, vertexBlobDepth, ied0));
 
 	AddDepthBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));

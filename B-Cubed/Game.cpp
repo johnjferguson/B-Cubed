@@ -26,7 +26,7 @@ Game::Game()
 	//entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
 	//std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
 	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//evenbettertrack.obj");
-	std::unique_ptr<Box> br = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//neonwall.jpg");
+	std::unique_ptr<Box> start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(33.0f, 8.0f, 1.0f), L"images//chess.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
 
@@ -105,9 +105,10 @@ Game::Game()
 	entities[4].AddPhysics(std::move(vp0));
 	entities[4].SetType(Entity::Type::VEHICLE);
 			   
-	entities[5].AddRenderable(std::move(br));
-	entities[5].SetPosition(0.0f, 1.0f, -5.0f);
-	entities[5].AddPhysics(std::move(sp1));
+	// start line
+	entities[5].AddRenderable(std::move(start));
+	entities[5].SetPosition(-10.f, -12.3f, 142.f);
+	//entities[5].AddPhysics(std::move(sp1));
 			   
 	entities[6].AddRenderable(std::move(w2));
 	entities[6].SetPosition(-5.0f, 1.0f, 0.0f);
@@ -146,6 +147,10 @@ Game::Game()
 int Game::Start()
 {
 	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 	while (true)
 	{
@@ -225,7 +230,7 @@ void Game::DoFrame()
 	
 	light.Update(wnd.gfx, cameraTransform);
 	light.Render(wnd.gfx);
-	overlay.Draw(wnd.gfx, entities[4].getNumCharges(), entities[4].GetNumLaps());
+	overlay.Draw(wnd.gfx, entities[4].getNumCharges(), entities[4].GetNumLaps(), entities[4].getFinishedIn());
 	
 	// fetch the physics results for the next frame
 	ps.Fetch();

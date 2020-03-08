@@ -300,7 +300,9 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 			accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
 			reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
-			steer = gameController.GetLeftStick().x;
+			steer = pow(gameController.GetLeftStick().x,4);
+			if (gameController.GetLeftStick().x < 0)
+				steer *= -1;
 
 			blast = gameController.IsPressed(Controller::Button::Y);
 			boost = gameController.IsPressed(Controller::Button::B);

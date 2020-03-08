@@ -4,7 +4,7 @@ SamplerState SampleTypeClamp;
 
 cbuffer CBuf
 {
-	float4 lightPosition;
+	int effect;
 };
 
 
@@ -70,6 +70,14 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 	color = color * textureColor;
 	//color = textureColor;
 
+	if (effect == 1)
+	{
+		return color * float4(1.0f, 0.0f, 0.0f, 1.0f);
+	}
+	else if (effect == 2)
+	{
+		return color * float4(0.0f, 1.0f, 0.0f, 1.0f);
+	}
 	return color;
 
 }
