@@ -551,7 +551,7 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		entity->CountNumLaps();
 		if (entity->GetNumLaps() == 3) {
 			entity->haveWon++;
-
+			entity->setFinishedIn(entity->haveWon);
 		}
 	}
 
