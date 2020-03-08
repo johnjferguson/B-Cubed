@@ -117,7 +117,8 @@ void VehiclePhysics::Update(Entity* entity)
 	entity->setNumCharges(abilityCharges);
 
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
-	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
+	//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 1.2, ang_vel.y / 1.05, ang_vel.z / 1.2));
 
 	PxVec3 cur_vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
