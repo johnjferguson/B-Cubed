@@ -98,6 +98,6 @@ private:
 
 	const int setSpinOutTime = 30;   //how long a spinout lasts
 	const int setAbilityTime = 60;   //how often player can use an ability
-	const int setRechargeTime = 120; //how often player gets an ability charge
+	const int setRechargeTime = 200; //how often player gets an ability charge
 	const int setBoostTime = 60;     //how long car will boost for
 };
