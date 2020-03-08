@@ -71,6 +71,6 @@ private:
 	physx::PxVec3 bounceDir;
 	int numLaps = 0;
 	int setParryTime = 10;
-	int setBarrierTime = 60;
+	int setBarrierTime = 120;
 	int finishedin = -1;
 };
