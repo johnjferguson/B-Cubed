@@ -313,7 +313,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	entity->CountBarrier();
 
 	//If full charge we don't start counting
-	if (abilityCharges >= 3) {
+	if (abilityCharges >= 3 || game->gameCounter < 250) {
 		rechargeTime = 0;
 	}
 	else {

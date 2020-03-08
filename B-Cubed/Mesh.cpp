@@ -42,7 +42,7 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 				{
 					{pMesh->mVertices[j].x*scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z*scale},
 					*reinterpret_cast<dx::XMFLOAT3*>(&pMesh->mNormals[j]),
-					temp[j % 3]
+					*reinterpret_cast<dx::XMFLOAT2*>(&pMesh->mTextureCoords[0][j])
 
 				}
 			);
@@ -74,9 +74,9 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	m_indices = std::move(indices);
 
 	if (path == "models//vehicle.obj")
-		AddBind(std::make_unique<Texture>(gfx, L"images//green.jpg"));
+		AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
 	else
-		AddBind(std::make_unique<Texture>(gfx, L"images//neonwall.jpg"));
+		AddBind(std::make_unique<Texture>(gfx, L"images//banner.jpg"));
 
 	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderTexture.cso");
 	ID3DBlob* vertexBlob = pVertexShader->GetBlob();
