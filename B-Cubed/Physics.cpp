@@ -62,6 +62,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 			}
 			else if (entity0->CanBlock()) {
 				entity1->MarkForDeath();
+				Sound::Play("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			}
 			else {
 				entity1->MarkForDeath();
@@ -78,6 +79,7 @@ class ContactReportCallback : public PxSimulationEventCallback
 			}
 			else if (entity1->CanBlock()) {
 				entity0->MarkForDeath();
+				Sound::Play("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			}
 			else {
 				entity0->MarkForDeath();
