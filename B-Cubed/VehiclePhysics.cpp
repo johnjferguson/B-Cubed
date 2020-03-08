@@ -262,6 +262,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		reverse = ai.getBrake();
 		steer = ai.getSteering();
 	} else {
+		PxVec3 position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+		
+		Gui::AddText("X: " + std::to_string(position.x) + " Y: " + std::to_string(position.y));
+
+
 		accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
 		reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
 		steer = gameController.GetLeftStick().x;

@@ -96,7 +96,7 @@ void AI::update() {
 
 	doCalculations();
 
-	Gui::AddText("AI Speed: " + std::to_string(speed) );
+	//Gui::AddText("AI Speed: " + std::to_string(speed) );
 
 	switch (state) {
 		case DRIVE:
