@@ -337,10 +337,10 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	{
 
 		if (abilityTime > 60 && abilityCharges > 0 && aOnPress) {
-			entity->ResetBarrier();
+			entity->ResetBarrier(); 
+			abilityCharges--;
 			if (!useAI) {
 				Sound::Play("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-
 			}
 			//spinOutTime = setSpinOutTime;
 		}
