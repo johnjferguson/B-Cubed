@@ -7,6 +7,7 @@
 class Physics
 {
 	friend class PhysicsComponent;
+	friend class MissilePhysics;
 public:
 	Physics();
 	~Physics();

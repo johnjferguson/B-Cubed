@@ -9,4 +9,5 @@ public:
 	virtual ~MissilePhysics() = default;
 	virtual void Update(Entity* entity) override;
 private:
+	Physics* phy;
 };
