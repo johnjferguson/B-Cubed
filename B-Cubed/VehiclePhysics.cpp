@@ -19,10 +19,10 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 
 	gSteerVsForwardSpeedData =
 	{
-		0.0f,		0.70f,
-		5.0f,		0.70f,
-		30.0f,		0.15f,
-		120.0f,		0.70f,
+		0.0f,		0.75f,
+		5.0f,		0.75f,
+		30.0f,		0.2f,
+		120.0f,		0.75f,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
@@ -118,43 +118,10 @@ void VehiclePhysics::Update(Entity* entity)
 
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
 	//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
-	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 1.05, ang_vel.y / 1.05, ang_vel.z / 1.05));
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 1.2, ang_vel.y / 1.05, ang_vel.z / 1.2));
 
 	PxVec3 cur_vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-	//gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y, cur_vel.z));
-
-	/*
-	PxVec3 vHorizontal = PxVec3(v.x, 0.0, v.y).getNormalized();
-
-	PxVec3 p = gRigidDynamic->getGlobalPose().p;
-	PxQuat q = gRigidDynamic->getGlobalPose().q;
-
-	PxRaycastBuffer hit;
-	bool status = phy->gScene->raycast(PxVec3(p.x, p.y - 3, p.z), PxVec3(0, -1, 0), 50, hit);
-
-	float dist = hit.block.distance;
-
-	gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
-
-	
-	if (gIsVehicleInAir) {
-		Gui::AddText("Is in Air");
-		//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
-		//gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
-		PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-		DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
-		PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
-
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -70000);
-	}
-	else {
-		PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-		DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
-		PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
-
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -60000);
-	}
-	*/
+	gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
 
 	checkLaps(entity);
 
@@ -183,13 +150,13 @@ void VehiclePhysics::initVehicle(Physics* px)
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
 	gVehicle4W = createVehicle4W(vehicleDesc, GetPhysics(px), GetCooking(px));
-	PxTransform startTransform(PxVec3(startPosX + 10, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f) + 40, startPosZ), PxQuat(0, -0.707, 0, -0.707));
+	PxTransform startTransform(PxVec3(startPosX, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f), startPosZ), PxQuat(0, -0.707, 0, -0.707));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 1700.f;
-	eng.mMaxOmega = 800;
+	eng.mPeakTorque = 800.f;
+	eng.mMaxOmega = 500;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -235,7 +202,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
-	const PxF32 chassisMass = 2000.0f;
+	const PxF32 chassisMass = 1800.0f;
 	const PxVec3 chassisDims(4.5f, 3.0f, 6.5f);
 	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
@@ -461,7 +428,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			gVehicleInputData.setAnalogBrake(true);
 			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
-			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
+			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 
 			gVehicle4W->getRigidDynamicActor()->addForce(-35000.f * forward);
 		}
@@ -475,9 +442,8 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
 			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
-			//-----------------------------------------------------------------------------------------------
-			//gVehicle4W->getRigidDynamicActor()->addForce(10000.f * forward);
-			//---------------------------------------------------------------------------------------------------
+
+			gVehicle4W->getRigidDynamicActor()->addForce(10000.f * forward);
 		}
 		gVehicleInputData.setAnalogAccel(true);
 		gVehicleInputData.setAnalogBrake(false);
@@ -515,7 +481,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	//Vehicle update.
 	//const PxVec3 grav = GetScene(&px)->getGravity();
-	const PxVec3 grav = PxVec3(0.0, -10, 0.0);
+	const PxVec3 grav = PxVec3(0.0, -18, 0.0);
 	PxWheelQueryResult wheelQueryResults[PX_MAX_NB_WHEELS];
 	PxVehicleWheelQueryResult vehicleQueryResults[1] = { {wheelQueryResults, gVehicle4W->mWheelsSimData.getNbWheels()} };
 	PxVehicleUpdates(timestep, grav, *gFrictionPairs, 1, vehicles, vehicleQueryResults);
