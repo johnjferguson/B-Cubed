@@ -118,43 +118,43 @@ void VehiclePhysics::Update(Entity* entity)
 
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
 	//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
-	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 1.05, ang_vel.y / 1.05, ang_vel.z / 1.05));
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 1.1f, ang_vel.y / 1.1f, ang_vel.z / 1.1f));
 
 	PxVec3 cur_vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	//gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y, cur_vel.z));
 
-	/*
-	PxVec3 vHorizontal = PxVec3(v.x, 0.0, v.y).getNormalized();
+	
+	//PxVec3 vHorizontal = PxVec3(v.x, 0.0, v.y).getNormalized();
 
-	PxVec3 p = gRigidDynamic->getGlobalPose().p;
-	PxQuat q = gRigidDynamic->getGlobalPose().q;
+	//PxVec3 p = gRigidDynamic->getGlobalPose().p;
+	//PxQuat q = gRigidDynamic->getGlobalPose().q;
 
-	PxRaycastBuffer hit;
-	bool status = phy->gScene->raycast(PxVec3(p.x, p.y - 3, p.z), PxVec3(0, -1, 0), 50, hit);
+	//PxRaycastBuffer hit;
+	//bool status = phy->gScene->raycast(PxVec3(p.x, p.y - 3, p.z), PxVec3(0, -1, 0), 50, hit);
 
-	float dist = hit.block.distance;
+	//float dist = hit.block.distance;
 
-	gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
+	//gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
 
 	
 	if (gIsVehicleInAir) {
 		Gui::AddText("Is in Air");
 		//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
 		//gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
-		PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-		DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
-		PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
+		//PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+		//DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
+		//PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -70000);
+		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -40000);
 	}
 	else {
 		PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 		DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
 		PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -60000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -80000);
 	}
-	*/
+	
 
 	checkLaps(entity);
 
@@ -188,8 +188,8 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 1700.f;
-	eng.mMaxOmega = 800;
+	eng.mPeakTorque = 1000.f;
+	eng.mMaxOmega = 400;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
 
@@ -202,6 +202,8 @@ void VehiclePhysics::initVehicle(Physics* px)
 
 	PxVehicleDifferential4WData diff = gVehicle4W->mDriveSimData.getDiffData();
 	diff.mType = PxVehicleDifferential4WData::eDIFF_TYPE_LS_4WD;
+	//diff.mType = PxVehicleDifferential4WData::eDIFF_TYPE_LS_FRONTWD;
+	//diff.mType = PxVehicleDifferential4WData::eDIFF_TYPE_LS_REARWD;
 
 	gVehicle4W->mDriveSimData.setEngineData(eng);
 	gVehicle4W->mDriveSimData.setAckermannGeometryData(acker);
@@ -236,8 +238,9 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
 	const PxF32 chassisMass = 2000.0f;
-	const PxVec3 chassisDims(4.5f, 3.0f, 6.5f);
-	//const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
+	//const PxVec3 chassisDims(5.5f, 3.0f, 8.0f);
+	//const PxVec3 chassisDims(2.75f, 1.5f, 4.0f);
+	const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
 	const PxVec3 chassisMOI
 	((chassisDims.y*chassisDims.y + chassisDims.z*chassisDims.z)*chassisMass / 12.0f,
 		(chassisDims.x*chassisDims.x + chassisDims.z*chassisDims.z)*0.7f*chassisMass / 12.0f,
@@ -246,9 +249,11 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 
 	//Set up the wheel mass, radius, width, moment of inertia, and number of wheels.
 	//Moment of inertia is just the moment of inertia of a cylinder.
-	const PxF32 wheelMass = 100.0f;
-	const PxF32 wheelRadius = 0.6f;
-	const PxF32 wheelWidth = 1.0f;
+	const PxF32 wheelMass = 80.0f;
+	//const PxF32 wheelRadius = 1.5f;
+	//const PxF32 wheelWidth = 1.3f;
+	const PxF32 wheelRadius = 0.8f;
+	const PxF32 wheelWidth = 0.3f;
 	const PxF32 wheelMOI = 0.4f*wheelMass*wheelRadius*wheelRadius;
 	const PxU32 nbWheels = 4;
 
