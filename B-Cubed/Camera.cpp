@@ -2,6 +2,7 @@
 #include "Gui.h"
 #include <cassert>
 #include "Entity.h"
+#include "EntityManager.h"
 
 namespace dx = DirectX;
 
@@ -125,19 +126,26 @@ void FreeCamera::WrapAngle(float& angle)
 }
 
 
-void FollowCamera::SetTarget(const Entity & target)
+FollowCamera::FollowCamera(EntityManager & entityManager, unsigned int targetId)
+	:
+	entityManager(&entityManager),
+	targetId(targetId)
 {
-	entity = &target;
+}
+
+void FollowCamera::SetTarget(unsigned int targetId_in)
+{
+	targetId = targetId_in;
 }
 
 DirectX::XMMATRIX FollowCamera::GetTransform(const Time & dt)
 {
 	Gui::AddSlider("radians", radianPerSecond, 0.0f, 6.0f);
 
-	if (entity != nullptr)
+	if (entityManager->Get(targetId) != nullptr)
 	{
-		DirectX::XMFLOAT3 pos = entity->GetPosition();
-		DirectX::XMMATRIX transform = entity->GetTransform();
+		DirectX::XMFLOAT3 pos = entityManager->Get(targetId)->GetPosition();
+		DirectX::XMMATRIX transform = entityManager->Get(targetId)->GetTransform();
 	
 		DirectX::XMVECTOR vz = transform.r[2];
 

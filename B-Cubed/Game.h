@@ -12,6 +12,7 @@
 #include "Mesh.h"
 #include "Sound.h"
 #include "Overlay.h"
+#include "EntityManager.h"
 
 class Game
 {
@@ -32,7 +33,7 @@ private:
 	//physics;
 	Physics ps;
 
-	std::vector<Entity> entities;
+	//std::vector<Entity> entities;
 	FrameTimer ft;
 	std::unique_ptr<FollowCamera> cam0;
 private:
@@ -41,7 +42,9 @@ private:
 	RenderTexture renderTexture;
 	Light light;
 	Overlay overlay;
+	EntityManager entityManager = EntityManager();
 private:
 	unsigned int iSkybox = 0u;
 	unsigned int activeCamera = 0u;
+	unsigned int playerId;
 };

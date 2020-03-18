@@ -35,13 +35,14 @@ private:
 class FollowCamera : public Camera
 {
 public:
-	FollowCamera() = default;
-	void SetTarget(const class Entity& target);
+	FollowCamera(class EntityManager& entityManager, unsigned int targetId);
+	void SetTarget(unsigned int targetId_in);
 	virtual DirectX::XMMATRIX GetTransform(const Time& dt) override;
 private:
-	const class Entity* entity = nullptr;
 	const float followZ = 15.0f;
 	const float followY = 6.0f;
+	class EntityManager* entityManager;
+	unsigned int targetId = 0;
 	DirectX::XMVECTOR previous_vz = DirectX::XMVectorZero();
 	float radianPerSecond = 4.0f;
 };

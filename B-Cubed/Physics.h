@@ -24,6 +24,6 @@ private:
 	physx::PxMaterial*				gMaterial = NULL;
 	physx::PxPvd*					gPvd = NULL;
 private:
-	static constexpr float timestep = 1.0f / 60.0f;
+	static constexpr float timestep = 1.0f / 120.0f;
 	float current = 0.0f;
 };

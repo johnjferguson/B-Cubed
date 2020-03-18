@@ -17,6 +17,10 @@ public:
 
 public:
 	Entity();
+	Entity(std::unique_ptr<Renderable> pRenderable, std::unique_ptr<PhysicsComponent> pPhysics, 
+		   const DirectX::XMFLOAT3& pos_in, const DirectX::XMMATRIX& transform_in, Entity::Type type_in );
+	// move constructor
+	Entity(Entity&& rhs);
 	void AddRenderable(std::unique_ptr<Renderable> pRenderable);
 	void AddPhysics(std::unique_ptr<PhysicsComponent> pPhysics);
 	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light);
@@ -27,10 +31,10 @@ public:
 	void MarkForDeath();
 	bool IsMarkedForDeath();
 
+	// -----------------------------
 	void IncreaseHit();
 	void ResetHit();
 	const int NumberofHits() const;
-
 	void SetPosition(float x, float y, float z);
 	const DirectX::XMFLOAT3& GetPosition() const;
 	void SetTransform(const DirectX::XMMATRIX& transform_in);
@@ -54,6 +58,7 @@ public:
 	void setFinishedIn(int placement);
 public:
 	int lastHitCounter = 0;
+	//----------------------------------
 private:
 	std::unique_ptr<PhysicsComponent> physicsComponent = nullptr;
 	std::unique_ptr<Renderable> renderable = nullptr;
@@ -63,6 +68,7 @@ private:
 	DirectX::XMMATRIX transform;
 	Entity::Type type = Entity::Type::DEFAULT;
 	bool markedForDeath = false;
+	// ------------------------
 	int hit = 0;
 	int	barrierTime = 0;
 	bool spinOut = false;
@@ -73,4 +79,5 @@ private:
 	int setParryTime = 10;
 	int setBarrierTime = 120;
 	int finishedin = -1;
+	// ---------------------
 };

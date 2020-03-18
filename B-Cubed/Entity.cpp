@@ -10,6 +10,24 @@ Entity::Entity()
 {
 }
 
+Entity::Entity(std::unique_ptr<Renderable> pRenderable, std::unique_ptr<PhysicsComponent> pPhysics, const DirectX::XMFLOAT3 & pos_in, const DirectX::XMMATRIX & transform_in, Entity::Type type_in)
+	:
+	renderable(std::move(pRenderable)),
+	physicsComponent(std::move(pPhysics)),
+	pos(pos_in),
+	transform(transform_in),
+	type(type_in)
+{
+}
+
+Entity::Entity(Entity && rhs)
+	:
+	Entity()
+{
+	renderable = std::move(rhs.renderable);
+	physicsComponent = std::move(rhs.physicsComponent);
+}
+
 void Entity::AddRenderable(std::unique_ptr<Renderable> pRenderable)
 {
 	renderable = std::move(pRenderable);
