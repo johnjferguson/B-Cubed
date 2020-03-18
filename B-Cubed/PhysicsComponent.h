@@ -7,6 +7,8 @@ class PhysicsComponent
 public:
 	virtual ~PhysicsComponent() = default;
 	virtual void Update(class Entity* entity ) = 0;
+	virtual void SetPosition(const DirectX::XMFLOAT3& position) = 0;
+	virtual void SetVelocity(const DirectX::XMFLOAT3& velocity) = 0;
 protected:
 	physx::PxPhysics* GetPhysics(Physics* physics);
 	physx::PxScene*   GetScene(Physics* physics);

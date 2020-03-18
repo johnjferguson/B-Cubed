@@ -47,4 +47,5 @@ private:
 	unsigned int iSkybox = 0u;
 	unsigned int activeCamera = 0u;
 	unsigned int playerId;
+	DirectX::XMFLOAT3 startPosition;
 };

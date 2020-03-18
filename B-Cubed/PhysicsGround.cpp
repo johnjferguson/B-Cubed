@@ -54,6 +54,16 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 
 }
 
+void PhysicsGround::SetPosition(const DirectX::XMFLOAT3 & position)
+{
+	PhysicsStatic::SetPosition(position);
+}
+
+void PhysicsGround::SetVelocity(const DirectX::XMFLOAT3 & velocity)
+{
+	PhysicsStatic::SetVelocity(velocity);
+}
+
 void PhysicsGround::Update(Entity * entity)
 {
 	gRigidStatic->userData = (void*)entity;

@@ -161,6 +161,19 @@ void VehiclePhysics::Update(Entity* entity)
 	stepPhysics(entity);
 }
 
+void VehiclePhysics::SetPosition(const DirectX::XMFLOAT3 & position)
+{
+
+	PxTransform current = gVehicle4W->getRigidDynamicActor()->getGlobalPose();
+	current.p = PxVec3(position.x, position.y, position.z);
+	gVehicle4W->getRigidDynamicActor()->setGlobalPose(current);
+}
+
+void VehiclePhysics::SetVelocity(const DirectX::XMFLOAT3 & velocity)
+{
+	gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
+}
+
 void VehiclePhysics::initVehicle(Physics* px)
 {
 

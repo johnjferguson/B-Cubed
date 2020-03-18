@@ -28,6 +28,12 @@ public:
 	void UpdatePhysics();
 	void SetType(Entity::Type typeIn);
 	Entity::Type GetType();
+	void SetPosition(float x, float y, float z);
+	const DirectX::XMFLOAT3& GetPosition() const;
+	void SetTransform(const DirectX::XMMATRIX& transform_in);
+	const DirectX::XMMATRIX& GetTransform() const;
+	void SetVelocity(const DirectX::XMFLOAT3& velocity_in);
+	const DirectX::XMFLOAT3& GetVelocity() const;
 	void MarkForDeath();
 	bool IsMarkedForDeath();
 
@@ -35,10 +41,6 @@ public:
 	void IncreaseHit();
 	void ResetHit();
 	const int NumberofHits() const;
-	void SetPosition(float x, float y, float z);
-	const DirectX::XMFLOAT3& GetPosition() const;
-	void SetTransform(const DirectX::XMMATRIX& transform_in);
-	const DirectX::XMMATRIX& GetTransform() const;
 	bool CanParry();
 	bool CanBlock();
 	void ResetBarrier();
@@ -65,6 +67,7 @@ private:
 private:
 	// position vector and rotation matrix for object
 	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 velocity;
 	DirectX::XMMATRIX transform;
 	Entity::Type type = Entity::Type::DEFAULT;
 	bool markedForDeath = false;

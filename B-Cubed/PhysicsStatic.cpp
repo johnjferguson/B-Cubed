@@ -21,6 +21,18 @@ PhysicsStatic::~PhysicsStatic()
 	gRigidStatic->release();
 }
 
+void PhysicsStatic::SetPosition(const DirectX::XMFLOAT3 & position)
+{
+	PxTransform current = gRigidStatic->getGlobalPose();
+	current.p = PxVec3(position.x, position.y, position.z);
+	gRigidStatic->setGlobalPose(current);
+}
+
+void PhysicsStatic::SetVelocity(const DirectX::XMFLOAT3 & velocity)
+{
+	assert(false && "setting velocity of static object");
+}
+
 void PhysicsStatic::Update(Entity* entity)
 {
 	gRigidStatic->userData = (void*)entity;

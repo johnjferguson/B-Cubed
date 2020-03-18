@@ -17,6 +17,16 @@ MissilePhysics::MissilePhysics(Physics* px, const PxTransform& transform, const 
 
 }
 
+void MissilePhysics::SetPosition(const DirectX::XMFLOAT3 & position)
+{
+	PhysicsDynamic::SetPosition(position);
+}
+
+void MissilePhysics::SetVelocity(const DirectX::XMFLOAT3 & velocity)
+{
+	PhysicsDynamic::SetVelocity(velocity);
+}
+
 void MissilePhysics::Update(Entity* entity)
 {
 

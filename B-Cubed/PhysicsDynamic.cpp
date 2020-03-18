@@ -22,6 +22,18 @@ PhysicsDynamic::PhysicsDynamic(Physics* px, const physx::PxTransform& transform,
 	GetScene(px)->addActor(*gRigidDynamic);
 }
 
+void PhysicsDynamic::SetPosition(const DirectX::XMFLOAT3 & position)
+{
+	PxTransform current = gRigidDynamic->getGlobalPose();
+	current.p = PxVec3(position.x, position.y, position.z);
+	gRigidDynamic->setGlobalPose(current);
+}
+
+void PhysicsDynamic::SetVelocity(const DirectX::XMFLOAT3 & velocity)
+{
+	gRigidDynamic->setLinearVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
+}
+
 PhysicsDynamic::~PhysicsDynamic()
 {
 	gRigidDynamic->release();

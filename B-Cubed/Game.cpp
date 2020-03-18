@@ -46,7 +46,7 @@ Game::Game()
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component
-
+	startPosition = dx::XMFLOAT3(-10.0f, 20.0f, 140.0f);
 	// Vehicle Physics
 	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -10.0f, 140.0f, 0);
 
@@ -282,6 +282,10 @@ void Game::DoInput()
 			{
 				iSkybox = ++iSkybox % skyboxes.size();
 			}
+			break;
+		case 'R':
+			entityManager.Get(playerId)->SetPosition(startPosition.x,startPosition.y,startPosition.z);
+			entityManager.Get(playerId)->SetVelocity({ 0.0f, 0.0f, 0.0f });
 			break;
 		}
 	}

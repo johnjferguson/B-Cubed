@@ -155,6 +155,7 @@ bool Entity::IsMarkedForDeath()
 void Entity::SetPosition(float x, float y, float z)
 {
 	pos = DirectX::XMFLOAT3(x,y,z);
+	physicsComponent->SetPosition(DirectX::XMFLOAT3(x, y, z));
 }
 
 const DirectX::XMFLOAT3 & Entity::GetPosition() const
@@ -170,6 +171,17 @@ void Entity::SetTransform(const DirectX::XMMATRIX & transform_in)
 const DirectX::XMMATRIX & Entity::GetTransform() const
 {
 	return transform;
+}
+
+void Entity::SetVelocity(const DirectX::XMFLOAT3 & velocity_in)
+{
+	velocity = velocity_in;
+	physicsComponent->SetVelocity(velocity_in);
+}
+
+const DirectX::XMFLOAT3 & Entity::GetVelocity() const
+{
+	return velocity;
 }
 
 bool Entity::CanParry()
