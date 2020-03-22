@@ -17,6 +17,7 @@ public:
 	void StartFrame();
 	void RenderIndexed(UINT count);
 	void TestDraw(int x, int y);
+	void SetViewPort(D3D11_VIEWPORT& vp_in);
 public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();

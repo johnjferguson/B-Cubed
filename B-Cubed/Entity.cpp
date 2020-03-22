@@ -126,10 +126,10 @@ void Entity::RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const D
 	}
 }
 
-void Entity::UpdatePhysics()
+void Entity::UpdatePhysics(const Time& dt)
 {
 	if (physicsComponent != nullptr)
-		physicsComponent->Update(this);
+		physicsComponent->Update(this, dt);
 }
 
 void Entity::SetType(Entity::Type typeIn)

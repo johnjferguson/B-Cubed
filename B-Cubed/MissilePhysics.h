@@ -9,7 +9,7 @@ public:
 	virtual ~MissilePhysics() = default;
 	virtual void SetPosition(const DirectX::XMFLOAT3& position) override;
 	virtual void SetVelocity(const DirectX::XMFLOAT3& velocity) override;
-	virtual void Update(Entity* entity) override;
+	virtual void Update(Entity* entity, const Time& dt) override;
 private:
 	Physics* phy;
 };

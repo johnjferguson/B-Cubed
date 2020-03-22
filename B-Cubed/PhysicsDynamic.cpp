@@ -39,7 +39,7 @@ PhysicsDynamic::~PhysicsDynamic()
 	gRigidDynamic->release();
 }
 
-void PhysicsDynamic::Update(Entity * entity)
+void PhysicsDynamic::Update(Entity * entity, const Time& dt)
 {
 	gRigidDynamic->userData = (void*)entity;
 

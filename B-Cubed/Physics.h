@@ -11,7 +11,7 @@ class Physics
 public:
 	Physics();
 	~Physics();
-	void Simulate(const Time& dt);
+	void Simulate(const Time& dt, class EntityManager& em);
 	void Fetch();
 private:
 	physx::PxDefaultAllocator		gAllocator;

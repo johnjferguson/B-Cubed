@@ -64,9 +64,9 @@ void PhysicsGround::SetVelocity(const DirectX::XMFLOAT3 & velocity)
 	PhysicsStatic::SetVelocity(velocity);
 }
 
-void PhysicsGround::Update(Entity * entity)
+void PhysicsGround::Update(Entity * entity, const Time& dt)
 {
 	gRigidStatic->userData = (void*)entity;
 
-	PhysicsStatic::Update(entity);
+	PhysicsStatic::Update(entity, dt);
 }

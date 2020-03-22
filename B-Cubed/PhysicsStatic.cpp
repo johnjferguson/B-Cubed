@@ -33,7 +33,7 @@ void PhysicsStatic::SetVelocity(const DirectX::XMFLOAT3 & velocity)
 	assert(false && "setting velocity of static object");
 }
 
-void PhysicsStatic::Update(Entity* entity)
+void PhysicsStatic::Update(Entity* entity, const Time& dt)
 {
 	gRigidStatic->userData = (void*)entity;
 

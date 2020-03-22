@@ -18,11 +18,11 @@ Entity* EntityManager::Get(unsigned int id)
 	return nullptr;
 }
 
-void EntityManager::UpdatePhysics()
+void EntityManager::UpdatePhysics(const Time& dt)
 {
 	
 	for (auto& e : entities) {
-		e.second->UpdatePhysics();
+		e.second->UpdatePhysics(dt);
 	}
 	
 }

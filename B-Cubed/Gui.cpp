@@ -33,12 +33,12 @@ void Gui::End()
 
 void Gui::AddSlider(const std::string & name, float & value, float lowerbound, float upperbound)
 {
-	ImGui::SliderFloat(name.c_str(), &value, lowerbound, upperbound);
+	//ImGui::SliderFloat(name.c_str(), &value, lowerbound, upperbound);
 }
 
 void Gui::AddText(const std::string & text)
 {
-	ImGui::Text(text.c_str());
+	//ImGui::Text(text.c_str());
 }
 
 void Gui::AddCheckbox(const std::string & name, bool & state)

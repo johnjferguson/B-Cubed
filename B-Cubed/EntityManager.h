@@ -18,7 +18,7 @@ public:
 	// get a single entity given an id
 	// will return nullptr if entity does not exist
 	Entity* Get(unsigned int id);
-	void UpdatePhysics();
+	void UpdatePhysics(const Time& dt);
 	void RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightProjection, const Light& light);
 	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light);
 	// get a vector with all the id's of a specific type i.e. Entity::Type::VEHICLE

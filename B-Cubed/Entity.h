@@ -25,7 +25,7 @@ public:
 	void AddPhysics(std::unique_ptr<PhysicsComponent> pPhysics);
 	void Render(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightView, const DirectX::XMMATRIX& lightProjection, const Light& light);
 	void RenderDepth(Graphics& gfx, const DirectX::XMMATRIX& camera, const DirectX::XMMATRIX& lightProjection, const Light& light);
-	void UpdatePhysics();
+	void UpdatePhysics(const Time& dt);
 	void SetType(Entity::Type typeIn);
 	Entity::Type GetType();
 	void SetPosition(float x, float y, float z);

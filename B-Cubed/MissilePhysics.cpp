@@ -27,7 +27,7 @@ void MissilePhysics::SetVelocity(const DirectX::XMFLOAT3 & velocity)
 	PhysicsDynamic::SetVelocity(velocity);
 }
 
-void MissilePhysics::Update(Entity* entity)
+void MissilePhysics::Update(Entity* entity, const Time& dt)
 {
 
 	PxVec3 v = gRigidDynamic->getLinearVelocity().getNormalized();
@@ -64,7 +64,7 @@ void MissilePhysics::Update(Entity* entity)
 
 	entity->SetBounceDir(gRigidDynamic->getLinearVelocity());
 
-	PhysicsDynamic::Update(entity);
+	PhysicsDynamic::Update(entity, dt);
 
 }
 

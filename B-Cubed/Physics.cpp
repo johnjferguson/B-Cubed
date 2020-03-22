@@ -3,6 +3,7 @@
 #include "physx/vehicle4W/snippetvehiclecommon/SnippetVehicleFilterShader.h"
 #include "Entity.h"
 #include "Sound.h"
+#include "EntityManager.h"
 
 #define PVD_HOST "127.0.0.1"
 #define PX_RELEASE(x)	if(x)	{ x->release(); x = NULL;	}
@@ -165,6 +166,11 @@ Physics::Physics()
 	}
 	gMaterial = gPhysics->createMaterial(5.0f, 5.0f, -15.5f);
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
+
+	// initialize physics
+	PxInitVehicleSDK(*gPhysics);
+	PxVehicleSetBasisVectors(PxVec3(0, 1, 0), PxVec3(0, 0, 1));
+	PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
 }
 
 Physics::~Physics()
@@ -183,14 +189,16 @@ Physics::~Physics()
 	PX_RELEASE(gFoundation);
 }
 
-void Physics::Simulate(const Time & dt)
+void Physics::Simulate(const Time & dt, EntityManager& em)
 {
 	// simulate the physics scene at a constant time
 	current += dt();
 	while (current > timestep)
 	{
-		gScene->simulate(timestep);
+		em.UpdatePhysics(dt);
 		current -= timestep;
+		gScene->simulate(timestep);
+		Fetch();
 	}
 }
 

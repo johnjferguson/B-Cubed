@@ -21,7 +21,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	{
 		0.0f,		0.70f,
 		5.0f,		0.70f,
-		30.0f,		0.15f,
+		30.0f,		0.70f,
 		120.0f,		0.70f,
 		PX_MAX_F32, PX_MAX_F32,
 		PX_MAX_F32, PX_MAX_F32,
@@ -94,7 +94,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
 }
 
-void VehiclePhysics::Update(Entity* entity)
+void VehiclePhysics::Update(Entity* entity, const Time& dt)
 {
 	gVehicle4W->getRigidDynamicActor()->userData = (void*)entity;
 
@@ -138,7 +138,7 @@ void VehiclePhysics::Update(Entity* entity)
 
 	
 	if (gIsVehicleInAir) {
-		Gui::AddText("Is in Air");
+		//Gui::AddText("Is in Air");
 		//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
 		//gVehicle4W->getRigidDynamicActor()->setLinearVelocity(PxVec3(cur_vel.x, cur_vel.y / 2.0, cur_vel.z));
 		//PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
@@ -157,7 +157,13 @@ void VehiclePhysics::Update(Entity* entity)
 	
 
 	checkLaps(entity);
-
+	/*
+	currentTime += dt();
+	while (currentTime > timestep)
+	{
+		currentTime -= timestep;
+	}
+	*/
 	stepPhysics(entity);
 }
 
@@ -176,11 +182,6 @@ void VehiclePhysics::SetVelocity(const DirectX::XMFLOAT3 & velocity)
 
 void VehiclePhysics::initVehicle(Physics* px)
 {
-
-	PxInitVehicleSDK(*GetPhysics(px));
-	PxVehicleSetBasisVectors(PxVec3(0, 1, 0), PxVec3(0, 0, 1));
-	PxVehicleSetUpdateMode(PxVehicleUpdateMode::eVELOCITY_CHANGE);
-
 	//Create the batched scene queries for the suspension raycasts.
 	gVehicleSceneQueryData = VehicleSceneQueryData::allocate(1, PX_MAX_NB_WHEELS, 1, 1, WheelSceneQueryPreFilterBlocking, NULL, *GetAllocator(px));
 	gBatchQuery = VehicleSceneQueryData::setUpBatchedSceneQuery(0, *gVehicleSceneQueryData, GetScene(px));
@@ -189,9 +190,9 @@ void VehiclePhysics::initVehicle(Physics* px)
 	gFrictionPairs = createFrictionPairs(GetMaterial(px));
 
 	//Create a plane to drive on.
-	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
-	GetScene(px)->addActor(*gGroundPlane);
+	//PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
+	//gGroundPlane = createDrivablePlane(groundPlaneSimFilterData, GetMaterial(px), GetPhysics(px));
+	//GetScene(px)->addActor(*gGroundPlane);
 
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
@@ -319,12 +320,12 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	PxQuat qua = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 
 	if (!useAI) {
-		std::stringstream ss;
-		ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
-		Gui::AddText(ss.str().c_str());
+		//std::stringstream ss;
+		//ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
+		//Gui::AddText(ss.str().c_str());
 
-		std::stringstream oo;
-		oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
+		//std::stringstream oo;
+		//oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
 		//Gui::AddText(oo.str().c_str());
 	}
 
@@ -361,7 +362,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		}
 	}
 
-	const PxF32 timestep = 1.0f / 60.0f;
+	//const PxF32 timestep = 1.0f / 120.0f;
 
 	abilityTime++;
 	entity->CountBarrier();
@@ -614,8 +615,8 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		}
 	}
 
-	std::stringstream ss;
-	ss << checkPoint1 << "   :   " << checkPoint2 << "  :  " << checkPoint3 << " Laps: " << entity->GetNumLaps() << " Has Won: " << entity->haveWon;
-	Gui::AddText(ss.str().c_str());
+	//std::stringstream ss;
+	//ss << checkPoint1 << "   :   " << checkPoint2 << "  :  " << checkPoint3 << " Laps: " << entity->GetNumLaps() << " Has Won: " << entity->haveWon;
+	//Gui::AddText(ss.str().c_str());
 
 }

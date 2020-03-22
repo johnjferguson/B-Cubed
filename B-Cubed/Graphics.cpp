@@ -43,7 +43,7 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		D3D11_CREATE_DEVICE_DEBUG,
+		0u,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -351,6 +351,11 @@ void Graphics::TestDraw(int x, int y)
 	
 }
 
+void Graphics::SetViewPort(D3D11_VIEWPORT & vp_in)
+{
+	pContext->RSSetViewports(1u, &vp_in);
+}
+
 ID3D11Device * Graphics::GetDevice()
 {
 	return pDevice.Get();
@@ -363,10 +368,19 @@ ID3D11DeviceContext * Graphics::GetContext()
 
 int Graphics::GetHeight() const
 {
-	return height;
+	D3D11_VIEWPORT vp_in;
+	UINT nViewPorts = 1;
+	pContext->RSGetViewports(&nViewPorts, &vp_in);
+
+	return vp_in.Height;
 }
 
 int Graphics::GetWidth() const
 {
-	return width;
+
+	D3D11_VIEWPORT vp_in;
+	UINT nViewPorts = 1;
+	pContext->RSGetViewports(&nViewPorts, &vp_in);
+
+	return vp_in.Width;
 }
