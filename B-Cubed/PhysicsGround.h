@@ -7,7 +7,7 @@
 class PhysicsGround : public PhysicsStatic
 {
 public:
-	PhysicsGround(Physics* px, const physx::PxTransform& transform, const std::vector<DirectX::XMFLOAT3>& vertices, const std::vector<unsigned short>& indices);
+	PhysicsGround(Physics* px, const physx::PxTransform& transform, const std::vector<DirectX::XMFLOAT3>& vertices, const std::vector<unsigned short>& indices, const bool ground);
 	virtual ~PhysicsGround() = default;
 	virtual void SetPosition(const DirectX::XMFLOAT3& position) override;
 	virtual void SetVelocity(const DirectX::XMFLOAT3& velocity) override;

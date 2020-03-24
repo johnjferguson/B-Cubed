@@ -6,7 +6,7 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform, const std::vector<DirectX::XMFLOAT3>& vertices, const std::vector<unsigned short>& indices)
+PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform, const std::vector<DirectX::XMFLOAT3>& vertices, const std::vector<unsigned short>& indices, const bool ground)
 {
 	gRigidStatic = GetPhysics(px)->createRigidStatic(transform);
 
@@ -25,9 +25,13 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 	bool w = tmd.isValid();
 
 	PxFilterData groundPlaneSimFilterData(COLLISION_FLAG_GROUND, COLLISION_FLAG_GROUND_AGAINST, 0, 0);
-	//PxFilterData obstFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
+	PxFilterData obstFilterData(COLLISION_FLAG_OBSTACLE, COLLISION_FLAG_OBSTACLE_AGAINST, 0, 0);
+
 	PxFilterData qryFilterData;
-	qryFilterData.word3 = static_cast<PxU32>(DRIVABLE_SURFACE);
+	
+	if (ground) {
+		qryFilterData.word3 = static_cast<PxU32>(DRIVABLE_SURFACE);
+	}
 
 	GetScene(px)->addActor(*gRigidStatic);
 
@@ -41,8 +45,13 @@ PhysicsGround::PhysicsGround(Physics * px, const physx::PxTransform & transform,
 
 		PxShape* shape = PxRigidActorExt::createExclusiveShape(*gRigidStatic, PxTriangleMeshGeometry(pMesh), *GetMaterial(px));
 		shape->setQueryFilterData(qryFilterData);
-		shape->setSimulationFilterData(groundPlaneSimFilterData);
-		//shape->setSimulationFilterData(obstFilterData);
+
+		if (ground) {
+			shape->setSimulationFilterData(groundPlaneSimFilterData);
+		}
+		else {
+			shape->setSimulationFilterData(obstFilterData);
+		}
 		shape->setLocalPose(transform);
 
 		GetScene(px)->addActor(*gRigidStatic);
