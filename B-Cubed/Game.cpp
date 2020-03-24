@@ -155,6 +155,9 @@ int Game::Start()
 	Sound::Load("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
+	first = true;
+	second = true;
+
 	while (true)
 	{
 		if (const auto eCode = wnd.ProcessMessages())
@@ -172,6 +175,9 @@ void Game::DoFrame()
 	gui.Begin("B-Cubed gui window");
 	
 	Time dt = ft.Set();
+	gameCounter += dt.Seconds();
+
+	std::cout << gameCounter << std::endl;
 
 	// update physics
 	//entityManager.UpdatePhysics(dt);
@@ -248,10 +254,17 @@ void Game::DoFrame()
 
 	entityManager.Cull();
 
-	if (gameCounter == 0) {
+	std::stringstream ss;
+	ss << "Time: " << dt.Seconds();
+	Gui::AddText(ss.str().c_str());
+
+
+	if (first) {
+		first = false;
 		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	}
-	else if (gameCounter == 240) {
+	else if (gameCounter > 20000 && second) {
+		second = false;
 		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 	}
 

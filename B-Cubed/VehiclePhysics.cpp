@@ -329,7 +329,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		//Gui::AddText(oo.str().c_str());
 	}
 
-	if (game->gameCounter > 250) {
+	if (game->gameCounter > 2000) {
 
 		if (useAI) {
 			PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
