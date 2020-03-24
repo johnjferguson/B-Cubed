@@ -202,7 +202,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
 	PxVehicleEngineData eng = gVehicle4W->mDriveSimData.getEngineData();
-	eng.mPeakTorque = 4000.f;
+	eng.mPeakTorque = 4200.f;
 	eng.mMaxOmega = 1800;
 	//eng.mTorqueCurve = 1;
 	//eng.mMOI = 5;
@@ -251,7 +251,7 @@ snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
 	//The moment of inertia is just the moment of inertia of a cuboid but modified for easier steering.
 	//Center of mass offset is 0.65m above the base of the chassis and 0.25m towards the front.
 	//const PxF32 chassisMass = 1260.0f;
-	const PxF32 chassisMass = 2250.0f;
+	const PxF32 chassisMass = 2200.0f;
 	//const PxVec3 chassisDims(5.5f, 3.0f, 8.0f);
 	//const PxVec3 chassisDims(2.75f, 1.5f, 4.0f);
 	const PxVec3 chassisDims(5.0f, 4.0f, 7.0f);
@@ -495,6 +495,14 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
 			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 			//-----------------------------------------------------------------------------------------------
+			gVehicle4W->getRigidDynamicActor()->addForce(12000.f * forward);
+			//---------------------------------------------------------------------------------------------------
+		}
+		else if ((int)gVehicle4W->computeForwardSpeed() >= 1 && (int)gVehicle4W->computeForwardSpeed() <= 60) {
+			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+			//-----------------------------------------------------------------------------------------------
 			gVehicle4W->getRigidDynamicActor()->addForce(10000.f * forward);
 			//---------------------------------------------------------------------------------------------------
 		}
@@ -504,14 +512,6 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 			//-----------------------------------------------------------------------------------------------
 			gVehicle4W->getRigidDynamicActor()->addForce(8000.f * forward);
-			//---------------------------------------------------------------------------------------------------
-		}
-		else if ((int)gVehicle4W->computeForwardSpeed() >= 1 && (int)gVehicle4W->computeForwardSpeed() <= 60) {
-			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
-			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
-			//-----------------------------------------------------------------------------------------------
-			gVehicle4W->getRigidDynamicActor()->addForce(6000.f * forward);
 			//---------------------------------------------------------------------------------------------------
 		}
 
@@ -572,7 +572,7 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-	gVehicle4W->getRigidDynamicActor()->addForce(80000.f * forward);
+	gVehicle4W->getRigidDynamicActor()->addForce(120000.f * forward);
 	if (!gIsVehicleInAir) {
 		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
 	}
