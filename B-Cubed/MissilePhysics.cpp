@@ -12,6 +12,7 @@ MissilePhysics::MissilePhysics(Physics* px, const PxTransform& transform, const 
 	phy = px;
 
 	gRigidDynamic->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
+	gRigidDynamic->setAngularVelocity(PxVec3(6.0, 12.3, 2.1));
 	//gRigidDynamic->setHitFlag(PxHitFlag::ePOSITION, true);
 	//gRigidDynamic->setActorFlags.
 
@@ -37,18 +38,24 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 	PxQuat q = gRigidDynamic->getGlobalPose().q;
 
 	PxRaycastBuffer hit;
-	bool status = phy->gScene->raycast(PxVec3(p.x, p.y - 3, p.z), PxVec3(0, -1, 0), 50, hit);
+	bool status = phy->gScene->raycast(PxVec3(p.x, p.y - 4, p.z), PxVec3(0, -1, 0), 50, hit);
 
 	float dist = hit.block.distance;
 
-	gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
+	if (dist < 10.f) {
+		gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
+		lastY = p.y - (dist - 1);
+	}
+	else {
+		gRigidDynamic->setGlobalPose(PxTransform(p.x, lastY, p.z, q));
+	} 
 
 	//std::stringstream ss;
 	//ss << "Status: " << status << "Distance: " << hit.block.distance;
 	//Gui::AddText(ss.str().c_str());
 	
 	if (v.y != 0.f) {
-		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.1, v.z) * 85.f);
+		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 120.f);
 	}
 	
 	if (entity->GetBounceBack()) {

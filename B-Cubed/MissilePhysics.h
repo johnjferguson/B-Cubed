@@ -12,4 +12,5 @@ public:
 	virtual void Update(Entity* entity, const Time& dt) override;
 private:
 	Physics* phy;
+	float lastY;
 };

@@ -28,7 +28,7 @@ Game::Game()
 	//std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
 	//std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//evenbettertrack.obj");
 	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
-	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//wallhalf.obj");
+	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
 	std::unique_ptr<Box> start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(33.0f, 8.0f, 1.0f), L"images//chess.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
@@ -47,9 +47,9 @@ Game::Game()
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component
-	startPosition = dx::XMFLOAT3(-10.0f, 20.0f, 140.0f);
+	startPosition = dx::XMFLOAT3(0.0f, 40.0f, 150.0f);
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -10.0f, 140.0f, 0);
+	std::unique_ptr<VehiclePhysics> vp0 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, 10.0f, 130.0f, 0);
 
 	std::vector<physx::PxVec3> aipath;
 	aipath.push_back({ 158, -10, 144 });
@@ -65,7 +65,7 @@ Game::Game()
 	aipath.push_back({ - 237, -10, 104 });
 	aipath.push_back({ - 174, -10, 139 });
 
-	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 155.f, 1);
+	std::unique_ptr<VehiclePhysics> vp1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 150.f, 1);
 	std::unique_ptr<VehiclePhysics> vp2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 0.f, 147.f, 2);
 	std::unique_ptr<VehiclePhysics> vp3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 10.f, 154.f, 3);
 
@@ -329,15 +329,18 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	PxTransform missileTrans;
 
 	if (startVel.magnitude() <= 40) {
-		missileTrans = PxTransform(startPos + forward * 5.0f);
+		missileTrans = PxTransform(PxVec3(startPos.x, startPos.y + 1.f, startPos.z) + forward * 8.0f);
+	}
+	else if (startVel.magnitude() <= 80) {
+		missileTrans = PxTransform(PxVec3(startPos.x, startPos.y + 3.f, startPos.z) + forward * 12.0f);
 	}
 	else {
-		missileTrans = PxTransform(startPos + forward * 13.0f);
+		missileTrans = PxTransform(PxVec3(startPos.x, startPos.y + 5.f, startPos.z) + forward * 15.0f);
 	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
-	PxVec3 missileVel = (forward * 85.f + startVel);
+	PxVec3 missileVel = (forward * 120.f + startVel);
 
-	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(0.8f, 0.8f, 0.8f));
+	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(1.0f, 1.0f, 1.0f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");
 
 	//Game::entities[entities.size()-1].AddRenderable(std::move(vb));

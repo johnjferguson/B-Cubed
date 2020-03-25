@@ -197,7 +197,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
 	gVehicle4W = createVehicle4W(vehicleDesc, GetPhysics(px), GetCooking(px));
-	PxTransform startTransform(PxVec3(startPosX + 10, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f) + 40, startPosZ), PxQuat(0, -0.707, 0, -0.707));
+	PxTransform startTransform(PxVec3(startPosX + 10, (vehicleDesc.chassisDims.y*0.5f + vehicleDesc.wheelRadius - 12.f) + 50, startPosZ), PxQuat(0, -0.707, 0, -0.707));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
@@ -320,9 +320,9 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	PxQuat qua = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 
 	if (!useAI) {
-		//std::stringstream ss;
-		//ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
-		//Gui::AddText(ss.str().c_str());
+		std::stringstream ss;
+		ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
+		Gui::AddText(ss.str().c_str());
 
 		//std::stringstream oo;
 		//oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
