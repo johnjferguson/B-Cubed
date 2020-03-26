@@ -69,10 +69,19 @@ private:
 	bool							aOnPress = true;
 	bool							xOnPress = true;
 
-	int								abilityCharges = 0;
-	int								rechargeTime = 0;
-	int								abilityTime = 0;
-	int								spinOutTime = 0;
+	float							abilityCharges = 0;
+
+	float							startRechargeTimer = 0;
+	float							rechargeTime = 0;
+
+	float							startAbilityTimer = 0; 
+	float							abilityTime = 0;
+
+	float							startSpinOutTimer = 0;
+	float							spinOutTime = 99;
+
+	float							startBoostTimer = 0;
+	float							boostTime = 99;
 
 	int								carNum;
 		
@@ -98,11 +107,8 @@ private:
 	bool barrier;
 	bool blast;
 
-	bool boosting;	// is true when vehicle is currently boosting
-	int boostTimer; // counts down while boosting -> boosting stops at 0
-
-	const int setSpinOutTime = 30;   //how long a spinout lasts
-	const int setAbilityTime = 60;   //how often player can use an ability
-	const int setRechargeTime = 200; //how often player gets an ability charge
-	const int setBoostTime = 60;     //how long car will boost for
+	const int setSpinOutTime = 1;   //how long a spinout lasts
+	const int setAbilityTime = 2;   //how often player can use an ability
+	const int setRechargeTime = 6.7; //how often player gets an ability charge
+	const int setBoostTime = 2;     //how long car will boost for
 };

@@ -12,6 +12,7 @@ public:
 	{
 		MISSILE,
 		VEHICLE,
+		FLOOR,
 		DEFAULT
 	};
 
@@ -43,8 +44,8 @@ public:
 	const int NumberofHits() const;
 	bool CanParry();
 	bool CanBlock();
-	void ResetBarrier();
-	void CountBarrier();
+	void ResetBarrier(float gameTime);
+	void CountBarrier(float gameTime);
 	void SetBounceBack(bool set);
 	void SetSpinOut(bool set);
 	bool GetBounceBack() const;
@@ -73,14 +74,16 @@ private:
 	bool markedForDeath = false;
 	// ------------------------
 	int hit = 0;
-	int	barrierTime = 0;
+	int	barrierTime = 99;
 	bool spinOut = false;
 	bool bounceBack = false;
 	int numCharges = 0;
 	physx::PxVec3 bounceDir;
 	int numLaps = 0;
-	int setParryTime = 10;
-	int setBarrierTime = 120;
+	float setParryTime = 0.5f;
+	float startParryTimer = 0.f;
+	float setBarrierTime = 4.f;
+	float startBarrierTimer = 0.f;
 	int finishedin = -1;
 	// ---------------------
 };

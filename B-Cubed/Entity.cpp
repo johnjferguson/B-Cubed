@@ -1,6 +1,7 @@
 #include "Entity.h"
 #include "DirectXMath.h"
 #include "Gui.h"
+#include "Game.h"
 
 int Entity::haveWon = 0;
 
@@ -201,14 +202,14 @@ bool Entity::CanBlock()
 	return false;
 }
 
-void Entity::ResetBarrier()
+void Entity::ResetBarrier(float gameTime)
 {
-	barrierTime = 0;
+	startBarrierTimer = gameTime;
 }
 
-void Entity::CountBarrier()
+void Entity::CountBarrier(float gameTime)
 {
-	barrierTime++;
+	barrierTime = gameTime - startBarrierTimer;
 }
 
 void Entity::SetBounceBack(bool set)

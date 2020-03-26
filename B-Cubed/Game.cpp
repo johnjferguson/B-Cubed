@@ -28,7 +28,7 @@ Game::Game()
 	//std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
 	//std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//evenbettertrack.obj");
 	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
-	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
+	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank1.obj");
 	std::unique_ptr<Box> start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(33.0f, 8.0f, 1.0f), L"images//chess.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
@@ -175,9 +175,6 @@ void Game::DoFrame()
 	gui.Begin("B-Cubed gui window");
 	
 	Time dt = ft.Set();
-	gameCounter += dt.Seconds();
-
-	std::cout << gameCounter << std::endl;
 
 	// update physics
 	//entityManager.UpdatePhysics(dt);
@@ -254,21 +251,23 @@ void Game::DoFrame()
 
 	entityManager.Cull();
 
+	gameCounter += dt.Seconds();
+
 	std::stringstream ss;
-	ss << "Time: " << dt.Seconds();
+	ss << "Time: " << gameCounter;
 	Gui::AddText(ss.str().c_str());
+
+	gameCounter += dt.Seconds();
 
 
 	if (first) {
 		first = false;
 		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	}
-	else if (gameCounter > 20000 && second) {
+	else if (gameCounter > 16.5 && second) {
 		second = false;
 		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 	}
-
-	gameCounter++;
 
 	gui.End();
 	wnd.gfx.EndFrame();

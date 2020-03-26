@@ -42,6 +42,18 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 
 	float dist = hit.block.distance;
 
+	PxRigidActor* hitActor = hit.block.actor;
+	/*
+	try {
+		Entity* hitEntity = (Entity*)hitActor->userData;
+	}
+	catch (char* e) {
+
+	}
+	*/
+	//if (hitEntity->GetType() == Entity::Type::VEHICLE)
+
+
 	if (dist < 10.f) {
 		gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
 		lastY = p.y - (dist - 1);
