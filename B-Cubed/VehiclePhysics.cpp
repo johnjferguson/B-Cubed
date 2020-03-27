@@ -6,7 +6,7 @@
 using namespace physx;
 using namespace snippetvehicle;
 
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ, int carNum)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosY, float startPosZ, int carNum)
 	:
 	gameController(gameController),
 	px(*px)
@@ -15,6 +15,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 
 	VehiclePhysics::game = game;
 	VehiclePhysics::startPosX = startPosX;
+	VehiclePhysics::startPosY = startPosY;
 	VehiclePhysics::startPosZ = startPosZ;
 
 	gSteerVsForwardSpeedData =
@@ -86,9 +87,9 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 	initVehicle(px);
 }
 
-VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosZ, int carNum)
+VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosY, float startPosZ, int carNum)
 	:
-	VehiclePhysics(px, gameController, game, startPosX, startPosZ, carNum) 
+	VehiclePhysics(px, gameController, game, startPosX, startPosY, startPosZ, carNum) 
 {
 	VehiclePhysics::useAI = true;
 	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
@@ -110,8 +111,8 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 	auto p = gVehicle4W->mDriveDynData.getEngineRotationSpeed();
 	auto m = gVehicle4W->computeForwardSpeed();
 
-	std::stringstream ss;
-	ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
+	//std::stringstream ss;
+	//ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	//Gui::AddText(ss.str().c_str());
 
 	entity->setNumCharges(abilityCharges);
@@ -136,6 +137,9 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 
 	//gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
 
+	PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
+	PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 	
 	if (gIsVehicleInAir) {
 		//Gui::AddText("Is in Air");
@@ -146,13 +150,10 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 		//PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 
 		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -100000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -100000);
 	}
 	else {
-		PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
-		DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
-		PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
-
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -80000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -100000);
 	}
 	
 
@@ -330,9 +331,9 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	PxQuat qua = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 
 	if (!useAI) {
-		std::stringstream ss;
-		ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
-		Gui::AddText(ss.str().c_str());
+		//::stringstream ss;
+		//ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
+		//Gui::AddText(ss.str().c_str());
 
 		//std::stringstream oo;
 		//oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
@@ -395,10 +396,6 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	if (spinOutTime < setSpinOutTime) {
 		spinOut();
-	}
-
-	if (!gIsVehicleInAir) {
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -500.0, 0));
 	}
 
 	//Cycle through the driving modes to demonstrate how to accelerate/reverse/brake/turn etc.
@@ -561,6 +558,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	gIsVehicleInAir = gVehicle4W->getRigidDynamicActor()->isSleeping() ? false : PxVehicleIsInAir(vehicleQueryResults[0]);
 }
 
+const PxVec3 VehiclePhysics::CurrentPosition()
+{
+	return gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
+}
+
 void VehiclePhysics::applyBoost() {
 
 	if (boostTime == 0 && !useAI) {
@@ -592,14 +594,10 @@ void VehiclePhysics::spinOut()
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
 	//gVehicle4W->getRigidDynamicActor()->addForce(-40000.f * forward);
 
-	if (spinOutTime == 1) {
+	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
+	gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 25.3, 0.0f));
+	//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -10000.0f, 0));
 
-	}
-	else {
-		PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
-		gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(0.0f, 25.3, 0.0f));
-		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -10000.0f, 0));
-	}
 }
 
 void VehiclePhysics::checkLaps(Entity* entity)
@@ -638,3 +636,4 @@ void VehiclePhysics::checkLaps(Entity* entity)
 	//Gui::AddText(ss.str().c_str());
 
 }
+

@@ -32,8 +32,8 @@ public:
 		eDRIVE_MODE_NONE
 	};
 	
-	VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosZ, int carNum);
-	VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosZ, int carNum);
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, float startPosX, float startPosY, float startPosZ, int carNum);
+	VehiclePhysics(Physics* px, Controller& gameController, Game* game, std::vector<physx::PxVec3> p, float startPosX, float startPosY, float startPosZ, int carNum);
 	virtual void Update(Entity* entity, const Time& dt) override;
 	virtual void SetPosition(const DirectX::XMFLOAT3& position) override;
 	virtual void SetVelocity(const DirectX::XMFLOAT3& velocity) override;
@@ -41,6 +41,7 @@ public:
 	snippetvehicle::VehicleDesc initVehicleDesc(Physics* ps);
 	void releaseAllControls();
 	void stepPhysics(Entity* entity);
+	const physx::PxVec3 CurrentPosition();
 private:
 	float currentTime = 0.0f;
 	constexpr static float timestep = 1.0f / 120.0f;
@@ -50,6 +51,7 @@ private:
 	void checkLaps(Entity* entity);
 private:
 	float							startPosX;
+	float							startPosY;
 	float							startPosZ;
 	physx::PxVehicleDrivableSurfaceToTireFrictionPairs* gFrictionPairs = NULL;
 	physx::PxRigidStatic*			gGroundPlane = NULL;
@@ -77,10 +79,10 @@ private:
 	float							startAbilityTimer = 0; 
 	float							abilityTime = 0;
 
-	float							startSpinOutTimer = 0;
+	float							startSpinOutTimer = 1;
 	float							spinOutTime = 99;
 
-	float							startBoostTimer = 0;
+	float							startBoostTimer = 1;
 	float							boostTime = 99;
 
 	int								carNum;
