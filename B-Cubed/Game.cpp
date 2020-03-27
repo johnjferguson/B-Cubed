@@ -47,9 +47,9 @@ Game::Game()
 	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// create physics component
-	startPosition = dx::XMFLOAT3(0.0f, 40.0f, 150.0f);
+	startPosition = dx::XMFLOAT3(-200.f, 15.0f, 141.0f);
 	// Vehicle Physics
-	std::unique_ptr<VehiclePhysics> player_vehicle = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, 0.0f, 40.0f, 150.0f, 0);
+	std::unique_ptr<VehiclePhysics> player_vehicle = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -200.f, 15.0f, 141.0f, 0);
 
 	std::vector<physx::PxVec3> aipath;
 	aipath.push_back({ 158, -10, 144 });
@@ -65,9 +65,9 @@ Game::Game()
 	aipath.push_back({ - 237, -10, 104 });
 	aipath.push_back({ - 174, -10, 139 });
 
-	std::unique_ptr<VehiclePhysics> ai_vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -10.f, 10.0f, 150.f, 1);
-	std::unique_ptr<VehiclePhysics> ai_vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 0.f, 10.0f, 147.f, 2);
-	std::unique_ptr<VehiclePhysics> ai_vehicle_3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, 10.f, 10.0f, 154.f, 3);
+	std::unique_ptr<VehiclePhysics> ai_vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -190.f, 15.0f, 193.f, 1);
+	std::unique_ptr<VehiclePhysics> ai_vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -189.3f, 15.0f, 173.f, 2);
+	std::unique_ptr<VehiclePhysics> ai_vehicle_3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -187.3f, 15.0f, 153.f, 3);
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));

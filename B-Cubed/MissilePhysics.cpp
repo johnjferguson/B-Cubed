@@ -12,7 +12,7 @@ MissilePhysics::MissilePhysics(Physics* px, const PxTransform& transform, const 
 	phy = px;
 
 	gRigidDynamic->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
-	gRigidDynamic->setAngularVelocity(PxVec3(6.0, 12.3, 2.1));
+	gRigidDynamic->setAngularVelocity(PxVec3(6.0, 12.3, 7.1));
 	//gRigidDynamic->setHitFlag(PxHitFlag::ePOSITION, true);
 	//gRigidDynamic->setActorFlags.
 
