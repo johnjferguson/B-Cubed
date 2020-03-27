@@ -374,6 +374,9 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			barrier = gameController.IsPressed(Controller::Button::A);
 		}
 	}
+	else {
+		gVehicleInputData.setAnalogBrake(true);
+	}
 
 	//const PxF32 timestep = 1.0f / 120.0f;
 

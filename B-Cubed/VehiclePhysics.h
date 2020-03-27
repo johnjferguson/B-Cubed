@@ -109,8 +109,8 @@ private:
 	bool barrier;
 	bool blast;
 
-	const int setSpinOutTime = 1;   //how long a spinout lasts
-	const int setAbilityTime = 2;   //how often player can use an ability
-	const int setRechargeTime = 6.7; //how often player gets an ability charge
-	const int setBoostTime = 2;     //how long car will boost for
+	const float setSpinOutTime = 0.95f;   //how long a spinout lasts
+	const float setAbilityTime = 2.f;   //how often player can use an ability
+	const float setRechargeTime = 6.7f; //how often player gets an ability charge
+	const float setBoostTime = 2.f;     //how long car will boost for
 };
