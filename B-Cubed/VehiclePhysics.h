@@ -79,10 +79,10 @@ private:
 	float							startAbilityTimer = 0; 
 	float							abilityTime = 0;
 
-	float							startSpinOutTimer = 1;
+	float							startSpinOutTimer = -1;
 	float							spinOutTime = 99;
 
-	float							startBoostTimer = 1;
+	float							startBoostTimer = -1;
 	float							boostTime = 99;
 
 	int								carNum;

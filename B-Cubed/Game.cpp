@@ -159,6 +159,10 @@ int Game::Start()
 	first = true;
 	second = true;
 
+
+	//entityManager.Get(playerId)->SetPosition(startPosition.x, startPosition.y, startPosition.z);
+	//entityManager.Get(playerId)->SetVelocity({ 0.0f, 0.0f, 0.0f });
+
 	while (true)
 	{
 		if (const auto eCode = wnd.ProcessMessages())
