@@ -206,7 +206,7 @@ void VehiclePhysics::initVehicle(Physics* px)
 	//Create a vehicle that will drive on the plane.
 	VehicleDesc vehicleDesc = initVehicleDesc(px);
 	gVehicle4W = createVehicle4W(vehicleDesc, GetPhysics(px), GetCooking(px));
-	PxTransform startTransform(PxVec3(startPosX, startPosY, startPosZ), PxQuat(0, -0.707, 0, -0.707));
+	PxTransform startTransform(PxVec3(startPosX, startPosY, startPosZ), PxQuat(0, 0.3907311, 0, 0.9205049));
 	gVehicle4W->getRigidDynamicActor()->setGlobalPose(startTransform);
 	GetScene(px)->addActor(*gVehicle4W->getRigidDynamicActor());
 
@@ -254,8 +254,6 @@ void VehiclePhysics::initVehicle(Physics* px)
 	gVehicleModeTimer = 0.0f;
 	gVehicleOrderProgress = 0;
 	//startBrakeMode();
-
-	gVehicle4W->getRigidDynamicActor()->setGlobalPose(PxTransform(startPosX, startPosY, startPosZ));
 }
 
 snippetvehicle::VehicleDesc VehiclePhysics::initVehicleDesc(Physics* px)
