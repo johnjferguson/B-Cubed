@@ -611,22 +611,22 @@ void VehiclePhysics::checkLaps(Entity* entity)
 	PxVec3 pos = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
 
 	//Passed checkpoint 1
-	if (!checkPoint1 && !checkPoint2 && !checkPoint3 && (pos.x >= 235 && pos.x <= 260) && (pos.z >= 25 && pos.z <= 40)) {
+	if (!checkPoint1 && !checkPoint2 && !checkPoint3 && (pos.x >= -60 && pos.x <= -30) && (pos.y >= 15 && pos.y <= 30) && (pos.z >= 225 && pos.z <= 280)) {
 		checkPoint1 = true;
 	}
 
 	//Passed checkpoint 2
-	if (checkPoint1 && !checkPoint2 && !checkPoint3 && (pos.x >= -25 && pos.x <= -5) && (pos.z >= -145 && pos.z <= -105)) {
+	if (checkPoint1 && !checkPoint2 && !checkPoint3 && (pos.x >= 250 && pos.x <= 310) && (pos.y >= 15 && pos.y <= 30) && (pos.z >= -100 && pos.z <= -55)) {
 		checkPoint2 = true;
 	}
 
 	//Passed checkpoint 3
-	if (checkPoint1 && checkPoint2 && !checkPoint3 && (pos.x >= -275 && pos.x <= -235) && (pos.z >= 55 && pos.z <= 75)) {
+	if (checkPoint1 && checkPoint2 && !checkPoint3 && (pos.x >= 60 && pos.x <= 110) && (pos.y >= 20 && pos.y <= 30) && (pos.z >= 125 && pos.z <= 180)) {
 		checkPoint3 = true;
 	}
 
 	//Passed checkpoint 4
-	if (checkPoint1 && checkPoint2 && checkPoint3 && (pos.x >= -15 && pos.x <= -5) && (pos.z >= 125 && pos.z <= 160)) {
+	if (checkPoint1 && checkPoint2 && checkPoint3 && (pos.x >= -160 && pos.x <= -110) && (pos.y >= 7 && pos.y <= 14) && (pos.z >= -125 && pos.z <= -70)) {
 		checkPoint1 = false;
 		checkPoint2 = false;
 		checkPoint3 = false;
