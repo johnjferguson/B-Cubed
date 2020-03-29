@@ -37,6 +37,7 @@ public:
 	const DirectX::XMFLOAT3& GetVelocity() const;
 	void MarkForDeath();
 	bool IsMarkedForDeath();
+	const DirectX::XMFLOAT3& GetForward() const;
 
 	// -----------------------------
 	void IncreaseHit();

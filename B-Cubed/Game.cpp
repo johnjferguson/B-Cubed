@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <sstream>
 #include <algorithm>
+#include <iterator>
 #include "Box.h"
 #include "SkyBox.h"
 #include <DirectXMath.h>
@@ -100,17 +101,16 @@ Game::Game()
 
 	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));		
 	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 0
-	unsigned int id0 = entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
+	//entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
 	entityManager.Add(std::make_unique<Entity>(std::move(w0), std::move(sp2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 2
 	entityManager.Add(std::make_unique<Entity>(std::move(w1), std::move(sp3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 3
 	playerId = entityManager.Add(std::make_unique<Entity>(std::move(nb), std::move(player_vehicle), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));				// 4
 	entityManager.Add(std::make_unique<Entity>(std::move(start), std::move(sp1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 5
 	entityManager.Add(std::make_unique<Entity>(std::move(w2), std::move(sp4), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 6
 	entityManager.Add(std::make_unique<Entity>(std::move(w3), std::move(sp5), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 7
-	unsigned int id1 = entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
-	unsigned int id2 = entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
+	//entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
+	//entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
 
-	vehicleIds = { playerId, id0, id1, id2 };
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox1.png"));
@@ -157,7 +157,7 @@ Game::Game()
 	viewportsPerPlayers.push_back({ 1,5,6 });
 	viewportsPerPlayers.push_back({ 3,4,5,6 });
 
-	overlay = Overlay(wnd.gfx, wnd.GetWidth(), wnd.GetHeight(), vehicleIds, entityManager);
+	overlay = Overlay(wnd.gfx, wnd.GetWidth(), wnd.GetHeight());
 }
 
 int Game::Start()
@@ -261,10 +261,15 @@ void Game::DoFrame()
 
 		//light.Update(wnd.gfx, cameraTransform);
 		//light.Render(wnd.gfx);
+
+		std::vector<unsigned int> vehicles = entityManager.Query(Entity::Type::VEHICLE);
+		std::vector<unsigned int>  missiles = entityManager.Query(Entity::Type::MISSILE);
+		vehicles.insert(vehicles.end(), std::make_move_iterator(missiles.begin()), std::make_move_iterator(missiles.end()));
+
 		overlay.Draw(wnd.gfx, entityManager.Get(playerId)->getNumCharges(), 
 			entityManager.Get(playerId)->GetNumLaps(), 
 			entityManager.Get(playerId)->getFinishedIn(),
-		    entityManager);
+		    entityManager, vehicles);
 		wnd.gfx.ResetViewPort();
 	}
 	

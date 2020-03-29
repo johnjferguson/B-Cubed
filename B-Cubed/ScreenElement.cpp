@@ -28,13 +28,18 @@ ScreenElement::ScreenElement(Graphics& gfx, const DirectX::XMFLOAT2& tl, float s
 	width *= scale;
 	height *= scale;
 
+	float halfStepX = (width * swh.y / swh.x) / 2.0f;
+	float halfStepY = height / 2.0f;
+
+
 	IndexedVertexList<Vertex> ivl;
 	ivl.vertices =
 	{
-		{{tl.x, tl.y},{0.0f,0.0f}},
-		{{tl.x + width*swh.y / swh.x, tl.y},{1.0f,0.0f}},
-		{{tl.x + width* swh.y / swh.x, tl.y - height},{1.0f,1.0f}},
-		{{tl.x, tl.y - height},{0.0f,1.0f}},
+		{{- halfStepX, halfStepY},{0.0f,0.0f}},
+		{{halfStepX, halfStepY},{1.0f,0.0f}},
+		{{halfStepX,- halfStepY},{1.0f,1.0f}},
+		{{- halfStepX,- halfStepY},{0.0f,1.0f}}
+
 	};
 
 	ivl.indices = 
@@ -63,8 +68,9 @@ ScreenElement::ScreenElement(Graphics& gfx, const DirectX::XMFLOAT2& tl, float s
 	struct VertexShaderInput
 	{
 		DirectX::XMFLOAT4 offset;
+		DirectX::XMMATRIX rotation;
 	};
-	VertexShaderInput vsi = { DirectX::XMFLOAT4(0.0f,0.0f,0.11f,1.0f) };
+	VertexShaderInput vsi = { DirectX::XMFLOAT4(tl.x,tl.y,0.11f,1.0f), DirectX::XMMatrixIdentity() };
 
 	AddBind(std::make_unique<VertexConstantBuffer>(gfx,vsi));
 

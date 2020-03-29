@@ -97,6 +97,9 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 
 void VehiclePhysics::Update(Entity* entity, const Time& dt)
 {
+	entity->SetVelocity(*(DirectX::XMFLOAT3*)&(gVehicle4W->getRigidDynamicActor()->getLinearVelocity()));
+
+
 	gVehicle4W->getRigidDynamicActor()->userData = (void*)entity;
 
 	PxTransform transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose();

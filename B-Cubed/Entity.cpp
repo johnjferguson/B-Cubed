@@ -153,6 +153,11 @@ bool Entity::IsMarkedForDeath()
 	return markedForDeath;
 }
 
+const DirectX::XMFLOAT3 & Entity::GetForward() const
+{
+	return (DirectX::XMFLOAT3&)transform.r[2];
+}
+
 void Entity::SetPosition(float x, float y, float z)
 {
 	pos = DirectX::XMFLOAT3(x,y,z);

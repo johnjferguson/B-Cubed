@@ -50,4 +50,7 @@ void PhysicsDynamic::Update(Entity * entity, const Time& dt)
 
 	PxQuat quint = transform.q;
 	entity->SetTransform(DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w)));
+
+	// this is bad practice
+	entity->SetVelocity(*(DirectX::XMFLOAT3*)&gRigidDynamic->getLinearVelocity());
 }
