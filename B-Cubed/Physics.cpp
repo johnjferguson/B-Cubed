@@ -169,7 +169,10 @@ Physics::Physics()
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	gMaterial = gPhysics->createMaterial(5.0f, 5.0f, -15.5f);
+	//gMaterial = gPhysics->createMaterial(5.0f, 5.0f, -15.5f);
+
+	gMaterial = gPhysics->createMaterial(0.05f, 0.05f, -3.f);
+
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 
 	// initialize physics

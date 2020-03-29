@@ -44,5 +44,5 @@ private:
 	class EntityManager* entityManager;
 	unsigned int targetId = 0;
 	DirectX::XMVECTOR previous_vz = DirectX::XMVectorZero();
-	float radianPerSecond = 4.0f;
+	float radianPerSecond = 3.5f;
 };
