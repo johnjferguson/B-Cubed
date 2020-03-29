@@ -85,6 +85,7 @@ PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 	const PxF32 x = dims.x*0.5f;
 	const PxF32 y = dims.y*0.5f;
 	const PxF32 z = dims.z*0.5f;
+	/*
 	PxVec3 verts[8] =
 	{
 		PxVec3(x,y,-z), 
@@ -96,8 +97,160 @@ PxConvexMesh* createChassisMesh(const PxVec3 dims, PxPhysics& physics, PxCooking
 		PxVec3(-x,-y,z),
 		PxVec3(-x,-y,-z)
 	};
+	*/
+	/*
+	PxVec3 verts[32] =
+	{
+		PxVec3(x/4.f,y,-z),
+		PxVec3(x/2.f,y,-z/2.f),
 
-	return createConvexMesh(verts,8,physics,cooking);
+		PxVec3(x/2.f,y,-z/2.f),
+		PxVec3(x,y,-z/4.f),
+
+		PxVec3(x/4.f,y,z),
+		PxVec3(x/2.f,y,z/2.f),
+
+		PxVec3(x/2.f,y,z/2.f),
+		PxVec3(x,y,z/4.f),
+
+		PxVec3(x/4.f,-y,z),
+		PxVec3(x/2.f,-y,z/2.f),
+
+		PxVec3(x/2.f,-y,z/2.f),
+		PxVec3(x,-y,z/4.f),
+
+		PxVec3(x/4.f,-y,-z),
+		PxVec3(x/2.f,-y,-z/2.f),
+
+		PxVec3(x/2.f,-y,-z/2.f),
+		PxVec3(x,-y,-z/4.f),
+
+		PxVec3(-x/4.f,y,-z),
+		PxVec3(-x/2.f,y,-z/2.f),
+
+		PxVec3(-x/2.f,y,-z/2.f),
+		PxVec3(-x,y,-z/4.f),
+
+		PxVec3(-x/4.f,y,z),
+		PxVec3(-x/2.f,y,z/2.f),
+
+		PxVec3(-x/2.f,y,z/2.f),
+		PxVec3(-x,y,z/4.f),
+
+		PxVec3(-x/4.f,-y,z),
+		PxVec3(-x/2.f,-y,z/2.f),
+
+		PxVec3(-x/2.f,-y,z/2.f),
+		PxVec3(-x,-y,z/4.f),
+
+		PxVec3(-x/4.f,-y,-z),
+		PxVec3(-x/2.f,-y,-z/2.f),
+
+		PxVec3(-x/2.f,-y,-z/2.f),
+		PxVec3(-x,-y,-z/4.f),
+	};
+	*/
+
+	PxVec3 verts[64] =
+	{
+		PxVec3(x / 8.f,y,-z),
+		PxVec3(x / 4.f,y,-z / 2.f),
+
+		PxVec3(x / 4.f,y,-z / 2.f),
+		PxVec3(x / 2.f,y,-z / 4.f),
+
+		PxVec3(x / 4.f,y,-z / 2.f),
+		PxVec3(x / 2.f,y,-z / 4.f),
+
+		PxVec3(x / 2.f,y,-z / 4.f),
+		PxVec3(x,y,-z / 8.f),
+
+		PxVec3(x / 8.f,y,z),
+		PxVec3(x / 4.f,y,z / 2.f),
+
+		PxVec3(x / 4.f,y,z / 2.f),
+		PxVec3(x / 2.f,y,z / 4.f),
+
+		PxVec3(x / 4.f,y,z / 2.f),
+		PxVec3(x / 2.f,y,z / 4.f),
+
+		PxVec3(x / 2.f,y,z / 4.f),
+		PxVec3(x,y,z / 8.f),
+
+		PxVec3(x / 8.f,-y,z),
+		PxVec3(x / 4.f,-y,z / 2.f),
+
+		PxVec3(x / 4.f,-y,z / 2.f),
+		PxVec3(x / 2.f,-y,z / 4.f),
+
+		PxVec3(x / 4.f,-y,z / 2.f),
+		PxVec3(x / 2.f,-y,z / 4.f),
+
+		PxVec3(x / 2.f ,-y,z / 4.f),
+		PxVec3(x,-y,z / 8.f),
+
+		PxVec3(x / 8.f,-y,-z),
+		PxVec3(x / 4.f,-y,-z / 2.f),
+
+		PxVec3(x / 4.f,-y,-z / 2.f),
+		PxVec3(x / 2.f,-y,-z / 4.f),
+
+		PxVec3(x / 4.f,-y,-z / 2.f),
+		PxVec3(x / 2.f,-y,-z / 4.f),
+
+		PxVec3(x / 2.f,-y,-z / 4.f),
+		PxVec3(x,-y,-z / 8.f),
+
+		PxVec3(-x / 8.f,y,-z),
+		PxVec3(-x / 4.f,y,-z / 2.f),
+
+		PxVec3(-x / 4.f,y,-z / 2.f),
+		PxVec3(-x / 2.f,y,-z / 4.f),
+
+		PxVec3(-x / 4.f,y,-z / 2.f),
+		PxVec3(-x / 2.f,y,-z / 4.f),
+
+		PxVec3(-x / 2.f,y,-z / 4.f),
+		PxVec3(-x,y,-z / 8.f),
+
+		PxVec3(-x / 8.f,y,z),
+		PxVec3(-x / 4.f,y,z / 2.f),
+
+		PxVec3(-x / 4.f,y,z / 2.f),
+		PxVec3(-x / 2.f,y,z / 4.f),
+
+		PxVec3(-x / 4.f,y,z / 2.f),
+		PxVec3(-x / 2.f,y,z / 4.f),
+
+		PxVec3(-x / 2.f,y,z / 4.f),
+		PxVec3(-x,y,z / 8.f),
+
+		PxVec3(-x / 8.f,-y,z),
+		PxVec3(-x / 4.f,-y,z / 2.f),
+
+		PxVec3(-x / 4.f,-y,z / 2.f),
+		PxVec3(-x / 2.f,-y,z / 4.f),
+
+		PxVec3(-x / 4.f,-y,z / 2.f),
+		PxVec3(-x / 2.f,-y,z / 4.f),
+
+		PxVec3(-x / 2.f,-y,z / 4.f),
+		PxVec3(-x,-y,z / 8.f),
+
+		PxVec3(-x / 8.f,-y,-z),
+		PxVec3(-x / 4.f,-y,-z / 2.f),
+
+		PxVec3(-x / 4.f,-y,-z / 2.f),
+		PxVec3(-x / 2.f,-y,-z / 4.f),
+
+		PxVec3(-x / 4.f,-y,-z / 2.f),
+		PxVec3(-x / 2.f,-y,-z / 4.f),
+
+		PxVec3(-x / 2.f,-y,-z / 4.f),
+		PxVec3(-x,-y,-z / 8.f)
+	};
+
+	return createConvexMesh(verts,64,physics,cooking);
 }
 
 PxConvexMesh* createWheelMesh(const PxF32 width, const PxF32 radius, PxPhysics& physics, PxCooking& cooking)
