@@ -401,14 +401,14 @@
     <ClInclude Include="Overlay.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScreenElement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EntityFactory.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenElement.h">
+      <Filter>Header Files\Renderables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -443,6 +443,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="PhongVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShaderOverlay.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexShaderOverlay.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -60,6 +60,14 @@ ScreenElement::ScreenElement(Graphics& gfx, const DirectX::XMFLOAT2& tl, float s
 	AddBind(std::make_unique<InputLayout>(gfx, vertexBlob, ied));
 
 	AddBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	struct VertexShaderInput
+	{
+		DirectX::XMFLOAT4 offset;
+	};
+	VertexShaderInput vsi = { DirectX::XMFLOAT4(0.0f,0.0f,0.11f,1.0f) };
+
+	AddBind(std::make_unique<VertexConstantBuffer>(gfx,vsi));
+
 	AddBind(std::make_unique<Sampler>(gfx));
 	AddBind(std::make_unique<Blender>(gfx, true));
 }

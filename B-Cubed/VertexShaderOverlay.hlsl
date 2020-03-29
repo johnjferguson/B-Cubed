@@ -1,3 +1,8 @@
+cbuffer Offset
+{
+	float4 offset;
+};
+
 
 struct VSOut
 {
@@ -5,12 +10,11 @@ struct VSOut
 	float4 pos : SV_POSITION;
 };
 
-
 VSOut main(float2 pos : POSITION, float2 tex : TEXCOORD)
 {
 	VSOut vso;
 	vso.tex = tex;
-	vso.pos = float4(pos.x, pos.y, 0.0f, 1.0f);
+	vso.pos = float4(pos.x + offset.x, pos.y + offset.y, offset.z, offset.w);
 
 	return vso;
 }
