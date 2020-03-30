@@ -111,6 +111,7 @@ private:
 
 	const float setSpinOutTime = 0.95f;   //how long a spinout lasts
 	const float setAbilityTime = 2.f;   //how often player can use an ability
-	const float setRechargeTime = 6.7f; //how often player gets an ability charge
+	//const
+	float setRechargeTime = 6.7f; //how often player gets an ability charge
 	const float setBoostTime = 2.f;     //how long car will boost for
 };

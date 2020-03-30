@@ -111,7 +111,7 @@ void AI::selectState() {
 		stateLock -= 1;
 	} else {
 		if (isStuck() && state != REVERSE) {
-			stateLock = 120; // ~60/sec
+			stateLock = 180; // ~60/sec
 			state = REVERSE;
 		} else {
 			if (abs(dirDiff) > directionRange) {
@@ -168,8 +168,8 @@ void AI::update() {
 		sleepTime--;
 	} else {
 		abilities[0] = 0; // Boost
-		abilities[1] = 2; // Barrier
-		abilities[2] = 5; // Blast
+		abilities[1] = 0; // Barrier
+		abilities[2] = 0; // Blast
 
 		// Do Brain stuff
 		doCalculations();

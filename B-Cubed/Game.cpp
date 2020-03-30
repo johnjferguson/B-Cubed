@@ -56,18 +56,21 @@ Game::Game()
 	std::unique_ptr<VehiclePhysics> player_vehicle = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -55.f, 11.0f, -108.0f, 0);
 
 	std::vector<physx::PxVec3> aipath;
-	aipath.push_back({ 158, -10, 144 });
-	aipath.push_back({ 212, -10, 119 });
-	aipath.push_back({ 251, -10, 44 });
-	aipath.push_back({ 242, -10, -69 });
-	aipath.push_back({ 198, -10, -115 });
-	aipath.push_back({ 128, -10, -128 });
-	aipath.push_back({ - 149, -10, -129 });
-	aipath.push_back({ - 200, -10, -117 });
-	aipath.push_back({ - 240, -10, -78 });
-	aipath.push_back({ - 261, -10, -7 });
-	aipath.push_back({ - 237, -10, 104 });
-	aipath.push_back({ - 174, -10, 139 });
+	aipath.push_back({ -155, 10, -90 });
+	aipath.push_back({ -235, 9, 48 });
+	aipath.push_back({ -153, 13, 203 });
+	aipath.push_back({ -22, 27, 248 });
+	aipath.push_back({ 200, 52, 176 });
+	aipath.push_back({ 280, 42, 60 });
+	aipath.push_back({ 271, 25, -81 });
+	aipath.push_back({ 145, 70, -132 });
+	aipath.push_back({ -85, 36, 8 });
+	aipath.push_back({ -88, 11, 101 });
+	aipath.push_back({ 22, 23, 160 });
+	aipath.push_back({ 121, 24, 114 });
+	aipath.push_back({ 166, 29, -5 });
+	aipath.push_back({ 63, 14, -116 });
+	
 	/*
 	std::unique_ptr<VehiclePhysics> ai_vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -203.f, 15.0f, 149.f, 1);
 	//std::unique_ptr<VehiclePhysics> ai_vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -179.3f, 13.2f, 193.3f, 2);
@@ -101,15 +104,15 @@ Game::Game()
 
 	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));		
 	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 0
-	//entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
+	entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
 	entityManager.Add(std::make_unique<Entity>(std::move(w0), std::move(sp2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 2
 	entityManager.Add(std::make_unique<Entity>(std::move(w1), std::move(sp3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 3
 	playerId = entityManager.Add(std::make_unique<Entity>(std::move(nb), std::move(player_vehicle), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));				// 4
 	entityManager.Add(std::make_unique<Entity>(std::move(start), std::move(sp1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 5
 	entityManager.Add(std::make_unique<Entity>(std::move(w2), std::move(sp4), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 6
 	entityManager.Add(std::make_unique<Entity>(std::move(w3), std::move(sp5), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 7
-	//entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
-	//entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
+	entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
+	entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
 
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
