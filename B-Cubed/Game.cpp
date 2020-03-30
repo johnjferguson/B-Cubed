@@ -28,7 +28,15 @@ Game::Game()
 	//std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
 	//std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//evenbettertrack.obj");
 	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
-	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank1.obj");
+	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd.obj");
+	std::unique_ptr<Mesh> b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
+	std::unique_ptr<Mesh> b4 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner.obj");
+	std::unique_ptr<Mesh> b5 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner2.obj");
+	std::unique_ptr<Mesh> b6 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd1.obj");
+	std::unique_ptr<Mesh> b7 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner1.obj");
+	std::unique_ptr<Mesh> b8 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner3.obj");
+	std::unique_ptr<Mesh> b9 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//panel.obj");
+
 	std::unique_ptr<Box> start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(33.0f, 8.0f, 1.0f), L"images//chess.jpg");
 	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
 	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
@@ -102,8 +110,43 @@ Game::Game()
 	auto indices2 = b2->GetIndices();
 	std::unique_ptr<PhysicsGround> sp02 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices2, indices2, false);
 
+	auto vertices3 = b3->GetVertices();
+	auto indices3 = b3->GetIndices();
+	std::unique_ptr<PhysicsGround> sp03 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices3, indices3, false);
+
+	auto vertices4 = b4->GetVertices();
+	auto indices4 = b4->GetIndices();
+	std::unique_ptr<PhysicsGround> sp04 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices4, indices4, false);
+
+	auto vertices5 = b5->GetVertices();
+	auto indices5 = b5->GetIndices();
+	std::unique_ptr<PhysicsGround> sp05 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices5, indices5, false);
+
+	auto vertices6 = b6->GetVertices();
+	auto indices6 = b6->GetIndices();
+	std::unique_ptr<PhysicsGround> sp06 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices6, indices6, false);
+
+	auto vertices7 = b7->GetVertices();
+	auto indices7 = b7->GetIndices();
+	std::unique_ptr<PhysicsGround> sp07 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices7, indices7, false);
+
+	auto vertices8 = b8->GetVertices();
+	auto indices8 = b8->GetIndices();
+	std::unique_ptr<PhysicsGround> sp08 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices8, indices8, false);
+
+	auto vertices9 = b9->GetVertices();
+	auto indices9 = b9->GetIndices();
+	std::unique_ptr<PhysicsGround> sp09 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices9, indices9, false);
+
 	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));		
-	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	
+	entityManager.Add(std::make_unique<Entity>(std::move(b3), std::move(sp03), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	
+	entityManager.Add(std::make_unique<Entity>(std::move(b4), std::move(sp04), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b5), std::move(sp05), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b6), std::move(sp06), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b7), std::move(sp07), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b8), std::move(sp08), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b9), std::move(sp09), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
 	entityManager.Add(std::make_unique<Entity>(std::move(w0), std::move(sp2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 2
 	entityManager.Add(std::make_unique<Entity>(std::move(w1), std::move(sp3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 3
