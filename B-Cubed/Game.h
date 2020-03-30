@@ -46,10 +46,10 @@ private:
 	EntityManager entityManager = EntityManager();
 	std::vector<D3D11_VIEWPORT> viewports;
 	std::vector<std::vector<unsigned int>> viewportsPerPlayers;
+	std::vector<unsigned int> vehicleIds;
 private:
 	unsigned int iSkybox = 0u;
 	unsigned int activeCamera = 0u;
-	unsigned int playerId;
 	DirectX::XMFLOAT3 startPosition;
 	unsigned int nPlayers = 1;
 };

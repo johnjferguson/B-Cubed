@@ -17,7 +17,7 @@ Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 1.0f, 700.0f)
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 0.5f, 700.0f)
 {
 	//entities = std::vector<Entity>(10);
 	//entities.reserve(110);
@@ -138,15 +138,15 @@ Game::Game()
 	entityManager.Add(std::make_unique<Entity>(std::move(b7), std::move(sp07), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b8), std::move(sp08), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b9), std::move(sp09), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
+	unsigned int playerId1 = entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
 	entityManager.Add(std::make_unique<Entity>(std::move(w0), std::move(sp2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 2
 	entityManager.Add(std::make_unique<Entity>(std::move(w1), std::move(sp3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 3
-	playerId = entityManager.Add(std::make_unique<Entity>(std::move(nb), std::move(player_vehicle), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));				// 4
+	unsigned int playerId0 = entityManager.Add(std::make_unique<Entity>(std::move(nb), std::move(player_vehicle), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));				// 4
 	entityManager.Add(std::make_unique<Entity>(std::move(start), std::move(sp1), dx::XMFLOAT3{ -50.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 5
 	entityManager.Add(std::make_unique<Entity>(std::move(w2), std::move(sp4), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 6
 	entityManager.Add(std::make_unique<Entity>(std::move(w3), std::move(sp5), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 7
-	entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
-	entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
+	unsigned int playerId2 = entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
+	unsigned int playerId3 = entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
 
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
@@ -154,10 +154,19 @@ Game::Game()
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox2.png"));
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox3.png"));
 
-	cam0 = std::make_unique<FollowCamera>(entityManager, playerId);
-	std::unique_ptr<FreeCamera> cam1 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
+	vehicleIds = { playerId0,playerId1,playerId2,playerId3 };
+
+
+	cam0 = std::make_unique<FollowCamera>(entityManager, vehicleIds[0]);
+	std::unique_ptr<FollowCamera> cam1 = std::make_unique<FollowCamera>(entityManager, vehicleIds[1]);
+	std::unique_ptr<FollowCamera> cam2 = std::make_unique<FollowCamera>(entityManager, vehicleIds[2]);
+	std::unique_ptr<FollowCamera> cam3 = std::make_unique<FollowCamera>(entityManager, vehicleIds[3]);
+	std::unique_ptr<FreeCamera> cam4 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
 	cameras.push_back(std::move(cam0));
 	cameras.push_back(std::move(cam1));
+	cameras.push_back(std::move(cam2));
+	cameras.push_back(std::move(cam3));
+	cameras.push_back(std::move(cam4));
 
 	D3D11_VIEWPORT vp;
 	vp.Width = float(wnd.GetWidth());
@@ -240,7 +249,6 @@ void Game::DoFrame()
 	// input
 	DoInput();
 
-	DirectX::XMMATRIX cameraTransform = cameras[activeCamera]->GetTransform(dt);
 
 
 	struct Transform
@@ -253,34 +261,36 @@ void Game::DoFrame()
 		DirectX::XMFLOAT4 buf3;
 	};
 
-	Transform transform
-	{
-		DirectX::XMMatrixIdentity(),
-		cameraTransform,
-		DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 700.0f)
-	};
+	static float x = 1.0f;
+	static float y = 1.0f;
+	static float z = -8.0f;
 
+	Gui::AddSlider("x:", x, -100, 100);
+	Gui::AddSlider("y:", y, -100, 100);
+	Gui::AddSlider("z:", z, -100, 100);
+
+	activeCamera = 0;
 	for (auto& i : viewportsPerPlayers[nPlayers - 1])
 	{
-
+		DirectX::XMMATRIX cameraTransform = cameras[activeCamera++]->GetTransform(dt);
+		Transform transform
+		{
+			DirectX::XMMatrixIdentity(),
+			cameraTransform,
+			DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 700.0f)
+		};
 		// shadow rendering
 		renderTexture.SetRenderTarget(wnd.gfx.GetContext());
 		renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
 
-		dx::XMFLOAT3 pos = entityManager.Get(playerId)->GetPosition();
+		dx::XMFLOAT3 pos = entityManager.Get(vehicleIds[0])->GetPosition();
 
 		std::stringstream ss;
 		ss << "Position: " << (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
 		Gui::AddText(ss.str().c_str());
 
-		static float x = 1.0f;
-		static float y = 1.0f;
-		static float z = 1.0f;
-		Gui::AddSlider("x:", x, -100, 100);
-		Gui::AddSlider("y:", y, -100, 100);
-		Gui::AddSlider("z:", z, -100, 100);
 
-		light.SetPosition(DirectX::XMFLOAT4(pos.x + x, pos.y + y, pos.z, z));
+		light.SetPosition(DirectX::XMFLOAT4(pos.x + x, pos.y + y, pos.z + z, 0.0f));
 
 		entityManager.RenderDepth(wnd.gfx, light.LookAt({ pos.x, pos.y, pos.z }), renderTexture.GetPerspective(), light);
 
@@ -296,16 +306,16 @@ void Game::DoFrame()
 		skyboxes[iSkybox]->UpdateVertex(wnd.gfx, transform);
 		skyboxes[iSkybox]->Render(wnd.gfx);
 
-		//light.Update(wnd.gfx, cameraTransform);
+		light.Update(wnd.gfx, cameraTransform);
 		//light.Render(wnd.gfx);
 
 		std::vector<unsigned int> vehicles = entityManager.Query(Entity::Type::VEHICLE);
 		std::vector<unsigned int>  missiles = entityManager.Query(Entity::Type::MISSILE);
 		vehicles.insert(vehicles.end(), std::make_move_iterator(missiles.begin()), std::make_move_iterator(missiles.end()));
 
-		overlay.Draw(wnd.gfx, entityManager.Get(playerId)->getNumCharges(), 
-			entityManager.Get(playerId)->GetNumLaps(), 
-			entityManager.Get(playerId)->getFinishedIn(),
+		overlay.Draw(wnd.gfx, entityManager.Get(vehicleIds[0])->getNumCharges(), 
+			entityManager.Get(vehicleIds[0])->GetNumLaps(),
+			entityManager.Get(vehicleIds[0])->getFinishedIn(),
 		    entityManager, vehicles);
 		wnd.gfx.ResetViewPort();
 	}
@@ -363,8 +373,8 @@ void Game::DoInput()
 			}
 			break;
 		case 'R':
-			entityManager.Get(playerId)->SetPosition(startPosition.x,startPosition.y,startPosition.z);
-			entityManager.Get(playerId)->SetVelocity({ 0.0f, 0.0f, 0.0f });
+			entityManager.Get(vehicleIds[0])->SetPosition(startPosition.x,startPosition.y,startPosition.z);
+			entityManager.Get(vehicleIds[0])->SetVelocity({ 0.0f, 0.0f, 0.0f });
 			break;
 		case '1':
 			nPlayers = 1;

@@ -75,6 +75,8 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 	if (path == "models//vehicle.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
+	else if (path == "models//2wallv2.stl")
+		AddBind(std::make_unique<Texture>(gfx, L"images//color.png"));
 	else
 		AddBind(std::make_unique<Texture>(gfx, L"images//banner.jpg"));
 
