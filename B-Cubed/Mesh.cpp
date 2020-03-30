@@ -74,9 +74,10 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	m_indices = std::move(indices);
 
 	if (path == "models//vehicle.obj")
-		AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
+		//AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
+		AddBind(std::make_unique<Texture>(gfx, L"images//bright.jpg"));
 	else
-		AddBind(std::make_unique<Texture>(gfx, L"images//banner.jpg"));
+		AddBind(std::make_unique<Texture>(gfx, L"images//withpink.png"));
 
 	std::unique_ptr<VertexShader> pVertexShader = std::make_unique<VertexShader>(gfx, L"VertexShaderTexture.cso");
 	ID3DBlob* vertexBlob = pVertexShader->GetBlob();
