@@ -53,61 +53,63 @@ class ContactReportCallback : public PxSimulationEventCallback
 		Entity* entity1 = (Entity*)actor1->userData;
 
 		try {
-			if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
-			{
-				if (entity0->CanParry()) {
-					//if (true) {
-					entity1->SetBounceBack(true);
-					Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-					entity1->ResetHit();
-				}
-				else if (entity0->CanBlock()) {
-					entity1->MarkForDeath();
-					Sound::Play("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-				}
-				else {
-					entity1->MarkForDeath();
-					entity0->SetSpinOut(true);
-				}
-			}
-			else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
-			{
-				if (entity1->CanParry()) {
-					//if (true) {
-					entity0->SetBounceBack(true);
-					Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-					entity0->ResetHit();
-				}
-				else if (entity1->CanBlock()) {
-					entity0->MarkForDeath();
-					Sound::Play("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-				}
-				else {
-					entity0->MarkForDeath();
-					entity1->SetSpinOut(true);
-				}
-				//entity0->MarkForDeath();
-			}
-			else if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE)
-			{
-				if (entity0->GetType() == Entity::Type::MISSILE) {
-					if (entity0->NumberofHits() > 3) {
-						entity0->MarkForDeath();
-					}
-					else if (entity0->lastHitCounter > 5) {
+			if (entity0 && entity1) {
+				if (entity0->GetType() == Entity::Type::VEHICLE && entity1->GetType() == Entity::Type::MISSILE)
+				{
+					if (entity0->CanParry()) {
+						//if (true) {
+						entity1->SetBounceBack(true);
 						Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-						entity0->IncreaseHit();
-						entity0->lastHitCounter = 0;
+						entity1->ResetHit();
 					}
-				}
-				else {
-					if (entity1->NumberofHits() > 3) {
+					else if (entity0->CanBlock()) {
 						entity1->MarkForDeath();
+						Sound::Play("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 					}
-					else if (entity1->lastHitCounter > 5) {
+					else {
+						entity1->MarkForDeath();
+						entity0->SetSpinOut(true);
+					}
+				}
+				else if (entity0->GetType() == Entity::Type::MISSILE && entity1->GetType() == Entity::Type::VEHICLE)
+				{
+					if (entity1->CanParry()) {
+						//if (true) {
+						entity0->SetBounceBack(true);
 						Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-						entity1->IncreaseHit();
-						entity1->lastHitCounter = 0;
+						entity0->ResetHit();
+					}
+					else if (entity1->CanBlock()) {
+						entity0->MarkForDeath();
+						Sound::Play("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+					}
+					else {
+						entity0->MarkForDeath();
+						entity1->SetSpinOut(true);
+					}
+					//entity0->MarkForDeath();
+				}
+				else if (entity0->GetType() == Entity::Type::MISSILE || entity1->GetType() == Entity::Type::MISSILE)
+				{
+					if (entity0->GetType() == Entity::Type::MISSILE) {
+						if (entity0->NumberofHits() > 3) {
+							entity0->MarkForDeath();
+						}
+						else if (entity0->lastHitCounter > 5) {
+							Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+							entity0->IncreaseHit();
+							entity0->lastHitCounter = 0;
+						}
+					}
+					else {
+						if (entity1->NumberofHits() > 3) {
+							entity1->MarkForDeath();
+						}
+						else if (entity1->lastHitCounter > 5) {
+							Sound::Play("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+							entity1->IncreaseHit();
+							entity1->lastHitCounter = 0;
+						}
 					}
 				}
 			}
