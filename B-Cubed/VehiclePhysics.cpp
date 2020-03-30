@@ -93,7 +93,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 {
 	VehiclePhysics::useAI = true;
 	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
-	setRechargeTime = 3.f; //how often ai gets an ability charge
+	setRechargeTime = 3.2f; //how often ai gets an ability charge
 }
 
 void VehiclePhysics::Update(Entity* entity, const Time& dt)

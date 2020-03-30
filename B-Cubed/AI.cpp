@@ -126,9 +126,9 @@ void AI::selectState() {
 	}
 	
 
-	std::stringstream ss;
-	ss << "AI(speed=" << (int) speed << ", " << "stateLock=" << stateLock << ", state=" << state << ", point=" << (int)point.x << ", " << (int)point.y << ", " << (int)point.z << ")";
-	Gui::AddText(ss.str().c_str());
+	//std::stringstream ss;
+	//ss << "AI(speed=" << (int) speed << ", " << "stateLock=" << stateLock << ", state=" << state << ", point=" << (int)point.x << ", " << (int)point.y << ", " << (int)point.z << ")";
+	//Gui::AddText(ss.str().c_str());
 }
 
 void AI::abilitySelect() {
@@ -168,8 +168,8 @@ void AI::update() {
 		sleepTime--;
 	} else {
 		abilities[0] = 0; // Boost
-		abilities[1] = 0; // Barrier
-		abilities[2] = 0; // Blast
+		abilities[1] = 10; // Barrier
+		abilities[2] = 10; // Blast
 
 		// Do Brain stuff
 		doCalculations();
