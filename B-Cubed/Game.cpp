@@ -19,14 +19,13 @@ Game::Game()
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 0.5f, 700.0f)
 {
-	//entities = std::vector<Entity>(10);
-	//entities.reserve(110);
+	
+	menu = Menu(wnd.gfx, wnd.GetWidth(), wnd.GetHeight());
+}
 
-	//std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//simpletrack.obj");
+void Game::InitializeGame()
+{
 
-	//entity.AddRenderable(std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f,2.0f,2.0f), L"images//voli.jpg"));
-	//std::unique_ptr<Box> bl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 100.0f, 1.0f), L"images//checker.jpg");
-	//std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 2.0f, "models//evenbettertrack.obj");
 	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
 	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd.obj");
 	std::unique_ptr<Mesh> b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
@@ -58,10 +57,10 @@ Game::Game()
 	//startPosition = dx::XMFLOAT3(-200.f, 15.0f, 141.0f);
 	startPosition = dx::XMFLOAT3(-175.f, 15.0f, 202.0f);
 	// Vehicle Physics
-	//std::unique_ptr<VehiclePhysics> player_vehicle = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -201.f, 15.0f, 138.0f, 0);
+	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -201.f, 15.0f, 138.0f, 0);
 
-	//std::unique_ptr<VehiclePhysics> player_vehicle = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -47.f, 11.0f, -112.0f, 0);
-	std::unique_ptr<VehiclePhysics> player_vehicle = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -55.f, 11.0f, -108.0f, 0);
+	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -47.f, 11.0f, -112.0f, 0);
+	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -55.f, 11.0f, -108.0f, 0);
 
 	std::vector<physx::PxVec3> aipath;
 	aipath.push_back({ -155, 10, -90 });
@@ -79,13 +78,41 @@ Game::Game()
 	aipath.push_back({ 166, 29, -5 });
 	aipath.push_back({ 63, 14, -116 });
 
-	std::unique_ptr<VehiclePhysics> ai_vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.f, -125.f, 1);
-	std::unique_ptr<VehiclePhysics> ai_vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -80.f, 10.3f, -119.f, 2);
-	std::unique_ptr<VehiclePhysics> ai_vehicle_3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -66.f, 10.3f, -113.f, 3);
+	std::unique_ptr<VehiclePhysics> vehicle_1;
+	if (!AI_1) {
+		vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -55.f, 11.0f, -108.0f, 0);
+	}
+	else {
+		vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -55.f, 11.0f, -108.0f, 0);
+	}
+
+	std::unique_ptr<VehiclePhysics> vehicle_2;
+	if (!AI_2) {
+		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.f, -125.f, 1);
+	}
+	else {
+		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.f, -125.f, 1);
+	}
+
+	std::unique_ptr<VehiclePhysics> vehicle_3;
+	if (!AI_3) {
+		vehicle_3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -80.f, 10.3f, -119.f, 2);
+	}
+	else {
+		vehicle_3 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -80.f, 10.3f, -119.f, 2);
+	}
+
+	std::unique_ptr<VehiclePhysics> vehicle_4;
+	if (!AI_4) {
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -66.f, 10.3f, -113.f, 3);
+	}
+	else {
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -66.f, 10.3f, -113.f, 3);
+	}
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
-	std::unique_ptr<PhysicsStatic> sp1 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-112.0f, 7.9f, -107.0f)), physx::PxVec3(5.0f,0.5f,5.0f));
+	std::unique_ptr<PhysicsStatic> sp1 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-112.0f, 7.9f, -107.0f)), physx::PxVec3(5.0f, 0.5f, 5.0f));
 
 	// Static Physics Cont. (Walls)
 	std::unique_ptr<PhysicsStatic> sp2 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
@@ -129,24 +156,24 @@ Game::Game()
 	auto indices9 = b9->GetIndices();
 	std::unique_ptr<PhysicsGround> sp09 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices9, indices9, false);
 
-	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));		
-	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	
-	entityManager.Add(std::make_unique<Entity>(std::move(b3), std::move(sp03), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	
+	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
+	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
+	entityManager.Add(std::make_unique<Entity>(std::move(b3), std::move(sp03), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
 	entityManager.Add(std::make_unique<Entity>(std::move(b4), std::move(sp04), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b5), std::move(sp05), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b6), std::move(sp06), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b7), std::move(sp07), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b8), std::move(sp08), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
 	entityManager.Add(std::make_unique<Entity>(std::move(b9), std::move(sp09), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	unsigned int playerId1 = entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(ai_vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
+	unsigned int playerId1 = entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
 	entityManager.Add(std::make_unique<Entity>(std::move(w0), std::move(sp2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 2
 	entityManager.Add(std::make_unique<Entity>(std::move(w1), std::move(sp3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 3
-	unsigned int playerId0 = entityManager.Add(std::make_unique<Entity>(std::move(nb), std::move(player_vehicle), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));				// 4
+	unsigned int playerId0 = entityManager.Add(std::make_unique<Entity>(std::move(nb), std::move(vehicle_1), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));				// 4
 	entityManager.Add(std::make_unique<Entity>(std::move(start), std::move(sp1), dx::XMFLOAT3{ -50.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 5
 	entityManager.Add(std::make_unique<Entity>(std::move(w2), std::move(sp4), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 6
 	entityManager.Add(std::make_unique<Entity>(std::move(w3), std::move(sp5), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 7
-	unsigned int playerId2 = entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(ai_vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
-	unsigned int playerId3 = entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(ai_vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
+	unsigned int playerId2 = entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
+	unsigned int playerId3 = entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(vehicle_4), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
 
 	// skyboxes
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
@@ -161,7 +188,7 @@ Game::Game()
 	std::unique_ptr<FollowCamera> cam1 = std::make_unique<FollowCamera>(entityManager, vehicleIds[1]);
 	std::unique_ptr<FollowCamera> cam2 = std::make_unique<FollowCamera>(entityManager, vehicleIds[2]);
 	std::unique_ptr<FollowCamera> cam3 = std::make_unique<FollowCamera>(entityManager, vehicleIds[3]);
-	std::unique_ptr<FreeCamera> cam4 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3( 0.0f,10.0f,10.0f ));
+	std::unique_ptr<FreeCamera> cam4 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3(0.0f, 10.0f, 10.0f));
 	cameras.push_back(std::move(cam0));
 	cameras.push_back(std::move(cam1));
 	cameras.push_back(std::move(cam2));
@@ -214,21 +241,104 @@ int Game::Start()
 	Sound::Load("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-	
+
 	first = true;
 	second = true;
 
-
-	//entityManager.Get(playerId)->SetPosition(startPosition.x, startPosition.y, startPosition.z);
-	//entityManager.Get(playerId)->SetVelocity({ 0.0f, 0.0f, 0.0f });
-
-	while (true)
+	
+	while (true) 
 	{
 		if (const auto eCode = wnd.ProcessMessages())
 		{
 			return *eCode;
+
 		}
-		DoFrame();
+
+		if (!menu.StartGame) {
+			wnd.gfx.StartFrame();
+
+			menu.Draw(wnd.gfx, wnd.clr, finish_order);
+			wnd.gfx.ResetViewPort();
+			wnd.gfx.EndFrame();
+		}
+		else if (menu.StartGame && !setup_done) {
+
+
+			AI_1 = !menu.player_1;
+			AI_2 = !menu.player_2;
+			AI_3 = !menu.player_3;
+			AI_4 = !menu.player_4;
+
+			InitializeGame();
+
+			finish_order.clear();
+			setup_done = true;
+			take_down_done = false;
+		}
+		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
+			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
+			(AI_3 || entityManager.Get(vehicleIds[2])->getFinishedIn() > 0) &&
+			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && start_end == 0) {
+
+			start_end = gameCounter;
+
+			int num_unfinished = 0;
+
+			if (entityManager.Get(vehicleIds[0])->getFinishedIn() < 0) {
+				finish_order.push_back(4 - num_unfinished);
+				num_unfinished++;
+			}
+			else {
+				finish_order.push_back(entityManager.Get(vehicleIds[0])->getFinishedIn());
+			}
+
+			if (entityManager.Get(vehicleIds[1])->getFinishedIn() < 0) {
+				finish_order.push_back(4 - num_unfinished);
+				num_unfinished++;
+			}
+			else {
+				finish_order.push_back(entityManager.Get(vehicleIds[1])->getFinishedIn());
+			}
+
+			if (entityManager.Get(vehicleIds[2])->getFinishedIn() < 0) {
+				finish_order.push_back(4 - num_unfinished);
+				num_unfinished++;
+			}
+			else {
+				finish_order.push_back(entityManager.Get(vehicleIds[2])->getFinishedIn());
+			}
+
+			if (entityManager.Get(vehicleIds[3])->getFinishedIn() < 0) {
+				finish_order.push_back(4 - num_unfinished);
+				num_unfinished++;
+			}
+			else {
+				finish_order.push_back(entityManager.Get(vehicleIds[3])->getFinishedIn());
+			}
+
+			DoFrame();
+		}
+		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
+			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
+			(AI_3 || entityManager.Get(vehicleIds[2])->getFinishedIn() > 0) &&
+			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && (gameCounter - start_end) > 3) {
+
+			if (!take_down_done) {
+				Reset();
+				take_down_done = true;
+			}
+
+			menu.StartGame = false;
+			setup_done = false;
+		}
+		else if (menu.StartGame && setup_done) {
+			DoFrame();
+		}
+
+
+		//entityManager.Get(vehicleIds[0])->getFinishedIn()
+		//if ()
+
 	}
 }
 
@@ -340,8 +450,9 @@ void Game::DoFrame()
 	if (first) {
 		first = false;
 		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+		gameCounter = 0.1;
 	}
-	else if (gameCounter > 16.5 && second) {
+	else if (gameCounter > 8 && second) {
 		second = false;
 		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 	}
@@ -397,7 +508,7 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 {
 	//entities.push_back(Entity());
 
-	//std::unique_ptr<MissilePhysics> ai_vehicle_2 = std::make_unique<MissilePhysics>(&ps, startPos, startRot, startVel);
+	//std::unique_ptr<MissilePhysics> vehicle_3 = std::make_unique<MissilePhysics>(&ps, startPos, startRot, startVel);
 
 	DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(startRot.x, startRot.y, startRot.z, startRot.w)).r[2];
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
@@ -424,4 +535,30 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 	//Game::entities[entities.size()-1].AddPhysics(std::move(vp2)); 
 	//Game::entities[entities.size()-1].SetType(Entity::Type::MISSILE); 
 	entityManager.Add(std::make_unique<Entity>(std::move(vb), std::move(vp2), dx::XMFLOAT3{ startPos.x + forward.x, startPos.y, startPos.z + forward.z }, dx::XMMatrixIdentity(), Entity::Type::MISSILE));
+}
+
+
+void Game::Reset()
+{
+
+
+	entityManager.Clear();
+	entityManager = EntityManager();
+
+	sound.soundMap.clear();
+	//ps.~Physics();
+
+	gameCounter = 0.f;
+
+	first = true;
+	second = true;
+
+	vehicleIds.clear();
+
+	AI_1 = true;
+	AI_2 = true;
+	AI_3 = true;
+	AI_4 = true;
+
+	start_end = 0;
 }

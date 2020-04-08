@@ -60,6 +60,7 @@ public:
 	static int haveWon;
 	int getFinishedIn();
 	void setFinishedIn(int placement);
+	bool IsAI();
 public:
 	int lastHitCounter = 0;
 	//----------------------------------
@@ -86,5 +87,6 @@ private:
 	float setBarrierTime = 4.f;
 	float startBarrierTimer = 0.f;
 	int finishedin = -1;
+	bool AI = false;
 	// ---------------------
 };

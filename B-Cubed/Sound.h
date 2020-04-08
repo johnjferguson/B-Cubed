@@ -49,9 +49,8 @@ public:
 	Sound& operator=(Sound&) = delete;
 	static void Play(const std::string& file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop);
 	static bool Load(const std::string& file_path, float gain, physx::PxVec3 listenerPos, physx::PxVec3 sourcePos, bool loop);
+	static std::unordered_map<std::string, Source> soundMap;
 private:
 	ALCdevice* device;
 	ALCcontext* context;
-private:
-	static std::unordered_map<std::string, Source> soundMap;
 };

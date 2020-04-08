@@ -347,7 +347,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		//Gui::AddText(oo.str().c_str());
 	}
 
-	if (game->gameCounter > 16) {
+	if (game->gameCounter > 8) {
 
 		if (useAI) {
 			PxVec3 vel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
@@ -388,7 +388,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	entity->CountBarrier(game->gameCounter);
 
 	//If full charge or begining of match we don't start counting
-	if (abilityCharges >= 3 || game->gameCounter < 16) {
+	if (abilityCharges >= 3 || game->gameCounter < 8) {
 		startRechargeTimer = game->gameCounter;
 	}
 

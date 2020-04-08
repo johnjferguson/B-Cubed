@@ -153,6 +153,10 @@ bool Entity::IsMarkedForDeath()
 	return markedForDeath;
 }
 
+bool Entity::IsAI() {
+	return AI;
+}
+
 const DirectX::XMFLOAT3 & Entity::GetForward() const
 {
 	return (DirectX::XMFLOAT3&)transform.r[2];
