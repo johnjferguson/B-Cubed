@@ -12,7 +12,9 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 {
 	b = { 0.0f,0.0f,0.0f,0.0f };
 
-	chargeBar = std::vector<std::unique_ptr<Renderable>>();
+	chargeBarBoost = std::vector<std::unique_ptr<Renderable>>();
+	chargeBarBarrier = std::vector<std::unique_ptr<Renderable>>();
+	chargeBarBlast = std::vector<std::unique_ptr<Renderable>>();
 	nPlace = std::vector<std::unique_ptr<Renderable>>();
 
 	D3D11_BLEND_DESC bd;
@@ -23,10 +25,20 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 
 	gfx.GetContext()->OMSetBlendState(bs, b.data(), 0xffffffff);
 
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar1.png"));
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar2.png"));
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar3.png"));
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar4.png"));
+	chargeBarBoost.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar1.png"));
+	chargeBarBoost.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar2.png"));
+	chargeBarBoost.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar3.png"));
+	chargeBarBoost.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar4.png"));
+
+	chargeBarBarrier.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar1.png"));
+	chargeBarBarrier.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar2_green.png"));
+	chargeBarBarrier.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar3_green.png"));
+	chargeBarBarrier.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.7f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar4_green.png"));
+
+	chargeBarBlast.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.3f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar1.png"));
+	chargeBarBlast.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.3f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar2_red.png"));
+	chargeBarBlast.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.3f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar3_red.png"));
+	chargeBarBlast.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.3f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar4_red.png"));
 
 	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, 0.1f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place1.png"));
 	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, 0.1f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place4.png"));
@@ -46,9 +58,9 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 
 void Overlay::Draw(Graphics& gfx, unsigned short numChargesBoost, unsigned short numChargesBarrier, unsigned short numChargesBlast, unsigned short nLap, int place, EntityManager& em, const std::vector<unsigned int>& entities)
 {
-	chargeBar[numChargesBoost % 4]->Render(gfx);
-	chargeBar[numChargesBarrier % 4]->Render(gfx);
-	chargeBar[numChargesBlast % 4]->Render(gfx);
+	chargeBarBoost[numChargesBoost % 4]->Render(gfx);
+	chargeBarBarrier[numChargesBarrier % 4]->Render(gfx);
+	chargeBarBlast[numChargesBlast % 4]->Render(gfx);
 	lapNumber[nLap % 3]->Render(gfx);
 	map->Render(gfx);
 

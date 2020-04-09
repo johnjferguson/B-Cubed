@@ -93,7 +93,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 {
 	VehiclePhysics::useAI = true;
 	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
-	setRechargeTimeBoost = 3.2f; //how often ai gets an ability charge
+	setRechargeTimeBoost = 3.4f; //how often ai gets an ability charge prev: 3.2
 }
 
 void VehiclePhysics::Update(Entity* entity, const Time& dt)
@@ -155,11 +155,11 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 		//DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[1];
 		//PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 
-		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -100000);
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -110000);
+		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -120000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -130000);
 	}
 	else {
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -110000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -130000);
 	}
 	
 

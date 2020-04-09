@@ -127,12 +127,12 @@ private:
 
 	const float setSpinOutTime = 0.95f;   //how long a spinout lasts
 	const float setAbilityTimeBoost = 2.f;   //how often player can use Boost ability
-	const float setAbilityTimeBlast = 2.f;   //how often player can use Blast ability
-	const float setAbilityTimeBarrier = 2.f;   //how often player can use Barrier ability
+	const float setAbilityTimeBlast = 1.f;   //how often player can use Blast ability
+	const float setAbilityTimeBarrier = 7.f;   //how often player can use Barrier ability
 	//const
-	float setRechargeTimeBoost = 6.7f; //how often player gets a Boost charge
-	float setRechargeTimeBlast = 6.7f; //how often player gets a Blast charge
-	float setRechargeTimeBarrier = 6.7f; //how often player gets a Barrier charge
+	float setRechargeTimeBoost = 6.5f; //how often player gets a Boost charge
+	float setRechargeTimeBlast = 5.0f; //how often player gets a Blast charge
+	float setRechargeTimeBarrier = 14.0f; //how often player gets a Barrier charge
 
 	const float setBoostTime = 2.f;     //how long car will boost for
 };
