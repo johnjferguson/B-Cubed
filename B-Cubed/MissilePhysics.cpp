@@ -67,7 +67,7 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 	//Gui::AddText(ss.str().c_str());
 	
 	if (v.y != 0.f) {
-		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 120.f);
+		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 150.f);
 	}
 	
 	if (entity->GetBounceBack()) {

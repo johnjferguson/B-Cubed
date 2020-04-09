@@ -425,7 +425,9 @@ void Game::DoFrame()
 		std::vector<unsigned int>  missiles = entityManager.Query(Entity::Type::MISSILE);
 		vehicles.insert(vehicles.end(), std::make_move_iterator(missiles.begin()), std::make_move_iterator(missiles.end()));
 
-		overlay.Draw(wnd.gfx, entityManager.Get(vehicleIds[0])->getNumCharges(), 
+		overlay.Draw(wnd.gfx, entityManager.Get(vehicleIds[0])->getNumChargesBoost(), 
+			entityManager.Get(vehicleIds[0])->getNumChargesBarrier(), 
+			entityManager.Get(vehicleIds[0])->getNumChargesBlast(),
 			entityManager.Get(vehicleIds[0])->GetNumLaps(),
 			entityManager.Get(vehicleIds[0])->getFinishedIn(),
 		    entityManager, vehicles);
@@ -527,7 +529,7 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 		missileTrans = PxTransform(PxVec3(startPos.x, startPos.y + 5.f, startPos.z) + forward * 15.0f);
 	}
 	//PxTransform missileTrans = PxTransform(startPos + PxVec3(0.0f, 5.0f, 0.0f));
-	PxVec3 missileVel = (forward * 120.f + startVel);
+	PxVec3 missileVel = (forward * 150.f + startVel);
 
 	std::unique_ptr<MissilePhysics> vp2 = std::make_unique<MissilePhysics>(&ps, missileTrans, missileVel, PxVec3(1.0f, 1.0f, 1.0f));
 	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), L"images//voli.jpg");

@@ -252,14 +252,34 @@ bool Entity::GetSpinOut() const
 	return spinOut;
 }
 
-int Entity::getNumCharges()
+int Entity::getNumChargesBoost()
 {
-	return numCharges;
+	return numChargesBoost;
 }
 
-void Entity::setNumCharges(int x)
+int Entity::getNumChargesBarrier()
 {
-	numCharges = x;
+	return numChargesBarrier;
+}
+
+int Entity::getNumChargesBlast()
+{
+	return numChargesBlast;
+}
+
+void Entity::setNumChargesBoost(int x)
+{
+	numChargesBoost = x;
+}
+
+void Entity::setNumChargesBarrier(int x)
+{
+	numChargesBarrier = x;
+}
+
+void Entity::setNumChargesBlast(int x)
+{
+	numChargesBlast = x;
 }
 
 int Entity::GetNumLaps()

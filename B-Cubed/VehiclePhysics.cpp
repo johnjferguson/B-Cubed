@@ -93,7 +93,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 {
 	VehiclePhysics::useAI = true;
 	VehiclePhysics::ai = AI::AI(p, gVehicle4W);
-	setRechargeTime = 3.2f; //how often ai gets an ability charge
+	setRechargeTimeBoost = 3.2f; //how often ai gets an ability charge
 }
 
 void VehiclePhysics::Update(Entity* entity, const Time& dt)
@@ -119,7 +119,9 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 	//ss << int(j) << "   :  " << (int)p << " Forwards Velocity:  " << (int)m;
 	//Gui::AddText(ss.str().c_str());
 
-	entity->setNumCharges(abilityCharges);
+	entity->setNumChargesBoost(abilityChargesBoost);
+	entity->setNumChargesBarrier(abilityChargesBarrier);
+	entity->setNumChargesBlast(abilityChargesBlast);
 
 	PxVec3 ang_vel = gVehicle4W->getRigidDynamicActor()->getAngularVelocity();
 	//gVehicle4W->getRigidDynamicActor()->setAngularVelocity(PxVec3(ang_vel.x / 3.0, ang_vel.y / 1.05, ang_vel.z / 3.0));
@@ -154,10 +156,10 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 		//PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 
 		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -100000);
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -100000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -110000);
 	}
 	else {
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -100000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -110000);
 	}
 	
 
@@ -171,9 +173,13 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 	*/
 	stepPhysics(entity);
 
-	rechargeTime = game->gameCounter - startRechargeTimer;
+	rechargeTimeBoost = game->gameCounter - startRechargeTimerBoost;
+	rechargeTimeBlast = game->gameCounter - startRechargeTimerBlast;
+	rechargeTimeBarrier = game->gameCounter - startRechargeTimerBarrier;
 
-	abilityTime = game->gameCounter - startAbilityTimer;
+	abilityTimeBoost = game->gameCounter - startAbilityTimerBoost;
+	abilityTimeBlast = game->gameCounter - startAbilityTimerBlast;
+	abilityTimeBarrier = game->gameCounter - startAbilityTimerBarrier;
 
 	spinOutTime = game->gameCounter - startSpinOutTimer;
 
@@ -388,14 +394,32 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	entity->CountBarrier(game->gameCounter);
 
 	//If full charge or begining of match we don't start counting
-	if (abilityCharges >= 3 || game->gameCounter < 8) {
-		startRechargeTimer = game->gameCounter;
+	if (abilityChargesBoost >= 3 || game->gameCounter < 8) {
+		startRechargeTimerBoost = game->gameCounter;
+	}
+
+	if (abilityChargesBlast >= 3 || game->gameCounter < 8) {
+		startRechargeTimerBlast = game->gameCounter;
+	}
+
+	if (abilityChargesBarrier >= 3 || game->gameCounter < 8) {
+		startRechargeTimerBarrier = game->gameCounter;
 	}
 
 	//Add an ability charge 
-	if (rechargeTime > setRechargeTime && abilityCharges < 3) {
-		abilityCharges++;
-		startRechargeTimer = game->gameCounter;
+	if (rechargeTimeBoost > setRechargeTimeBoost && abilityChargesBoost < 3) {
+		abilityChargesBoost++;
+		startRechargeTimerBoost = game->gameCounter;
+	}
+
+	if (rechargeTimeBlast > setRechargeTimeBlast && abilityChargesBlast < 3) {
+		abilityChargesBlast++;
+		startRechargeTimerBlast = game->gameCounter;
+	}
+
+	if (rechargeTimeBarrier > setRechargeTimeBarrier && abilityChargesBarrier < 3) {
+		abilityChargesBarrier++;
+		startRechargeTimerBarrier = game->gameCounter;
 	}
 
 	//If hit with a bullet vehicle will spinout
@@ -413,9 +437,9 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	if (barrier)
 	{
 
-		if (abilityTime > setAbilityTime && abilityCharges > 0 && aOnPress) {
+		if (abilityTimeBarrier > setAbilityTimeBarrier && abilityChargesBarrier > 0 && aOnPress) {
 			entity->ResetBarrier(game->gameCounter); 
-			abilityCharges--;
+			abilityChargesBarrier--;
 			if (!useAI) {
 				Sound::Play("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			}
@@ -430,11 +454,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	if (boost)
 	{
-		if (abilityTime > setAbilityTime && abilityCharges > 0 && bOnPress) {
+		if (abilityTimeBoost > setAbilityTimeBoost && abilityChargesBoost > 0 && bOnPress) {
 			if (boostTime > setBoostTime) {
 				startBoostTimer = game->gameCounter;
-				startAbilityTimer = game->gameCounter;
-				abilityCharges--;
+				startAbilityTimerBoost = game->gameCounter;
+				abilityChargesBoost--;
 			}
 		}
 		bOnPress = false;
@@ -450,7 +474,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 	if (blast)
 	{
-		if (abilityTime > setAbilityTime && abilityCharges > 0 && yOnPress) {
+		if (abilityTimeBlast > setAbilityTimeBlast && abilityChargesBlast > 0 && yOnPress) {
 			PxQuat transform = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 			//DirectX::XMMATRIX transform = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(quint.x, quint.y, quint.z, quint.w));
 
@@ -461,8 +485,8 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 
 			game->fireMissile(gVehicle4W->getRigidDynamicActor()->getGlobalPose().p, transform, gVehicle4W->getRigidDynamicActor()->getLinearVelocity());
 
-			startAbilityTimer = game->gameCounter;
-			abilityCharges--;
+			startAbilityTimerBlast = game->gameCounter;
+			abilityChargesBlast--;
 		}
 		yOnPress = false;
 	}
@@ -503,7 +527,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
 			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 			//-----------------------------------------------------------------------------------------------
-			gVehicle4W->getRigidDynamicActor()->addForce(10000.f * forward);
+			gVehicle4W->getRigidDynamicActor()->addForce(14000.f * forward);
 			//---------------------------------------------------------------------------------------------------
 		}
 		else if ((int)gVehicle4W->computeForwardSpeed() >= 1 && (int)gVehicle4W->computeForwardSpeed() <= 60) {
@@ -511,7 +535,7 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
 			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 			//-----------------------------------------------------------------------------------------------
-			gVehicle4W->getRigidDynamicActor()->addForce(8000.f * forward);
+			gVehicle4W->getRigidDynamicActor()->addForce(12000.f * forward);
 			//---------------------------------------------------------------------------------------------------
 		}
 		else if ((int)gVehicle4W->computeForwardSpeed() >= 1 && (int)gVehicle4W->computeForwardSpeed() <= 80) {
@@ -519,7 +543,15 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
 			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 			//-----------------------------------------------------------------------------------------------
-			gVehicle4W->getRigidDynamicActor()->addForce(5000.f * forward);
+			gVehicle4W->getRigidDynamicActor()->addForce(10000.f * forward);
+			//---------------------------------------------------------------------------------------------------
+		}
+		else if ((int)gVehicle4W->computeForwardSpeed() >= 1 && (int)gVehicle4W->computeForwardSpeed() <= 120) {
+			PxQuat currentRot = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
+			DirectX::XMVECTOR mat = DirectX::XMMatrixRotationQuaternion(DirectX::XMVectorSet(currentRot.x, currentRot.y, currentRot.z, currentRot.w)).r[2];
+			PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
+			//-----------------------------------------------------------------------------------------------
+			gVehicle4W->getRigidDynamicActor()->addForce(8000.f * forward);
 			//---------------------------------------------------------------------------------------------------
 		}
 
@@ -585,7 +617,7 @@ void VehiclePhysics::applyBoost() {
 	PxVec3 forward = PxVec3(DirectX::XMVectorGetX(mat), 0, DirectX::XMVectorGetZ(mat));
 
 	PxVec3 currentVel = gVehicle4W->getRigidDynamicActor()->getLinearVelocity();
-	gVehicle4W->getRigidDynamicActor()->addForce(100000.f * forward);
+	gVehicle4W->getRigidDynamicActor()->addForce(110000.f * forward);
 	if (!gIsVehicleInAir) {
 		//gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, -50.0, 0));
 	}

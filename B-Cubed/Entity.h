@@ -53,8 +53,12 @@ public:
 	void SetBounceDir(physx::PxVec3 dir);
 	physx::PxVec3 GetBounceDir() const;
 	bool GetSpinOut() const;
-	int getNumCharges();
-	void setNumCharges(int x);
+	int getNumChargesBoost();
+	int getNumChargesBarrier();
+	int getNumChargesBlast();
+	void setNumChargesBoost(int x);
+	void setNumChargesBarrier(int x);
+	void setNumChargesBlast(int x);
 	int GetNumLaps();
 	void CountNumLaps();
 	static int haveWon;
@@ -79,7 +83,9 @@ private:
 	int	barrierTime = 99;
 	bool spinOut = false;
 	bool bounceBack = false;
-	int numCharges = 0;
+	int numChargesBoost = 0;
+	int numChargesBarrier = 0;
+	int numChargesBlast = 0;
 	physx::PxVec3 bounceDir;
 	int numLaps = 0;
 	float setParryTime = 0.5f;

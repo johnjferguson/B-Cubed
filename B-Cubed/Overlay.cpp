@@ -44,9 +44,11 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 
 }
 
-void Overlay::Draw(Graphics& gfx, unsigned short numCharges, unsigned short nLap, int place, EntityManager& em, const std::vector<unsigned int>& entities)
+void Overlay::Draw(Graphics& gfx, unsigned short numChargesBoost, unsigned short numChargesBarrier, unsigned short numChargesBlast, unsigned short nLap, int place, EntityManager& em, const std::vector<unsigned int>& entities)
 {
-	chargeBar[numCharges % 4]->Render(gfx);
+	chargeBar[numChargesBoost % 4]->Render(gfx);
+	chargeBar[numChargesBarrier % 4]->Render(gfx);
+	chargeBar[numChargesBlast % 4]->Render(gfx);
 	lapNumber[nLap % 3]->Render(gfx);
 	map->Render(gfx);
 
