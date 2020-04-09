@@ -14,6 +14,9 @@
 #include "Overlay.h"
 #include "Menu.h"
 #include "EntityManager.h"
+#include "Box.h"
+#include "PhysicsStatic.h"
+#include "PhysicsGround.h"
 
 class Game
 {
@@ -66,4 +69,48 @@ private:
 	float start_end = 0; 
 
 	std::vector<int> finish_order;
+private:
+	std::unique_ptr<Mesh> bl;
+	std::unique_ptr<Mesh> b2;
+	std::unique_ptr<Mesh> b3;
+	std::unique_ptr<Mesh> b4;
+	std::unique_ptr<Mesh> b5;
+	std::unique_ptr<Mesh> b6;
+	std::unique_ptr<Mesh> b7;
+	std::unique_ptr<Mesh> b8;
+	std::unique_ptr<Mesh> b9;
+
+	std::unique_ptr<Box> start;
+	std::unique_ptr<Box> tl;
+	std::unique_ptr<Box> tr;
+
+	std::unique_ptr<Box> w0;
+	std::unique_ptr<Box> w1;
+	std::unique_ptr<Box> w2;
+	std::unique_ptr<Box> w3;
+
+	std::unique_ptr<Box> vb;
+	std::unique_ptr<Mesh> nb;
+	std::unique_ptr<Mesh> zb;
+	std::unique_ptr<Mesh> zb1;
+	std::unique_ptr<Mesh> zb2;
+	std::unique_ptr<Box> eb;
+
+	std::vector<physx::PxVec3> aipath;
+
+	std::unique_ptr<PhysicsStatic> sp1;
+	std::unique_ptr<PhysicsStatic> sp2;
+	std::unique_ptr<PhysicsStatic> sp3;
+	std::unique_ptr<PhysicsStatic> sp4;
+	std::unique_ptr<PhysicsStatic> sp5;
+
+	std::unique_ptr<PhysicsGround> sp0;
+	std::unique_ptr<PhysicsGround> sp02;
+	std::unique_ptr<PhysicsGround> sp03;
+	std::unique_ptr<PhysicsGround> sp04;
+	std::unique_ptr<PhysicsGround> sp05;
+	std::unique_ptr<PhysicsGround> sp06;
+	std::unique_ptr<PhysicsGround> sp07;
+	std::unique_ptr<PhysicsGround> sp08;
+	std::unique_ptr<PhysicsGround> sp09;
 };

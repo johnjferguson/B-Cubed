@@ -60,14 +60,37 @@ Menu::Menu(Graphics& gfx, float screenWidth, float screenHeight)
 	p134 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\134_players.png");
 	p234 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\234_players.png");
 	p1234 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\1234_players.png");
+
+	end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\ending_screen.png");
 }
 
 void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 {
-	//if (finish_order.size() != 0) {
-	if (false) {
-		start->Render(gfx);
+	if (race_finished) {
 
+		player_1 = false;
+		player_2 = false;
+		player_3 = false;
+		player_4 = false;
+		
+		ScoreBoard(gfx, finish_order);
+
+		end->Render(gfx);
+
+		race_finished = false;
+		end_screen = true;
+
+	}
+	else if (end_screen) {
+
+		end->Render(gfx);
+
+		if (ctlr.IsPressed(Controller::Button::X, 0) || ctlr.IsPressed(Controller::Button::X, 1) ||
+			ctlr.IsPressed(Controller::Button::X, 2) || ctlr.IsPressed(Controller::Button::X, 3)) {
+
+			finish_order.clear();
+			end_screen = false;
+		}
 	}
 	else {
 
@@ -76,9 +99,18 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 
 			if (ctlr.IsPressed(Controller::Button::R_TRIGGER) || ctlr.IsPressed(Controller::Button::L_TRIGGER) ||
 				ctlr.IsPressed(Controller::Button::X) || ctlr.IsPressed(Controller::Button::Y) ||
-				ctlr.IsPressed(Controller::Button::A) || ctlr.IsPressed(Controller::Button::B)) {
-				first_load = false;
+				ctlr.IsPressed(Controller::Button::A) || ctlr.IsPressed(Controller::Button::B) ||
+				ctlr.IsPressed(Controller::Button::R_TRIGGER, 1) || ctlr.IsPressed(Controller::Button::L_TRIGGER, 1) ||
+				ctlr.IsPressed(Controller::Button::X, 1) || ctlr.IsPressed(Controller::Button::Y, 1) ||
+				ctlr.IsPressed(Controller::Button::A, 1) || ctlr.IsPressed(Controller::Button::B, 1) || 
+				ctlr.IsPressed(Controller::Button::R_TRIGGER, 2) || ctlr.IsPressed(Controller::Button::L_TRIGGER, 2) ||
+				ctlr.IsPressed(Controller::Button::X, 2) || ctlr.IsPressed(Controller::Button::Y, 2) ||
+				ctlr.IsPressed(Controller::Button::A, 2) || ctlr.IsPressed(Controller::Button::B, 2) || 
+				ctlr.IsPressed(Controller::Button::R_TRIGGER, 3) || ctlr.IsPressed(Controller::Button::L_TRIGGER, 3) ||
+				ctlr.IsPressed(Controller::Button::X, 3) || ctlr.IsPressed(Controller::Button::Y, 3) ||
+				ctlr.IsPressed(Controller::Button::A, 3) || ctlr.IsPressed(Controller::Button::B, 3)) {
 
+				first_load = false;
 
 				if (ctlr.IsPressed(Controller::Button::A, 0)) {
 					a_1_pressed_start = true;
@@ -200,4 +232,81 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 			a_4_pressed_start = false;
 		}
 	}
+}
+
+void Menu::ScoreBoard(Graphics& gfx, std::vector<int> finish_order)
+{
+	if (finish_order[0] == 1 && finish_order[1] == 2 && finish_order[2] == 3 && finish_order[3] == 4) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1234.png");
+	}
+	else if (finish_order[0] == 1 && finish_order[1] == 2 && finish_order[2] == 4 && finish_order[3] == 3) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1243.png");
+	}
+	else if (finish_order[0] == 1 && finish_order[1] == 3 && finish_order[2] == 2 && finish_order[3] == 4) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1324.png");
+	}
+	else if (finish_order[0] == 1 && finish_order[1] == 3 && finish_order[2] == 4 && finish_order[3] == 2) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1342.png");
+	}
+	else if (finish_order[0] == 1 && finish_order[1] == 4 && finish_order[2] == 2 && finish_order[3] == 3) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1423.png");
+	}
+	else if (finish_order[0] == 1 && finish_order[1] == 4 && finish_order[2] == 3 && finish_order[3] == 2) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1432.png");
+	}
+	else if (finish_order[0] == 2 && finish_order[1] == 1 && finish_order[2] == 3 && finish_order[3] == 4) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2134.png");
+	}
+	else if (finish_order[0] == 2 && finish_order[1] == 1 && finish_order[2] == 4 && finish_order[3] == 3) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2143.png");
+	}
+	else if (finish_order[0] == 2 && finish_order[1] == 3 && finish_order[2] == 1 && finish_order[3] == 4) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2314.png");
+	}
+	else if (finish_order[0] == 2 && finish_order[1] == 3 && finish_order[2] == 4 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2341.png");
+	}
+	else if (finish_order[0] == 2 && finish_order[1] == 4 && finish_order[2] == 1 && finish_order[3] == 3) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2413.png");
+	}
+	else if (finish_order[0] == 2 && finish_order[1] == 4 && finish_order[2] == 3 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2431.png");
+	}
+	else if (finish_order[0] == 3 && finish_order[1] == 1 && finish_order[2] == 2 && finish_order[3] == 4) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3124.png");
+	}
+	else if (finish_order[0] == 3 && finish_order[1] == 1 && finish_order[2] == 4 && finish_order[3] == 2) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3142.png");
+	}
+	else if (finish_order[0] == 3 && finish_order[1] == 2 && finish_order[2] == 1 && finish_order[3] == 4) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3214.png");
+	}
+	else if (finish_order[0] == 3 && finish_order[1] == 2 && finish_order[2] == 4 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3241.png");
+	}
+	else if (finish_order[0] == 3 && finish_order[1] == 4 && finish_order[2] == 1 && finish_order[3] == 2) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3412.png");
+	}
+	else if (finish_order[0] == 3 && finish_order[1] == 4 && finish_order[2] == 2 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3421.png");
+	}
+	else if (finish_order[0] == 4 && finish_order[1] == 1 && finish_order[2] == 2 && finish_order[3] == 3) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4123.png");
+	}
+	else if (finish_order[0] == 4 && finish_order[1] == 1 && finish_order[2] == 3 && finish_order[3] == 2) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4132.png");
+	}
+	else if (finish_order[0] == 4 && finish_order[1] == 2 && finish_order[2] == 1 && finish_order[3] == 3) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4213.png");
+	}
+	else if (finish_order[0] == 4 && finish_order[1] == 2 && finish_order[2] == 3 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4231.png");
+	}
+	else if (finish_order[0] == 4 && finish_order[1] == 3 && finish_order[2] == 2 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4312.png");
+	}
+	else if (finish_order[0] == 4 && finish_order[1] == 3 && finish_order[2] == 2 && finish_order[3] == 1) {
+		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4321.png");
+	}
+	
 }

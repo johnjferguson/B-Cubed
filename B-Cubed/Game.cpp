@@ -19,50 +19,45 @@ Game::Game()
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
 	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 0.5f, 700.0f)
 {
-	
+
 	menu = Menu(wnd.gfx, wnd.GetWidth(), wnd.GetHeight());
 }
 
 void Game::InitializeGame()
 {
 
-	std::unique_ptr<Mesh> bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
-	std::unique_ptr<Mesh> b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd.obj");
-	std::unique_ptr<Mesh> b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
-	std::unique_ptr<Mesh> b4 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner.obj");
-	std::unique_ptr<Mesh> b5 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner2.obj");
-	std::unique_ptr<Mesh> b6 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd1.obj");
-	std::unique_ptr<Mesh> b7 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner1.obj");
-	std::unique_ptr<Mesh> b8 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner3.obj");
-	std::unique_ptr<Mesh> b9 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//panel.obj");
+	bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
+	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd.obj");
+	b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
+	b4 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner.obj");
+	b5 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner2.obj");
+	b6 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd1.obj");
+	b7 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner1.obj");
+	b8 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner3.obj");
+	b9 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//panel.obj");
 
-	std::unique_ptr<Box> start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(55.0f, 8.0f, 1.0f), L"images//chess.jpg");
-	std::unique_ptr<Box> tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
-	std::unique_ptr<Box> tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
+	start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(55.0f, 8.0f, 1.0f), L"images//chess.jpg");
+	tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
+	tr = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//wood.jpg");
 
-	std::unique_ptr<Box> w0 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 2.0f, 5.0f), L"images//neonwall.jpg");
-	std::unique_ptr<Box> w1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, -100.0f, 5.0f), L"images//neonwall.jpg");
-	std::unique_ptr<Box> w2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(-100.0f, 2.0f, 5.0f), L"images//neonwall.jpg");
-	std::unique_ptr<Box> w3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 100.0f, 5.0f), L"images//neonwall.jpg");
+	w0 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(100.0f, 2.0f, 5.0f), L"images//neonwall.jpg");
+	w1 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, -100.0f, 5.0f), L"images//neonwall.jpg");
+	w2 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(-100.0f, 2.0f, 5.0f), L"images//neonwall.jpg");
+	w3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 100.0f, 5.0f), L"images//neonwall.jpg");
 
-	std::unique_ptr<Box> vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//voli.jpg");
-	//std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//simpletrack.obj");
-	std::unique_ptr<Mesh> nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	std::unique_ptr<Mesh> zb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	std::unique_ptr<Mesh> zb1 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	std::unique_ptr<Mesh> zb2 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	std::unique_ptr<Box> eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
+	vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//voli.jpg");
+	nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	zb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	zb1 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	zb2 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
-	// create physics component
-	//startPosition = dx::XMFLOAT3(-200.f, 15.0f, 141.0f);
-	startPosition = dx::XMFLOAT3(-175.f, 15.0f, 202.0f);
-	// Vehicle Physics
-	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -201.f, 15.0f, 138.0f, 0);
+	// skyboxes
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox1.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox2.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox3.png"));
 
-	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -47.f, 11.0f, -112.0f, 0);
-	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -55.f, 11.0f, -108.0f, 0);
-
-	std::vector<physx::PxVec3> aipath;
 	aipath.push_back({ -155, 10, -90 });
 	aipath.push_back({ -235, 9, 48 });
 	aipath.push_back({ -153, 13, 203 });
@@ -77,6 +72,61 @@ void Game::InitializeGame()
 	aipath.push_back({ 121, 24, 114 });
 	aipath.push_back({ 166, 29, -5 });
 	aipath.push_back({ 63, 14, -116 });
+
+	// Static Physics
+	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
+	sp1 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-112.0f, 7.9f, -107.0f)), physx::PxVec3(5.0f, 0.5f, 5.0f));
+
+	// Static Physics Cont. (Walls)
+	sp2 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
+	sp3 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 2.5f, 50.0f)), physx::PxVec3(50.0f, 10.0f, 0.5f));
+	sp4 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
+	sp5 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 2.5f, -50.0f)), physx::PxVec3(50.0f, 10.0f, 0.5f));
+
+	auto vertices = bl->GetVertices();
+	auto indices = bl->GetIndices();
+	sp0 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices, indices, true);
+
+	auto vertices2 = b2->GetVertices();
+	auto indices2 = b2->GetIndices();
+	sp02 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices2, indices2, false);
+
+	auto vertices3 = b3->GetVertices();
+	auto indices3 = b3->GetIndices();
+	sp03 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices3, indices3, false);
+
+	auto vertices4 = b4->GetVertices();
+	auto indices4 = b4->GetIndices();
+	sp04 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices4, indices4, false);
+
+	auto vertices5 = b5->GetVertices();
+	auto indices5 = b5->GetIndices();
+	sp05 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices5, indices5, false);
+
+	auto vertices6 = b6->GetVertices();
+	auto indices6 = b6->GetIndices();
+	sp06 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices6, indices6, false);
+
+	auto vertices7 = b7->GetVertices();
+	auto indices7 = b7->GetIndices();
+	sp07 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices7, indices7, false);
+
+	auto vertices8 = b8->GetVertices();
+	auto indices8 = b8->GetIndices();
+	sp08 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices8, indices8, false);
+
+	auto vertices9 = b9->GetVertices();
+	auto indices9 = b9->GetIndices();
+	sp09 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices9, indices9, false);
+
+	// create physics component
+	//startPosition = dx::XMFLOAT3(-200.f, 15.0f, 141.0f);
+	startPosition = dx::XMFLOAT3(-175.f, 15.0f, 202.0f);
+	// Vehicle Physics
+	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -201.f, 15.0f, 138.0f, 0);
+
+	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -47.f, 11.0f, -112.0f, 0);
+	//std::unique_ptr<VehiclePhysics> vehicle_1 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -55.f, 11.0f, -108.0f, 0);
 
 	std::unique_ptr<VehiclePhysics> vehicle_1;
 	if (!AI_1) {
@@ -110,51 +160,6 @@ void Game::InitializeGame()
 		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -66.f, 10.3f, -113.f, 3);
 	}
 
-	// Static Physics
-	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
-	std::unique_ptr<PhysicsStatic> sp1 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-112.0f, 7.9f, -107.0f)), physx::PxVec3(5.0f, 0.5f, 5.0f));
-
-	// Static Physics Cont. (Walls)
-	std::unique_ptr<PhysicsStatic> sp2 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(-50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
-	std::unique_ptr<PhysicsStatic> sp3 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 2.5f, 50.0f)), physx::PxVec3(50.0f, 10.0f, 0.5f));
-	std::unique_ptr<PhysicsStatic> sp4 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(50.0f, 2.5f, 0.0f)), physx::PxVec3(0.5f, 10.0f, 50.0f));
-	std::unique_ptr<PhysicsStatic> sp5 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 2.5f, -50.0f)), physx::PxVec3(50.0f, 10.0f, 0.5f));
-
-	auto vertices = bl->GetVertices();
-	auto indices = bl->GetIndices();
-	std::unique_ptr<PhysicsGround> sp0 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices, indices, true);
-
-	auto vertices2 = b2->GetVertices();
-	auto indices2 = b2->GetIndices();
-	std::unique_ptr<PhysicsGround> sp02 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices2, indices2, false);
-
-	auto vertices3 = b3->GetVertices();
-	auto indices3 = b3->GetIndices();
-	std::unique_ptr<PhysicsGround> sp03 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices3, indices3, false);
-
-	auto vertices4 = b4->GetVertices();
-	auto indices4 = b4->GetIndices();
-	std::unique_ptr<PhysicsGround> sp04 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices4, indices4, false);
-
-	auto vertices5 = b5->GetVertices();
-	auto indices5 = b5->GetIndices();
-	std::unique_ptr<PhysicsGround> sp05 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices5, indices5, false);
-
-	auto vertices6 = b6->GetVertices();
-	auto indices6 = b6->GetIndices();
-	std::unique_ptr<PhysicsGround> sp06 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices6, indices6, false);
-
-	auto vertices7 = b7->GetVertices();
-	auto indices7 = b7->GetIndices();
-	std::unique_ptr<PhysicsGround> sp07 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices7, indices7, false);
-
-	auto vertices8 = b8->GetVertices();
-	auto indices8 = b8->GetIndices();
-	std::unique_ptr<PhysicsGround> sp08 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices8, indices8, false);
-
-	auto vertices9 = b9->GetVertices();
-	auto indices9 = b9->GetIndices();
-	std::unique_ptr<PhysicsGround> sp09 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices9, indices9, false);
 
 	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
 	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
@@ -175,11 +180,6 @@ void Game::InitializeGame()
 	unsigned int playerId2 = entityManager.Add(std::make_unique<Entity>(std::move(zb1), std::move(vehicle_3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 8
 	unsigned int playerId3 = entityManager.Add(std::make_unique<Entity>(std::move(zb2), std::move(vehicle_4), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));						    // 9
 
-	// skyboxes
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox1.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox2.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox3.png"));
 
 	vehicleIds = { playerId0,playerId1,playerId2,playerId3 };
 
@@ -317,6 +317,8 @@ int Game::Start()
 			}
 
 			DoFrame();
+			
+			menu.race_finished = true;
 		}
 		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
 			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
@@ -540,7 +542,7 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 
 void Game::Reset()
 {
-
+	entityManager.Get(0)->haveWon = 0;
 
 	entityManager.Clear();
 	entityManager = EntityManager();
