@@ -53,6 +53,8 @@ private:
 	std::unique_ptr<Renderable> num_player_2;
 	std::unique_ptr<Renderable> num_player_3;
 	std::unique_ptr<Renderable> num_player_4;
+
+	std::unique_ptr<Renderable> load;
 private:
 	float screenWidth;
 	float screenHeight;

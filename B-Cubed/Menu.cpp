@@ -62,6 +62,8 @@ Menu::Menu(Graphics& gfx, float screenWidth, float screenHeight)
 	p1234 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\1234_players.png");
 
 	end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\ending_screen.png");
+
+	load = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\loading_screen.png");
 }
 
 void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
@@ -158,15 +160,19 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 
 			if (player_1 && (ctlr.IsPressed(Controller::Button::X, 0))) {
 				StartGame = true;
+				load->Render(gfx);
 			}
 			else if (player_2 && (ctlr.IsPressed(Controller::Button::X, 1))) {
 				StartGame = true;
+				load->Render(gfx);
 			}
 			else if (player_3 && (ctlr.IsPressed(Controller::Button::X, 2))) {
 				StartGame = true;
+				load->Render(gfx);
 			}
 			else if (player_4 && (ctlr.IsPressed(Controller::Button::X, 3))) {
 				StartGame = true;
+				load->Render(gfx);
 			}
 
 			if (!player_1 && !player_2 && !player_3 && !player_4) {
