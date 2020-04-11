@@ -1,8 +1,12 @@
 #include "Menu.h"
 #include "ScreenElement.h"
 #include "Graphics.h"
+#include "Sound.h"
+#include "Physics.h"
 #include <DirectXMath.h>
 #include <sstream>
+
+using namespace physx;
 
 Menu::Menu(Graphics& gfx, float screenWidth, float screenHeight)
 	:
@@ -92,12 +96,21 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 
 			finish_order.clear();
 			end_screen = false;
+			Sound::Play("sounds//start.wav", 1.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 		}
 	}
 	else {
 
 		if (first_load) {
+
+
 			start->Render(gfx);
+
+			if (play_start) {
+				Sound::Play("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
+				play_start = false;
+			}
 
 			if (ctlr.IsPressed(Controller::Button::R_TRIGGER) || ctlr.IsPressed(Controller::Button::L_TRIGGER) ||
 				ctlr.IsPressed(Controller::Button::X) || ctlr.IsPressed(Controller::Button::Y) ||
@@ -113,6 +126,8 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 				ctlr.IsPressed(Controller::Button::A, 3) || ctlr.IsPressed(Controller::Button::B, 3)) {
 
 				first_load = false;
+				Sound::Play("sounds//start.wav", 1.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 
 				if (ctlr.IsPressed(Controller::Button::A, 0)) {
 					a_1_pressed_start = true;
@@ -130,32 +145,48 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 		}
 		else {
 
-			if (ctlr.IsPressed(Controller::Button::A, 0) && !a_1_pressed_start) {
+			if (ctlr.IsPressed(Controller::Button::A, 0) && !a_1_pressed_start && a_1_released) {
+				Sound::Play("sounds//lock_in.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_1 = true;
+				a_1_released = false;
 			}
-			else if (ctlr.IsPressed(Controller::Button::B, 0)) {
+			else if (ctlr.IsPressed(Controller::Button::B, 0) && b_1_released) {
+				Sound::Play("sounds//unlock.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_1 = false;
+				b_1_released = false;
 			}
 
-			if (ctlr.IsPressed(Controller::Button::A, 1) && !a_2_pressed_start) {
+			if (ctlr.IsPressed(Controller::Button::A, 1) && !a_2_pressed_start && a_2_released) {
+				Sound::Play("sounds//lock_in.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_2 = true;
+				a_2_released = false;
 			}
-			else if (ctlr.IsPressed(Controller::Button::B, 1)) {
+			else if (ctlr.IsPressed(Controller::Button::B, 1) && b_2_released) {
+				Sound::Play("sounds//unlock.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_2 = false;
+				b_2_released = false;
 			}
 
-			if (ctlr.IsPressed(Controller::Button::A, 2) && !a_3_pressed_start) {
+			if (ctlr.IsPressed(Controller::Button::A, 2) && !a_3_pressed_start && a_3_released) {
+				Sound::Play("sounds//lock_in.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_3 = true;
+				a_3_released = false;
 			}
-			else if (ctlr.IsPressed(Controller::Button::B, 2)) {
+			else if (ctlr.IsPressed(Controller::Button::B, 2) && b_3_released) {
+				Sound::Play("sounds//unlock.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_3 = false;
+				b_3_released = false;
 			}
 
-			if (ctlr.IsPressed(Controller::Button::A, 3) && !a_4_pressed_start) {
+			if (ctlr.IsPressed(Controller::Button::A, 3) && !a_4_pressed_start && a_4_released) {
+				Sound::Play("sounds//lock_in.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_4 = true;
+				a_4_released = false;
 			}
-			else if (ctlr.IsPressed(Controller::Button::B, 3)) {
+			else if (ctlr.IsPressed(Controller::Button::B, 3) && b_4_released) {
+				Sound::Play("sounds//unlock.wav", 1.0f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_4 = false;
+				b_4_released = false;
 			}
 
 			if (player_1 && (ctlr.IsPressed(Controller::Button::X, 0))) {
@@ -173,6 +204,32 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 			else if (player_4 && (ctlr.IsPressed(Controller::Button::X, 3))) {
 				StartGame = true;
 				load->Render(gfx);
+			}
+
+			if (!(ctlr.IsPressed(Controller::Button::A, 0))) {
+				a_1_released = true;
+			}
+			else if (!(ctlr.IsPressed(Controller::Button::A, 1))) {
+				a_2_released = true;
+			}
+			else if (!(ctlr.IsPressed(Controller::Button::A, 2))) {
+				a_3_released = true;
+			}
+			else if (!(ctlr.IsPressed(Controller::Button::A, 3))) {
+				a_4_released = true;
+			}
+
+			if (!(ctlr.IsPressed(Controller::Button::B, 0))) {
+				b_1_released = true;
+			}
+			else if (!(ctlr.IsPressed(Controller::Button::B, 1))) {
+				b_2_released = true;
+			}
+			else if (!(ctlr.IsPressed(Controller::Button::B, 2))) {
+				b_3_released = true;
+			}
+			else if (!(ctlr.IsPressed(Controller::Button::B, 3))) {
+				b_4_released = true;
 			}
 
 			if (!player_1 && !player_2 && !player_3 && !player_4) {
@@ -242,6 +299,9 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 
 void Menu::ScoreBoard(Graphics& gfx, std::vector<int> finish_order)
 {
+
+	Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
+
 	if (finish_order[0] == 1 && finish_order[1] == 2 && finish_order[2] == 3 && finish_order[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1234.png");
 	}

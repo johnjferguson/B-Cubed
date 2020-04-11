@@ -26,6 +26,15 @@ Game::Game()
 void Game::InitializeGame()
 {
 
+	Sound::Load("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//pipe.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
 	bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
 	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd.obj");
 	b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
@@ -235,12 +244,6 @@ void Game::InitializeGame()
 
 int Game::Start()
 {
-	Sound::Load("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-	Sound::Load("sounds//bulletbounce.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-	Sound::Load("sounds//bounce2.wav", 0.5, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-	Sound::Load("sounds//barrier.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-	Sound::Load("sounds//blast.wav", 0.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
-	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 	first = true;
 	second = true;
@@ -269,6 +272,9 @@ int Game::Start()
 			AI_3 = !menu.player_3;
 			AI_4 = !menu.player_4;
 
+
+			sound.soundMap.clear();
+			Sound::Play("sounds//start_match.wav", 0.9f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			InitializeGame();
 
 			finish_order.clear();
@@ -323,7 +329,7 @@ int Game::Start()
 		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
 			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
 			(AI_3 || entityManager.Get(vehicleIds[2])->getFinishedIn() > 0) &&
-			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && (gameCounter - start_end) > 3) {
+			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && (gameCounter - start_end) > 6) {
 
 			if (!take_down_done) {
 				Reset();

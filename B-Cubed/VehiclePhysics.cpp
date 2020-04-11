@@ -670,6 +670,9 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		if (entity->GetNumLaps() == 3) {
 			entity->haveWon++;
 			entity->setFinishedIn(entity->haveWon);
+			if (!useAI) {
+				Sound::Play("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+			}
 		}
 	}
 
