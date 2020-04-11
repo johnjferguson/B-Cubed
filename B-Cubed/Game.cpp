@@ -147,10 +147,10 @@ void Game::InitializeGame()
 
 	std::unique_ptr<VehiclePhysics> vehicle_2;
 	if (!AI_2) {
-		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.f, -125.f, 1);
+		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.5f, -125.f, 1);
 	}
 	else {
-		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.f, -125.f, 1);
+		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.5f, -125.f, 1);
 	}
 
 	std::unique_ptr<VehiclePhysics> vehicle_3;
@@ -163,7 +163,7 @@ void Game::InitializeGame()
 
 	std::unique_ptr<VehiclePhysics> vehicle_4;
 	if (!AI_4) {
-		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -66.f, 10.3f, -113.f, 3);
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -66.5f, 10.2f, -113.5f, 3);
 	}
 	else {
 		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -66.f, 10.3f, -113.f, 3);
@@ -274,7 +274,7 @@ int Game::Start()
 
 
 			sound.soundMap.clear();
-			Sound::Play("sounds//start_match.wav", 0.9f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+			Sound::Play("sounds//start_match.wav", 0.7f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			InitializeGame();
 
 			finish_order.clear();
@@ -459,7 +459,7 @@ void Game::DoFrame()
 
 	if (first) {
 		first = false;
-		Sound::Play("sounds//countdown.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+		Sound::Play("sounds//countdown.wav", 0.9f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 		gameCounter = 0.1;
 	}
 	else if (gameCounter > 8 && second) {
