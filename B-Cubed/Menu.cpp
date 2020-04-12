@@ -285,78 +285,95 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 void Menu::ScoreBoard(Graphics& gfx, std::vector<int> finish_order)
 {
 
+	std::vector<int> finish;
+
+	for (int i = 0; i < 4; i++) {
+		if (finish_order[0] == i + 1) {
+			finish.push_back(1);
+		}
+		if (finish_order[1] == i + 1) {
+			finish.push_back(2);
+		}
+		if (finish_order[2] == i + 1) {
+			finish.push_back(3);
+		}
+		if (finish_order[3] == i + 1) {
+			finish.push_back(4);
+		}
+	}
+
 	Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 
-	if (finish_order[0] == 1 && finish_order[1] == 2 && finish_order[2] == 3 && finish_order[3] == 4) {
+	if (finish[0] == 1 && finish[1] == 2 && finish[2] == 3 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1234.png");
 	}
-	else if (finish_order[0] == 1 && finish_order[1] == 2 && finish_order[2] == 4 && finish_order[3] == 3) {
+	else if (finish[0] == 1 && finish[1] == 2 && finish[2] == 4 && finish[3] == 3) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1243.png");
 	}
-	else if (finish_order[0] == 1 && finish_order[1] == 3 && finish_order[2] == 2 && finish_order[3] == 4) {
+	else if (finish[0] == 1 && finish[1] == 3 && finish[2] == 2 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1324.png");
 	}
-	else if (finish_order[0] == 1 && finish_order[1] == 3 && finish_order[2] == 4 && finish_order[3] == 2) {
+	else if (finish[0] == 1 && finish[1] == 3 && finish[2] == 4 && finish[3] == 2) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1342.png");
 	}
-	else if (finish_order[0] == 1 && finish_order[1] == 4 && finish_order[2] == 2 && finish_order[3] == 3) {
+	else if (finish[0] == 1 && finish[1] == 4 && finish[2] == 2 && finish[3] == 3) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1423.png");
 	}
-	else if (finish_order[0] == 1 && finish_order[1] == 4 && finish_order[2] == 3 && finish_order[3] == 2) {
+	else if (finish[0] == 1 && finish[1] == 4 && finish[2] == 3 && finish[3] == 2) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1432.png");
 	}
-	else if (finish_order[0] == 2 && finish_order[1] == 1 && finish_order[2] == 3 && finish_order[3] == 4) {
+	else if (finish[0] == 2 && finish[1] == 1 && finish[2] == 3 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2134.png");
 	}
-	else if (finish_order[0] == 2 && finish_order[1] == 1 && finish_order[2] == 4 && finish_order[3] == 3) {
+	else if (finish[0] == 2 && finish[1] == 1 && finish[2] == 4 && finish[3] == 3) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2143.png");
 	}
-	else if (finish_order[0] == 2 && finish_order[1] == 3 && finish_order[2] == 1 && finish_order[3] == 4) {
+	else if (finish[0] == 2 && finish[1] == 3 && finish[2] == 1 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2314.png");
 	}
-	else if (finish_order[0] == 2 && finish_order[1] == 3 && finish_order[2] == 4 && finish_order[3] == 1) {
+	else if (finish[0] == 2 && finish[1] == 3 && finish[2] == 4 && finish[3] == 1) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2341.png");
 	}
-	else if (finish_order[0] == 2 && finish_order[1] == 4 && finish_order[2] == 1 && finish_order[3] == 3) {
+	else if (finish[0] == 2 && finish[1] == 4 && finish[2] == 1 && finish[3] == 3) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2413.png");
 	}
-	else if (finish_order[0] == 2 && finish_order[1] == 4 && finish_order[2] == 3 && finish_order[3] == 1) {
+	else if (finish[0] == 2 && finish[1] == 4 && finish[2] == 3 && finish[3] == 1) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_2431.png");
 	}
-	else if (finish_order[0] == 3 && finish_order[1] == 1 && finish_order[2] == 2 && finish_order[3] == 4) {
+	else if (finish[0] == 3 && finish[1] == 1 && finish[2] == 2 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3124.png");
 	}
-	else if (finish_order[0] == 3 && finish_order[1] == 1 && finish_order[2] == 4 && finish_order[3] == 2) {
+	else if (finish[0] == 3 && finish[1] == 1 && finish[2] == 4 && finish[3] == 2) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3142.png");
 	}
-	else if (finish_order[0] == 3 && finish_order[1] == 2 && finish_order[2] == 1 && finish_order[3] == 4) {
+	else if (finish[0] == 3 && finish[1] == 2 && finish[2] == 1 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3214.png");
 	}
-	else if (finish_order[0] == 3 && finish_order[1] == 2 && finish_order[2] == 4 && finish_order[3] == 1) {
+	else if (finish[0] == 3 && finish[1] == 2 && finish[2] == 4 && finish[3] == 1) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3241.png");
 	}
-	else if (finish_order[0] == 3 && finish_order[1] == 4 && finish_order[2] == 1 && finish_order[3] == 2) {
+	else if (finish[0] == 3 && finish[1] == 4 && finish[2] == 1 && finish[3] == 2) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3412.png");
 	}
-	else if (finish_order[0] == 3 && finish_order[1] == 4 && finish_order[2] == 2 && finish_order[3] == 1) {
+	else if (finish[0] == 3 && finish[1] == 4 && finish[2] == 2 && finish[3] == 1) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_3421.png");
 	}
-	else if (finish_order[0] == 4 && finish_order[1] == 1 && finish_order[2] == 2 && finish_order[3] == 3) {
+	else if (finish[0] == 4 && finish[1] == 1 && finish[2] == 2 && finish[3] == 3) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4123.png");
 	}
-	else if (finish_order[0] == 4 && finish_order[1] == 1 && finish_order[2] == 3 && finish_order[3] == 2) {
+	else if (finish[0] == 4 && finish[1] == 1 && finish[2] == 3 && finish[3] == 2) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4132.png");
 	}
-	else if (finish_order[0] == 4 && finish_order[1] == 2 && finish_order[2] == 1 && finish_order[3] == 3) {
+	else if (finish[0] == 4 && finish[1] == 2 && finish[2] == 1 && finish[3] == 3) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4213.png");
 	}
-	else if (finish_order[0] == 4 && finish_order[1] == 2 && finish_order[2] == 3 && finish_order[3] == 1) {
+	else if (finish[0] == 4 && finish[1] == 2 && finish[2] == 3 && finish[3] == 1) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4231.png");
 	}
-	else if (finish_order[0] == 4 && finish_order[1] == 3 && finish_order[2] == 1 && finish_order[3] == 2) {
+	else if (finish[0] == 4 && finish[1] == 3 && finish[2] == 1 && finish[3] == 2) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4312.png");
 	}
-	else if (finish_order[0] == 4 && finish_order[1] == 3 && finish_order[2] == 2 && finish_order[3] == 1) {
+	else if (finish[0] == 4 && finish[1] == 3 && finish[2] == 2 && finish[3] == 1) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_4321.png");
 	}
 	

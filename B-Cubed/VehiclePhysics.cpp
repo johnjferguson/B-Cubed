@@ -662,8 +662,8 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		checkPoint3 = false;
 		entity->CountNumLaps();
 		if (entity->GetNumLaps() == 3) {
-			entity->haveWon++;
-			entity->setFinishedIn(entity->haveWon);
+			//entity->haveWon++;
+			//entity->setFinishedIn(entity->haveWon);
 
 			int placement = 1;
 
@@ -672,8 +672,10 @@ void VehiclePhysics::checkLaps(Entity* entity)
 					placement++;
 				}
 			}
+			if (placement < 5) {
+				game->finish_order[carNum] = placement;
+			}
 
-			game->finish_order[carNum] = placement;
 			if (!useAI) {
 				Sound::Play("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			}

@@ -3,8 +3,6 @@
 #include "Gui.h"
 #include "Game.h"
 
-int Entity::haveWon = 0;
-
 Entity::Entity()
 	:
 	transform(DirectX::XMMatrixIdentity())
@@ -290,16 +288,6 @@ int Entity::GetNumLaps()
 void Entity::CountNumLaps()
 {
 	numLaps++;
-}
-
-int Entity::getFinishedIn()
-{
-	return finishedin;
-}
-
-void Entity::setFinishedIn(int placement)
-{
-	finishedin = placement;
 }
 
 void Entity::IncreaseHit()

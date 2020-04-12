@@ -61,9 +61,6 @@ public:
 	void setNumChargesBlast(int x);
 	int GetNumLaps();
 	void CountNumLaps();
-	static int haveWon;
-	int getFinishedIn();
-	void setFinishedIn(int placement);
 	bool IsAI();
 public:
 	int lastHitCounter = 0;

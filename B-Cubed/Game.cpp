@@ -299,35 +299,41 @@ int Game::Start()
 
 			finish_order.clear();
 			finish_order.resize(4, -1);
+
+			int boo = finish_order[0];
+			int foo = finish_order[1];
+			int goo = finish_order[2];
+			int doo = finish_order[3];
+
 			setup_done = true;
 			take_down_done = false;
 		}
-		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
-			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
-			(AI_3 || entityManager.Get(vehicleIds[2])->getFinishedIn() > 0) &&
-			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && start_end == 0) {
+		else if (menu.StartGame && setup_done && (AI_1 || finish_order[0] > 0) &&
+			(AI_2 || finish_order[1] > 0) &&
+			(AI_3 || finish_order[2] > 0) &&
+			(AI_4 || finish_order[3] > 0) && start_end == 0) {
 
 			start_end = gameCounter;
 
 			int num_unfinished = 0;
 
 			if (finish_order[0] < 0) {
-				finish_order.push_back(4 - num_unfinished);
+				finish_order[0] = (4 - num_unfinished);
 				num_unfinished++;
 			}
 
 			if (finish_order[1] < 0) {
-				finish_order.push_back(4 - num_unfinished);
+				finish_order[1] = (4 - num_unfinished);
 				num_unfinished++;
 			}
 
 			if (finish_order[2] < 0) {
-				finish_order.push_back(4 - num_unfinished);
+				finish_order[2] = (4 - num_unfinished);
 				num_unfinished++;
 			}
 
 			if (finish_order[3] < 0) {
-				finish_order.push_back(4 - num_unfinished);
+				finish_order[3] = (4 - num_unfinished);
 				num_unfinished++;
 			}
 
@@ -335,10 +341,10 @@ int Game::Start()
 			
 			menu.race_finished = true;
 		}
-		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
-			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
-			(AI_3 || entityManager.Get(vehicleIds[2])->getFinishedIn() > 0) &&
-			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && (gameCounter - start_end) > 5.5) {
+		else if (menu.StartGame && setup_done && (AI_1 || finish_order[0] > 0) &&
+			(AI_2 || finish_order[1] > 0) &&
+			(AI_3 || finish_order[2] > 0) &&
+			(AI_4 || finish_order[3] > 0) && (gameCounter - start_end) > 5.5) {
 
 			if (!take_down_done) {
 				Reset();
@@ -444,7 +450,7 @@ void Game::DoFrame()
 			entityManager.Get(vehicleIds[player_order[activeCamera]])->getNumChargesBarrier(),
 			entityManager.Get(vehicleIds[player_order[activeCamera]])->getNumChargesBlast(),
 			entityManager.Get(vehicleIds[player_order[activeCamera]])->GetNumLaps(),
-			entityManager.Get(vehicleIds[player_order[activeCamera]])->getFinishedIn(),
+			finish_order[player_order[activeCamera]],
 		    entityManager, vehicles);
 		wnd.gfx.ResetViewPort();
 
@@ -561,7 +567,6 @@ void Game::fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::Px
 
 void Game::Reset()
 {
-	entityManager.Get(0)->haveWon = 0;
 
 	entityManager.Clear();
 	entityManager = EntityManager();
