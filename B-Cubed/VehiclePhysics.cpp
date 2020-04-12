@@ -99,7 +99,7 @@ VehiclePhysics::VehiclePhysics(Physics* px, Controller& gameController, Game* ga
 void VehiclePhysics::Update(Entity* entity, const Time& dt)
 {
 	entity->SetVelocity(*(DirectX::XMFLOAT3*)&(gVehicle4W->getRigidDynamicActor()->getLinearVelocity()));
-
+	entity->SetNum(carNum);
 
 	gVehicle4W->getRigidDynamicActor()->userData = (void*)entity;
 
@@ -156,10 +156,10 @@ void VehiclePhysics::Update(Entity* entity, const Time& dt)
 		//PxVec3 trackDir = PxVec3(DirectX::XMVectorGetX(mat), DirectX::XMVectorGetY(mat), DirectX::XMVectorGetZ(mat));
 
 		gVehicle4W->getRigidDynamicActor()->addForce(PxVec3(0, 1, 0) * -120000);
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -130000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -140000);
 	}
 	else {
-		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -130000);
+		gVehicle4W->getRigidDynamicActor()->addForce(trackDir * -140000);
 	}
 	
 
@@ -662,8 +662,6 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		checkPoint3 = false;
 		entity->CountNumLaps();
 		if (entity->GetNumLaps() == 3) {
-			//entity->haveWon++;
-			//entity->setFinishedIn(entity->haveWon);
 
 			int placement = 1;
 
@@ -681,10 +679,5 @@ void VehiclePhysics::checkLaps(Entity* entity)
 			}
 		}
 	}
-
-	//std::stringstream ss;
-	//ss << checkPoint1 << "   :   " << checkPoint2 << "  :  " << checkPoint3 << " Laps: " << entity->GetNumLaps() << " Has Won: " << entity->haveWon;
-	//Gui::AddText(ss.str().c_str());
-
 }
 

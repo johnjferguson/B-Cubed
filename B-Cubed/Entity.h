@@ -62,6 +62,8 @@ public:
 	int GetNumLaps();
 	void CountNumLaps();
 	bool IsAI();
+	int GetNum();
+	void SetNum(int x);
 public:
 	int lastHitCounter = 0;
 	//----------------------------------
@@ -91,5 +93,6 @@ private:
 	float startBarrierTimer = 0.f;
 	int finishedin = -1;
 	bool AI = false;
+	int num = -1;
 	// ---------------------
 };

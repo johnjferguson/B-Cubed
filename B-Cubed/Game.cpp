@@ -147,10 +147,10 @@ void Game::InitializeGame()
 
 	std::unique_ptr<VehiclePhysics> vehicle_2;
 	if (!AI_2) {
-		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.5f, -125.f, 1);
+		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -66.5f, 10.3f, -113.5f, 1);
 	}
 	else {
-		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.5f, -125.f, 1);
+		vehicle_2 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath,  -66.5f, 10.3f, -113.5f, 1);
 	}
 
 	std::unique_ptr<VehiclePhysics> vehicle_3;
@@ -163,10 +163,10 @@ void Game::InitializeGame()
 
 	std::unique_ptr<VehiclePhysics> vehicle_4;
 	if (!AI_4) {
-		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -66.5f, 10.2f, -113.5f, 3);
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.5f, -125.f, 3);
 	}
 	else {
-		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -66.f, 10.3f, -113.f, 3);
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.5f, -125.f, 3);
 	}
 
 
@@ -451,7 +451,7 @@ void Game::DoFrame()
 			entityManager.Get(vehicleIds[player_order[activeCamera]])->getNumChargesBlast(),
 			entityManager.Get(vehicleIds[player_order[activeCamera]])->GetNumLaps(),
 			finish_order[player_order[activeCamera]],
-		    entityManager, vehicles);
+		    entityManager, vehicles, player_order[activeCamera]);
 		wnd.gfx.ResetViewPort();
 
 		activeCamera++;

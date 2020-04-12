@@ -300,6 +300,16 @@ void Entity::ResetHit()
 	hit = 0;
 }
 
+int Entity::GetNum()
+{
+	return num;
+}
+
+void Entity::SetNum(int x)
+{
+	num = x;
+}
+
 const int Entity::NumberofHits() const
 {
 	return hit;

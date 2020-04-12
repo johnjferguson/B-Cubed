@@ -57,15 +57,37 @@ Overlay::Overlay(Graphics& gfx, float screenWidth, float screenHeight)
 	vehicle = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.05f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\arrow.png");
 	missile = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.05f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\missle.png");
 
+	vehicle_1 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.08f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\arrow_1.png");
+	vehicle_2 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.08f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\arrow_2.png");
+	vehicle_3 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.08f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\arrow_3.png");
+	vehicle_4 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.08f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\arrow_4.png");
+
+	icon_1 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.93f, 0.85f), 0.5f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\player_1_icon.png");
+	icon_2 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.93f, 0.85f), 0.5f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\player_2_icon.png");
+	icon_3 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.93f, 0.85f), 0.5f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\player_3_icon.png");
+	icon_4 = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.93f, 0.85f), 0.5f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\player_4_icon.png");
 }
 
-void Overlay::Draw(Graphics& gfx, unsigned short numChargesBoost, unsigned short numChargesBarrier, unsigned short numChargesBlast, unsigned short nLap, int place, EntityManager& em, const std::vector<unsigned int>& entities)
+void Overlay::Draw(Graphics& gfx, unsigned short numChargesBoost, unsigned short numChargesBarrier, unsigned short numChargesBlast, unsigned short nLap, int place, EntityManager& em, const std::vector<unsigned int>& entities, int carNum)
 {
 	chargeBarBoost[numChargesBoost % 4]->Render(gfx);
 	chargeBarBarrier[numChargesBarrier % 4]->Render(gfx);
 	chargeBarBlast[numChargesBlast % 4]->Render(gfx);
 	lapNumber[nLap % 6]->Render(gfx);
 	map->Render(gfx);
+
+	if (carNum == 0) {
+		icon_1->Render(gfx);
+	}
+	else if (carNum == 1) {
+		icon_2->Render(gfx);
+	}
+	else if (carNum == 2) {
+		icon_3->Render(gfx);
+	}
+	else if (carNum == 3) {
+		icon_4->Render(gfx);
+	}
 
 	if (place > 0)
 	{
@@ -114,8 +136,22 @@ void Overlay::Draw(Graphics& gfx, unsigned short numChargesBoost, unsigned short
 
 			if (entity->GetType() == Entity::Type::VEHICLE)
 			{
-				vehicle->UpdateVertex(gfx, vsi);
-				vehicle->Render(gfx);
+				if (entity->GetNum() == 0) {
+					vehicle_1->UpdateVertex(gfx, vsi);
+					vehicle_1->Render(gfx);
+				}
+				else if (entity->GetNum() == 1) {
+					vehicle_2->UpdateVertex(gfx, vsi);
+					vehicle_2->Render(gfx);
+				}
+				else if (entity->GetNum() == 2) {
+					vehicle_3->UpdateVertex(gfx, vsi);
+					vehicle_3->Render(gfx);
+				}
+				else if (entity->GetNum() == 3) {
+					vehicle_4->UpdateVertex(gfx, vsi);
+					vehicle_4->Render(gfx);
+				}
 
 			}
 			else if (entity->GetType() == Entity::Type::MISSILE)

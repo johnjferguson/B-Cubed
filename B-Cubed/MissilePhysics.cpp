@@ -32,7 +32,7 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 {
 
 	PxVec3 v = gRigidDynamic->getLinearVelocity().getNormalized();
-    PxVec3 vHorizontal = PxVec3(v.x, 0.0, v.y).getNormalized();
+	PxVec3 vHorizontal = PxVec3(v.x, 0.0, v.y).getNormalized();
 
 	PxVec3 p = gRigidDynamic->getGlobalPose().p;
 	PxQuat q = gRigidDynamic->getGlobalPose().q;
@@ -43,16 +43,10 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 	float dist = hit.block.distance;
 
 	PxRigidActor* hitActor = hit.block.actor;
-	/*
-	try {
-		Entity* hitEntity = (Entity*)hitActor->userData;
-	}
-	catch (char* e) {
 
+	if (p.x > 400 || p.y > 400 || p.z > 400) {
+		entity->MarkForDeath();
 	}
-	*/
-	//if (hitEntity->GetType() == Entity::Type::VEHICLE)
-
 
 	if (dist < 10.f) {
 		gRigidDynamic->setGlobalPose(PxTransform(p.x, p.y - (dist - 1), p.z, q));
@@ -61,10 +55,6 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 	else {
 		gRigidDynamic->setGlobalPose(PxTransform(p.x, lastY, p.z, q));
 	} 
-
-	//std::stringstream ss;
-	//ss << "Status: " << status << "Distance: " << hit.block.distance;
-	//Gui::AddText(ss.str().c_str());
 	
 	if (v.y != 0.f) {
 		gRigidDynamic->setLinearVelocity(PxVec3(v.x, 0.0, v.z) * 150.f);
