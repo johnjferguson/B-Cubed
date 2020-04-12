@@ -30,6 +30,7 @@ public:
 	void fireMissile(physx::PxVec3 startPos, physx::PxQuat startRot, physx::PxVec3 startVel);
 public:
 	float gameCounter = 0.f;
+	std::vector<int> finish_order;
 private:
 	// order here matter Gui has to be before Gui has to be before Window since there is
 	// some dependancy
@@ -68,7 +69,7 @@ private:
 
 	float start_end = 0; 
 
-	std::vector<int> finish_order;
+	std::vector<int> player_order;
 private:
 	std::unique_ptr<Mesh> bl;
 	std::unique_ptr<Mesh> b2;

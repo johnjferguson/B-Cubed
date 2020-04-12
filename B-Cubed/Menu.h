@@ -64,15 +64,10 @@ private:
 	bool play_start = true;
 	bool end_screen = false;
 
-	bool a_1_pressed_start = false;
-	bool a_2_pressed_start = false;
-	bool a_3_pressed_start = false;
-	bool a_4_pressed_start = false;
-
-	bool a_1_released = true;
-	bool a_2_released = true;
-	bool a_3_released = true;
-	bool a_4_released = true;
+	bool a_1_released = false;
+	bool a_2_released = false;
+	bool a_3_released = false;
+	bool a_4_released = false;
 
 	bool b_1_released = true;
 	bool b_2_released = true;

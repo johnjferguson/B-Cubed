@@ -272,12 +272,33 @@ int Game::Start()
 			AI_3 = !menu.player_3;
 			AI_4 = !menu.player_4;
 
-
 			sound.soundMap.clear();
 			Sound::Play("sounds//start_match.wav", 0.7f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+
 			InitializeGame();
 
+			nPlayers = 0;
+			player_order.clear();
+
+			if (!AI_1) {
+				nPlayers++;
+				player_order.push_back(0);
+			}
+			if (!AI_2) {
+				nPlayers++;
+				player_order.push_back(1);
+			}
+			if (!AI_3) {
+				nPlayers++;
+				player_order.push_back(2);
+			}
+			if (!AI_4) {
+				nPlayers++;
+				player_order.push_back(3);
+			}
+
 			finish_order.clear();
+			finish_order.resize(4, -1);
 			setup_done = true;
 			take_down_done = false;
 		}
@@ -290,36 +311,24 @@ int Game::Start()
 
 			int num_unfinished = 0;
 
-			if (entityManager.Get(vehicleIds[0])->getFinishedIn() < 0) {
+			if (finish_order[0] < 0) {
 				finish_order.push_back(4 - num_unfinished);
 				num_unfinished++;
-			}
-			else {
-				finish_order.push_back(entityManager.Get(vehicleIds[0])->getFinishedIn());
 			}
 
-			if (entityManager.Get(vehicleIds[1])->getFinishedIn() < 0) {
+			if (finish_order[1] < 0) {
 				finish_order.push_back(4 - num_unfinished);
 				num_unfinished++;
-			}
-			else {
-				finish_order.push_back(entityManager.Get(vehicleIds[1])->getFinishedIn());
 			}
 
-			if (entityManager.Get(vehicleIds[2])->getFinishedIn() < 0) {
+			if (finish_order[2] < 0) {
 				finish_order.push_back(4 - num_unfinished);
 				num_unfinished++;
-			}
-			else {
-				finish_order.push_back(entityManager.Get(vehicleIds[2])->getFinishedIn());
 			}
 
-			if (entityManager.Get(vehicleIds[3])->getFinishedIn() < 0) {
+			if (finish_order[3] < 0) {
 				finish_order.push_back(4 - num_unfinished);
 				num_unfinished++;
-			}
-			else {
-				finish_order.push_back(entityManager.Get(vehicleIds[3])->getFinishedIn());
 			}
 
 			DoFrame();
@@ -329,7 +338,7 @@ int Game::Start()
 		else if (menu.StartGame && setup_done && (AI_1 || entityManager.Get(vehicleIds[0])->getFinishedIn() > 0) &&
 			(AI_2 || entityManager.Get(vehicleIds[1])->getFinishedIn() > 0) &&
 			(AI_3 || entityManager.Get(vehicleIds[2])->getFinishedIn() > 0) &&
-			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && (gameCounter - start_end) > 6) {
+			(AI_4 || entityManager.Get(vehicleIds[3])->getFinishedIn() > 0) && (gameCounter - start_end) > 5.5) {
 
 			if (!take_down_done) {
 				Reset();
@@ -390,7 +399,7 @@ void Game::DoFrame()
 	activeCamera = 0;
 	for (auto& i : viewportsPerPlayers[nPlayers - 1])
 	{
-		DirectX::XMMATRIX cameraTransform = cameras[activeCamera++]->GetTransform(dt);
+		DirectX::XMMATRIX cameraTransform = cameras[player_order[activeCamera]]->GetTransform(dt);
 		Transform transform
 		{
 			DirectX::XMMatrixIdentity(),
@@ -431,13 +440,15 @@ void Game::DoFrame()
 		std::vector<unsigned int>  missiles = entityManager.Query(Entity::Type::MISSILE);
 		vehicles.insert(vehicles.end(), std::make_move_iterator(missiles.begin()), std::make_move_iterator(missiles.end()));
 
-		overlay.Draw(wnd.gfx, entityManager.Get(vehicleIds[0])->getNumChargesBoost(), 
-			entityManager.Get(vehicleIds[0])->getNumChargesBarrier(), 
-			entityManager.Get(vehicleIds[0])->getNumChargesBlast(),
-			entityManager.Get(vehicleIds[0])->GetNumLaps(),
-			entityManager.Get(vehicleIds[0])->getFinishedIn(),
+		overlay.Draw(wnd.gfx, entityManager.Get(vehicleIds[player_order[activeCamera]])->getNumChargesBoost(),
+			entityManager.Get(vehicleIds[player_order[activeCamera]])->getNumChargesBarrier(),
+			entityManager.Get(vehicleIds[player_order[activeCamera]])->getNumChargesBlast(),
+			entityManager.Get(vehicleIds[player_order[activeCamera]])->GetNumLaps(),
+			entityManager.Get(vehicleIds[player_order[activeCamera]])->getFinishedIn(),
 		    entityManager, vehicles);
 		wnd.gfx.ResetViewPort();
+
+		activeCamera++;
 	}
 	
 	//light.Update(wnd.gfx, cameraTransform);

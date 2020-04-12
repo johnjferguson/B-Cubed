@@ -374,15 +374,15 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 		else {
 			PxVec3 vehicle_position = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
 
-			accel = gameController.IsPressed(Controller::Button::R_TRIGGER);
-			reverse = gameController.IsPressed(Controller::Button::L_TRIGGER);
-			steer = pow(gameController.GetLeftStick().x,4);
-			if (gameController.GetLeftStick().x < 0)
+			accel = gameController.IsPressed(Controller::Button::R_TRIGGER, carNum);
+			reverse = gameController.IsPressed(Controller::Button::L_TRIGGER, carNum);
+			steer = pow(gameController.GetLeftStick(carNum).x,4);
+			if (gameController.GetLeftStick(carNum).x < 0)
 				steer *= -1;
 
-			blast = gameController.IsPressed(Controller::Button::Y);
-			boost = gameController.IsPressed(Controller::Button::B);
-			barrier = gameController.IsPressed(Controller::Button::A);
+			blast = gameController.IsPressed(Controller::Button::Y, carNum);
+			boost = gameController.IsPressed(Controller::Button::B, carNum);
+			barrier = gameController.IsPressed(Controller::Button::A, carNum);
 		}
 	}
 	else {
@@ -493,12 +493,6 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	else
 	{
 		yOnPress = true;
-	}
-	if (gameController.IsPressed(Controller::Button::X))
-	{
-	}
-	else
-	{
 	}
 
 	if (reverse)
@@ -670,6 +664,16 @@ void VehiclePhysics::checkLaps(Entity* entity)
 		if (entity->GetNumLaps() == 3) {
 			entity->haveWon++;
 			entity->setFinishedIn(entity->haveWon);
+
+			int placement = 1;
+
+			for (int i = 0; i < game->finish_order.size(); i++) {
+				if (game->finish_order[i] > 0) {
+					placement++;
+				}
+			}
+
+			game->finish_order[carNum] = placement;
 			if (!useAI) {
 				Sound::Play("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			}
