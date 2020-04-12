@@ -15,9 +15,6 @@ Menu::Menu(Graphics& gfx, float screenWidth, float screenHeight)
 {
 	b = { 0.0f,0.0f,0.0f,0.0f };
 
-	chargeBar = std::vector<std::unique_ptr<Renderable>>();
-	nPlace = std::vector<std::unique_ptr<Renderable>>();
-
 	D3D11_BLEND_DESC bd;
 	bd.AlphaToCoverageEnable = true;
 	bd.IndependentBlendEnable = true;
@@ -26,25 +23,7 @@ Menu::Menu(Graphics& gfx, float screenWidth, float screenHeight)
 
 	gfx.GetContext()->OMSetBlendState(bs, b.data(), 0xffffffff);
 
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar1.png"));
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar2.png"));
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar3.png"));
-	chargeBar.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, -0.8f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\bar4.png"));
-
-	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, 0.1f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place1.png"));
-	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, 0.1f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place4.png"));
-	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, 0.1f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place2.png"));
-	nPlace.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(-0.2f, 0.1f), 2.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\place3.png"));
-
 	map = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.70f, -0.60f), 1.2f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\map.png");
-
-	lapNumber.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.8f, 0.5f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\1outof3.png"));
-	lapNumber.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.8f, 0.5f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\2outof3.png"));
-	lapNumber.push_back(std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.8f, 0.5f), 1.0f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\3outof3.png"));
-
-	vehicle = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.05f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\arrow.png");
-	missile = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 0.05f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\missle.png");
-
 
 	start = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\starting_screen.png");
 
