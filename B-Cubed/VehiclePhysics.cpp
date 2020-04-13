@@ -343,15 +343,11 @@ void VehiclePhysics::stepPhysics(Entity* entity)
 	PxVec3 pos = gVehicle4W->getRigidDynamicActor()->getGlobalPose().p;
 	PxQuat qua = gVehicle4W->getRigidDynamicActor()->getGlobalPose().q;
 
-	if (!useAI) {
-		//::stringstream ss;
-		//ss << "Position: " <<  (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
-		//Gui::AddText(ss.str().c_str());
-
-		//std::stringstream oo;
-		//oo << "Rotation: " << qua.x << " :  " << qua.y << " : " << qua.z << " : " << (float)qua.w;
-		//Gui::AddText(oo.str().c_str());
+	if (pos.z < -250) {
+		PxTransform pose = PxTransform(PxVec3(-105.f, 9.5f, -125.f));
+		gVehicle4W->getRigidDynamicActor()->setGlobalPose(pose);
 	}
+
 
 	if (game->gameCounter > 8) {
 

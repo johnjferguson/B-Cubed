@@ -44,7 +44,8 @@ void MissilePhysics::Update(Entity* entity, const Time& dt)
 
 	PxRigidActor* hitActor = hit.block.actor;
 
-	if (p.x > 400 || p.y > 400 || p.z > 400) {
+	if (p.x > 400 || p.y > 400 || p.z > 400 ||
+		p.x < - 400 || p.y < -400 || p.z < -400) {
 		entity->MarkForDeath();
 	}
 
