@@ -17,9 +17,8 @@ Game::Game()
 	:
 	wnd(1280, 720, "B-Cubed"), 
 	light(wnd.gfx, { 0.0f, 0.0f, 100.0f, 1.0f }),
-	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 0.5f, 700.0f)
+	renderTexture(wnd.gfx.GetDevice(), wnd.GetWidth(), wnd.GetHeight(), 0.5f, 2000.0f)
 {
-
 	menu = Menu(wnd.gfx, wnd.GetWidth(), wnd.GetHeight());
 }
 
@@ -36,14 +35,8 @@ void Game::InitializeGame()
 	Sound::Load("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 	bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
-	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd.obj");
-	b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//blank.obj");
-	b4 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner.obj");
-	b5 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner2.obj");
-	b6 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//gaurd1.obj");
-	b7 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner1.obj");
-	b8 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//newinner3.obj");
-	b9 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//panel.obj");
+	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//finalwall.obj");
+	b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//background.obj");
 
 	start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(55.0f, 8.0f, 1.0f), L"images//chess.jpg");
 	tl = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(10.0f, 10.0f, 1.0f), L"images//rock.jpg");
@@ -62,10 +55,10 @@ void Game::InitializeGame()
 	eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// skyboxes
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox0.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox1.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox2.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 700.0f, L"images//skybox3.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox0.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox1.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox2.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox3.png"));
 
 	aipath.push_back({ -155, 10, -90 });
 	aipath.push_back({ -235, 9, 48 });
@@ -99,34 +92,6 @@ void Game::InitializeGame()
 	auto vertices2 = b2->GetVertices();
 	auto indices2 = b2->GetIndices();
 	sp02 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices2, indices2, false);
-
-	auto vertices3 = b3->GetVertices();
-	auto indices3 = b3->GetIndices();
-	sp03 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices3, indices3, false);
-
-	auto vertices4 = b4->GetVertices();
-	auto indices4 = b4->GetIndices();
-	sp04 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices4, indices4, false);
-
-	auto vertices5 = b5->GetVertices();
-	auto indices5 = b5->GetIndices();
-	sp05 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices5, indices5, false);
-
-	auto vertices6 = b6->GetVertices();
-	auto indices6 = b6->GetIndices();
-	sp06 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices6, indices6, false);
-
-	auto vertices7 = b7->GetVertices();
-	auto indices7 = b7->GetIndices();
-	sp07 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices7, indices7, false);
-
-	auto vertices8 = b8->GetVertices();
-	auto indices8 = b8->GetIndices();
-	sp08 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices8, indices8, false);
-
-	auto vertices9 = b9->GetVertices();
-	auto indices9 = b9->GetIndices();
-	sp09 = std::make_unique<PhysicsGround>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), vertices9, indices9, false);
 
 	// create physics component
 	//startPosition = dx::XMFLOAT3(-200.f, 15.0f, 141.0f);
@@ -172,13 +137,9 @@ void Game::InitializeGame()
 
 	entityManager.Add(std::make_unique<Entity>(std::move(bl), std::move(sp0), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
 	entityManager.Add(std::make_unique<Entity>(std::move(b2), std::move(sp02), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
-	entityManager.Add(std::make_unique<Entity>(std::move(b3), std::move(sp03), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
-	entityManager.Add(std::make_unique<Entity>(std::move(b4), std::move(sp04), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	entityManager.Add(std::make_unique<Entity>(std::move(b5), std::move(sp05), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	entityManager.Add(std::make_unique<Entity>(std::move(b6), std::move(sp06), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	entityManager.Add(std::make_unique<Entity>(std::move(b7), std::move(sp07), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	entityManager.Add(std::make_unique<Entity>(std::move(b8), std::move(sp08), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
-	entityManager.Add(std::make_unique<Entity>(std::move(b9), std::move(sp09), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));	// 0
+	entityManager.Add(std::make_unique<Entity>(std::move(b3), nullptr, dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));
+
+	
 	unsigned int playerId1 = entityManager.Add(std::make_unique<Entity>(std::move(zb), std::move(vehicle_2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::VEHICLE));							// 1
 	entityManager.Add(std::make_unique<Entity>(std::move(w0), std::move(sp2), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 2
 	entityManager.Add(std::make_unique<Entity>(std::move(w1), std::move(sp3), dx::XMFLOAT3{ 0.0f,0.0f,0.0f }, dx::XMMatrixIdentity(), Entity::Type::DEFAULT));							// 3
@@ -410,7 +371,7 @@ void Game::DoFrame()
 		{
 			DirectX::XMMatrixIdentity(),
 			cameraTransform,
-			DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 700.0f)
+			DirectX::XMMatrixPerspectiveLH(1.0f, float(wnd.gfx.GetHeight()) / float(wnd.gfx.GetWidth()), 0.5f, 2000.0f)
 		};
 		// shadow rendering
 		renderTexture.SetRenderTarget(wnd.gfx.GetContext());

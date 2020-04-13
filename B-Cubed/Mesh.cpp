@@ -34,7 +34,7 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	for (int i = 0; i < pModel->mNumMeshes; i++)
 	{
 		const auto pMesh = pModel->mMeshes[i];
-		//int k = vertices.size();
+		int k = vertices.size();
 
 		for (unsigned int j = 0; j < pMesh->mNumVertices; j++)
 		{
@@ -55,13 +55,13 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 			const auto& face = pMesh->mFaces[j];
 			if (face.mNumIndices == 3)
 			{
-				indices.push_back(face.mIndices[0]);
-				indices.push_back(face.mIndices[1]);
-				indices.push_back(face.mIndices[2]);
+				indices.push_back(k + face.mIndices[0]);
+				indices.push_back(k + face.mIndices[1]);
+				indices.push_back(k + face.mIndices[2]);
 
-				indices.push_back(face.mIndices[0]);
-				indices.push_back(face.mIndices[2]);
-				indices.push_back(face.mIndices[1]);
+				indices.push_back(k + face.mIndices[0]);
+				indices.push_back(k + face.mIndices[2]);
+				indices.push_back(k + face.mIndices[1]);
 			}
 		}
 	}
@@ -76,6 +76,8 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	if (path == "models//vehicle.obj")
 		//AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
 		AddBind(std::make_unique<Texture>(gfx, L"images//bright.jpg"));
+	else if (path == "models//finalwall.obj")
+		AddBind(std::make_unique<Texture>(gfx, L"images//texture_5.png"));
 	else
 		AddBind(std::make_unique<Texture>(gfx, L"images//withpink.png"));
 
