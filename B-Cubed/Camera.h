@@ -38,9 +38,9 @@ public:
 	FollowCamera(class EntityManager& entityManager, unsigned int targetId);
 	void SetTarget(unsigned int targetId_in);
 	virtual DirectX::XMMATRIX GetTransform(const Time& dt) override;
+	float followZ = 15.0f;
+	float followY = 6.0f;
 private:
-	const float followZ = 15.0f;
-	const float followY = 6.0f;
 	class EntityManager* entityManager;
 	unsigned int targetId = 0;
 	DirectX::XMVECTOR previous_vz = DirectX::XMVectorZero();

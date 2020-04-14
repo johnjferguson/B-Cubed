@@ -153,12 +153,58 @@ void Game::InitializeGame()
 
 	vehicleIds = { playerId0,playerId1,playerId2,playerId3 };
 
+	cameras.clear();
 
 	cam0 = std::make_unique<FollowCamera>(entityManager, vehicleIds[0]);
 	std::unique_ptr<FollowCamera> cam1 = std::make_unique<FollowCamera>(entityManager, vehicleIds[1]);
 	std::unique_ptr<FollowCamera> cam2 = std::make_unique<FollowCamera>(entityManager, vehicleIds[2]);
 	std::unique_ptr<FollowCamera> cam3 = std::make_unique<FollowCamera>(entityManager, vehicleIds[3]);
 	std::unique_ptr<FreeCamera> cam4 = std::make_unique<FreeCamera>(wnd.kbd, wnd.mouse, DirectX::XMFLOAT3(0.0f, 10.0f, 10.0f));
+
+	if (nPlayers == 2) {
+		
+		if (player_order[0] == 0) {
+			cam0->followZ = 25;
+		}
+		else if (player_order[0] == 1) {
+			cam1->followZ = 25;
+		}
+		else if (player_order[0] == 2) {
+			cam2->followZ = 25;
+		}
+		else if (player_order[0] == 3) {
+			cam3->followZ = 25;
+		}
+
+		if (player_order[1] == 0) {
+			cam0->followZ = 25;
+		}
+		else if (player_order[1] == 1) {
+			cam1->followZ = 25;
+		}
+		else if (player_order[1] == 2) {
+			cam2->followZ = 25;
+		}
+		else if (player_order[1] == 3) {
+			cam3->followZ = 25;
+		}
+
+	}
+	else if (nPlayers == 3) {
+		if (player_order[0] == 1) {
+			cam0->followZ = 25;
+		}
+		else if (player_order[0] == 2) {
+			cam1->followZ = 25;
+		}
+		else if (player_order[0] == 3) {
+			cam2->followZ = 25;
+		}
+		else if (player_order[0] == 4) {
+			cam3->followZ = 25;
+		}
+	}
+
 	cameras.push_back(std::move(cam0));
 	cameras.push_back(std::move(cam1));
 	cameras.push_back(std::move(cam2));
@@ -236,8 +282,6 @@ int Game::Start()
 			sound.soundMap.clear();
 			Sound::Play("sounds//start_match.wav", 0.7f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
-			InitializeGame();
-
 			nPlayers = 0;
 			player_order.clear();
 
@@ -257,6 +301,8 @@ int Game::Start()
 				nPlayers++;
 				player_order.push_back(3);
 			}
+
+			InitializeGame();
 
 			finish_order.clear();
 			finish_order.resize(4, -1);
