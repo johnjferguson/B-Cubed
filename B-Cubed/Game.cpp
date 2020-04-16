@@ -34,7 +34,7 @@ void Game::InitializeGame()
 	Sound::Load("sounds//pipe.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
-	bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2.obj");
+	bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2old.obj");
 	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//finalwall.obj");
 	b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//background.obj");
 
@@ -55,10 +55,10 @@ void Game::InitializeGame()
 	eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// skyboxes
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox0.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox1.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox2.png"));
-	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1500.0f, L"images//skybox3.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1800.0f, L"images//skybox0.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1800.0f, L"images//skybox1.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1800.0f, L"images//skybox2.png"));
+	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1800.0f, L"images//skybox3.png"));
 
 	aipath.push_back({ -155, 10, -90 });
 	aipath.push_back({ -235, 9, 48 });
@@ -412,7 +412,8 @@ void Game::DoFrame()
 	activeCamera = 0;
 	for (auto& i : viewportsPerPlayers[nPlayers - 1])
 	{
-		DirectX::XMMATRIX cameraTransform = cameras[player_order[activeCamera]]->GetTransform(dt);
+		//DirectX::XMMATRIX cameraTransform = cameras[player_order[activeCamera]]->GetTransform(dt);
+		DirectX::XMMATRIX cameraTransform = cameras[4]->GetTransform(dt);
 		Transform transform
 		{
 			DirectX::XMMatrixIdentity(),

@@ -46,6 +46,7 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 				}
 			);
+			vertices.back().tex.y = 1 - vertices.back().tex.y;
 
 			// add all the vertex point to renderable
 			m_vertices.push_back({ pMesh->mVertices[j].x *scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z * scale });
@@ -78,6 +79,10 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 		AddBind(std::make_unique<Texture>(gfx, L"images//bright.jpg"));
 	else if (path == "models//finalwall.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//texture_5.png"));
+	else if (path == "models//SPLINE2old.obj")
+		AddBind(std::make_unique<Texture>(gfx, L"images//splinetext.png"));
+	else if (path == "models//background.obj")
+		AddBind(std::make_unique<Texture>(gfx, L"images//background.png"));
 	else
 		AddBind(std::make_unique<Texture>(gfx, L"images//withpink.png"));
 
