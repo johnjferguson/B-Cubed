@@ -173,7 +173,7 @@ Physics::Physics()
 	}
 	//gMaterial = gPhysics->createMaterial(5.0f, 5.0f, -15.5f);
 
-	gMaterial = gPhysics->createMaterial(0.05f, 0.05f, -3.f);
+	gMaterial = gPhysics->createMaterial(0.04f, 0.04f, 0.0f);
 
 	gCooking = PxCreateCooking(PX_PHYSICS_VERSION, *gFoundation, PxCookingParams(PxTolerancesScale()));
 

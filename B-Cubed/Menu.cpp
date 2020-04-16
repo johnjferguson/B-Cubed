@@ -239,7 +239,7 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 			else if (!player_1 && player_2 && !player_3 && player_4) {
 				p24->Render(gfx);
 			}
-			else if (!player_1 && !player_2 && player_3 && !player_4) {
+			else if (!player_1 && !player_2 && player_3 && player_4) {
 				p34->Render(gfx);
 			}
 			else if (player_1 && player_2 && player_3 && !player_4) {

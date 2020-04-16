@@ -191,16 +191,16 @@ void Game::InitializeGame()
 
 	}
 	else if (nPlayers == 3) {
-		if (player_order[0] == 1) {
+		if (player_order[0] == 0) {
 			cam0->followZ = 25;
 		}
-		else if (player_order[0] == 2) {
+		else if (player_order[0] == 1) {
 			cam1->followZ = 25;
 		}
-		else if (player_order[0] == 3) {
+		else if (player_order[0] == 2) {
 			cam2->followZ = 25;
 		}
-		else if (player_order[0] == 4) {
+		else if (player_order[0] == 3) {
 			cam3->followZ = 25;
 		}
 	}
