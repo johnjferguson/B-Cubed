@@ -48,10 +48,10 @@ void Game::InitializeGame()
 	w3 = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 100.0f, 5.0f), L"images//neonwall.jpg");
 
 	vb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//voli.jpg");
-	nb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	zb = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	zb1 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
-	zb2 = std::make_unique<Mesh>(wnd.gfx, 1.0f, "models//vehicle.obj");
+	nb = std::make_unique<Mesh>(wnd.gfx, 0.5f, "models//vehicle.obj");
+	zb = std::make_unique<Mesh>(wnd.gfx, 0.5f, "models//vehicle.obj");
+	zb1 = std::make_unique<Mesh>(wnd.gfx, 0.5f, "models//vehicle.obj");
+	zb2 = std::make_unique<Mesh>(wnd.gfx, 0.5f, "models//vehicle.obj");
 	eb = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f), L"images//error.png");
 
 	// skyboxes
@@ -402,8 +402,8 @@ void Game::DoFrame()
 	};
 
 	static float x = 1.0f;
-	static float y = 1.0f;
-	static float z = -8.0f;
+	static float y = 20.0f;
+	static float z = 1.0f;
 
 	Gui::AddSlider("x:", x, -100, 100);
 	Gui::AddSlider("y:", y, -100, 100);
@@ -412,8 +412,13 @@ void Game::DoFrame()
 	activeCamera = 0;
 	for (auto& i : viewportsPerPlayers[nPlayers - 1])
 	{
-		//DirectX::XMMATRIX cameraTransform = cameras[player_order[activeCamera]]->GetTransform(dt);
-		DirectX::XMMATRIX cameraTransform = cameras[4]->GetTransform(dt);
+		dx::XMFLOAT3 pos = entityManager.Get(vehicleIds[activeCamera])->GetPosition();
+		light.SetPosition(DirectX::XMFLOAT4(pos.x + x, pos.y + y, pos.z + z, 0.0f));
+
+		DirectX::XMMATRIX cameraTransform = cameras[player_order[activeCamera]]->GetTransform(dt);
+		//DirectX::XMMATRIX cameraTransform = cameras[4]->GetTransform(dt);
+		//DirectX::XMMATRIX cameraTransform = light.LookAt({ pos.x, pos.y, pos.z });
+
 		Transform transform
 		{
 			DirectX::XMMatrixIdentity(),
@@ -424,14 +429,14 @@ void Game::DoFrame()
 		renderTexture.SetRenderTarget(wnd.gfx.GetContext());
 		renderTexture.ClearRenderTarget(wnd.gfx.GetContext());
 
-		dx::XMFLOAT3 pos = entityManager.Get(vehicleIds[0])->GetPosition();
+		//dx::XMFLOAT3 pos = entityManager.Get(vehicleIds[0])->GetPosition();
 
 		std::stringstream ss;
 		ss << "Position: " << (int)pos.x << " :  " << (int)pos.y << " : " << (int)pos.z;
 		Gui::AddText(ss.str().c_str());
 
 
-		light.SetPosition(DirectX::XMFLOAT4(pos.x + x, pos.y + y, pos.z + z, 0.0f));
+		//light.SetPosition(DirectX::XMFLOAT4(pos.x + x, pos.y + y, pos.z + z, 0.0f));
 
 		entityManager.RenderDepth(wnd.gfx, light.LookAt({ pos.x, pos.y, pos.z }), renderTexture.GetPerspective(), light);
 

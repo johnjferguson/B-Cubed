@@ -38,15 +38,22 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 		for (unsigned int j = 0; j < pMesh->mNumVertices; j++)
 		{
-			vertices.push_back(
-				{
-					{pMesh->mVertices[j].x*scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z*scale},
-					*reinterpret_cast<dx::XMFLOAT3*>(&pMesh->mNormals[j]),
-					*reinterpret_cast<dx::XMFLOAT2*>(&pMesh->mTextureCoords[0][j])
+			if (!(path == "models//vehicle.obj" && i == 1))
+			{
+				vertices.push_back(
+					{
+						{pMesh->mVertices[j].x*scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z*scale},
+						*reinterpret_cast<dx::XMFLOAT3*>(&pMesh->mNormals[j]),
+						*reinterpret_cast<dx::XMFLOAT2*>(&pMesh->mTextureCoords[0][j])
 
-				}
-			);
+					}
+				);
+			}
+			// need to flip the y so the texture maps properly
 			vertices.back().tex.y = 1 - vertices.back().tex.y;
+			vertices.back().n.x = -vertices.back().n.x;
+			vertices.back().n.y = -vertices.back().n.y;
+			vertices.back().n.z = -vertices.back().n.z;
 
 			// add all the vertex point to renderable
 			m_vertices.push_back({ pMesh->mVertices[j].x *scale, pMesh->mVertices[j].y*scale, pMesh->mVertices[j].z * scale });
@@ -76,11 +83,13 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 
 	if (path == "models//vehicle.obj")
 		//AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
-		AddBind(std::make_unique<Texture>(gfx, L"images//bright.jpg"));
+		AddBind(std::make_unique<Texture>(gfx, L"images//vehicle.png"));
 	else if (path == "models//finalwall.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//texture_5.png"));
-	else if (path == "models//SPLINE2old.obj")
+	else if (path == "models//SPLINE2.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//splinetext.png"));
+	else if (path == "models//SPLINE2old.obj")
+		AddBind(std::make_unique<Texture>(gfx, L"images//green.jpg"));
 	else if (path == "models//background.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//background.png"));
 	else
