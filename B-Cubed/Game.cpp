@@ -34,8 +34,8 @@ void Game::InitializeGame()
 	Sound::Load("sounds//pipe.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
-	bl = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//SPLINE2old.obj");
-	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//finalwall.obj");
+	bl = std::make_unique<Mesh>(wnd.gfx, 3.1f, "models//secondary.obj");
+	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//finalfinalwall.obj");
 	b3 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//background.obj");
 
 	start = std::make_unique<Box>(wnd.gfx, DirectX::XMFLOAT3(55.0f, 8.0f, 1.0f), L"images//chess.jpg");

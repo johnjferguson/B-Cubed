@@ -84,10 +84,10 @@ Mesh::Mesh(Graphics & gfx, float scale, const std::string & path)
 	if (path == "models//vehicle.obj")
 		//AddBind(std::make_unique<Texture>(gfx, L"images//color.jpg"));
 		AddBind(std::make_unique<Texture>(gfx, L"images//vehicle.png"));
-	else if (path == "models//finalwall.obj")
+	else if (path == "models//finalfinalwall.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//texture_5.png"));
-	else if (path == "models//SPLINE2.obj")
-		AddBind(std::make_unique<Texture>(gfx, L"images//splinetext.png"));
+	else if (path == "models//secondary.obj")
+		AddBind(std::make_unique<Texture>(gfx, L"images//withpink.png"));
 	else if (path == "models//SPLINE2old.obj")
 		AddBind(std::make_unique<Texture>(gfx, L"images//green.jpg"));
 	else if (path == "models//background.obj")
