@@ -96,7 +96,7 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 			start->Render(gfx);
 
 			if (play_start) {
-				Sound::Play("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//win.wav", 1.f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 				play_start = false;
 			}
@@ -115,7 +115,7 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 				ctlr.IsPressed(Controller::Button::A, 3) || ctlr.IsPressed(Controller::Button::B, 3)) {
 
 				first_load = false;
-				Sound::Play("sounds//start.wav", 1.2f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//start.wav", 1.f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 
 			}
@@ -123,45 +123,45 @@ void Menu::Draw(Graphics& gfx, Controller& ctlr, std::vector<int> finish_order)
 		else {
 
 			if (ctlr.IsPressed(Controller::Button::A, 0)  && a_1_released) {
-				Sound::Play("sounds//lock_in.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//lock_in.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_1 = true;
 				a_1_released = false;
 			}
 			else if (ctlr.IsPressed(Controller::Button::B, 0) && b_1_released) {
-				Sound::Play("sounds//unlock.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//unlock.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_1 = false;
 				b_1_released = false;
 			}
 
 			if (ctlr.IsPressed(Controller::Button::A, 1) && a_2_released) {
-				Sound::Play("sounds//lock_in.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//lock_in.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_2 = true;
 				a_2_released = false;
 			}
 			else if (ctlr.IsPressed(Controller::Button::B, 1) && b_2_released) {
-				Sound::Play("sounds//unlock.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//unlock.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_2 = false;
 				b_2_released = false;
 			}
 
 			if (ctlr.IsPressed(Controller::Button::A, 2) && a_3_released) {
-				Sound::Play("sounds//lock_in.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//lock_in.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_3 = true;
 				a_3_released = false;
 			}
 			else if (ctlr.IsPressed(Controller::Button::B, 2) && b_3_released) {
-				Sound::Play("sounds//unlock.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//unlock.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_3 = false;
 				b_3_released = false;
 			}
 
 			if (ctlr.IsPressed(Controller::Button::A, 3) && a_4_released) {
-				Sound::Play("sounds//lock_in.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//lock_in.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_4 = true;
 				a_4_released = false;
 			}
 			else if (ctlr.IsPressed(Controller::Button::B, 3) && b_4_released) {
-				Sound::Play("sounds//unlock.wav", 0.8f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+				Sound::Play("sounds//unlock.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 				player_4 = false;
 				b_4_released = false;
 			}
@@ -281,7 +281,7 @@ void Menu::ScoreBoard(Graphics& gfx, std::vector<int> finish_order)
 		}
 	}
 
-	Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
+	Sound::Play("sounds//BackgroundLoop.wav", 0.08f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 
 	if (finish[0] == 1 && finish[1] == 2 && finish[2] == 3 && finish[3] == 4) {
 		end = std::make_unique<ScreenElement>(gfx, DirectX::XMFLOAT2(0.0f, 0.0f), 3.6f, DirectX::XMFLOAT2(screenWidth, screenHeight), L"images\\scoreboard\\score_1234.png");

@@ -674,6 +674,11 @@ void VehiclePhysics::checkLaps(Entity* entity)
 				Sound::Play("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 			}
 		}
+		else {
+			if (!useAI) {
+				Sound::Play("sounds//lapcomplete.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+			}
+		}
 	}
 }
 

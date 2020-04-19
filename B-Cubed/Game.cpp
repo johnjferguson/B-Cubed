@@ -280,7 +280,7 @@ int Game::Start()
 			AI_4 = !menu.player_4;
 
 			sound.soundMap.clear();
-			Sound::Play("sounds//start_match.wav", 0.7f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+			Sound::Play("sounds//start_match.wav", 0.5f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 			nPlayers = 0;
 			player_order.clear();
@@ -489,12 +489,12 @@ void Game::DoFrame()
 
 	if (first) {
 		first = false;
-		Sound::Play("sounds//countdown.wav", 0.9f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+		Sound::Play("sounds//countdown.wav", 1.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 		gameCounter = 0.1;
 	}
 	else if (gameCounter > 8 && second) {
 		second = false;
-		Sound::Play("sounds//BackgroundLoop.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
+		Sound::Play("sounds//BackgroundGame.wav", 0.25f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), true);
 	}
 
 	gui.End();
