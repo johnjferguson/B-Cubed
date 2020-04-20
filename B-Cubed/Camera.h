@@ -26,8 +26,23 @@ private:
 	DirectX::XMVECTOR pos;
 	float maxTurnSpeed = 2.0f;
 	float mouseDeadzone = 0.05f;
-	float moveSpeed = 8.0f;
+	float moveSpeed = 100.0f;
 	float pitch = -3.14f;
 	float roll = 1.0f;
 	bool inputEnabled = true;
+};
+
+class FollowCamera : public Camera
+{
+public:
+	FollowCamera(class EntityManager& entityManager, unsigned int targetId);
+	void SetTarget(unsigned int targetId_in);
+	virtual DirectX::XMMATRIX GetTransform(const Time& dt) override;
+	float followZ = 15.0f;
+	float followY = 6.0f;
+private:
+	class EntityManager* entityManager;
+	unsigned int targetId = 0;
+	DirectX::XMVECTOR previous_vz = DirectX::XMVectorZero();
+	float radianPerSecond = 3.5f;
 };

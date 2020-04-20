@@ -1,25 +1,29 @@
 #pragma once
-#include <memory>
 #include "physx/include/PxPhysicsAPI.h"
+#include "physx/include/PxShape.h"
 #include "Time.h"
+
 
 class Physics
 {
+	friend class PhysicsComponent;
+	friend class MissilePhysics;
 public:
 	Physics();
 	~Physics();
-	void Update(Time dt);
+	void Simulate(const Time& dt, class EntityManager& em);
+	void Fetch();
 private:
-	physx::PxRigidDynamic * CreateDynamic(const physx::PxTransform& t, const physx::PxGeometry& geometry, const physx::PxVec3& velocity);
+	physx::PxDefaultAllocator		gAllocator;
+	physx::PxDefaultErrorCallback	gErrorCallback;
+	physx::PxFoundation*			gFoundation = NULL;
+	physx::PxPhysics*				gPhysics = NULL;
+	physx::PxDefaultCpuDispatcher*	gDispatcher = NULL;
+	physx::PxScene*					gScene = NULL;
+	physx::PxCooking*				gCooking = NULL;
+	physx::PxMaterial*				gMaterial = NULL;
+	physx::PxPvd*					gPvd = NULL;
 private:
-	physx::PxDefaultAllocator gAllocator;
-	physx::PxDefaultErrorCallback gErrorCallback;
-	physx::PxFoundation* gFoundation = NULL;
-	physx::PxPhysics* gPhysics = NULL;
-	physx::PxDefaultCpuDispatcher* gDispatcher = NULL;
-	physx::PxScene*	gScene = NULL;
-	physx::PxMaterial* gMaterial = NULL;
-	physx::PxCudaContextManager* gCudaContextManager = NULL;
-	physx::PxRigidDynamic* ball = NULL;
-	physx::PxPvd* gPvd = NULL;
+	static constexpr float timestep = 1.0f / 120.0f;
+	float current = 0.0f;
 };

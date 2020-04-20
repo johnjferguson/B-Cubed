@@ -1,5 +1,8 @@
 #include "Camera.h"
 #include "Gui.h"
+#include <cassert>
+#include "Entity.h"
+#include "EntityManager.h"
 
 namespace dx = DirectX;
 
@@ -120,4 +123,47 @@ void FreeCamera::WrapAngle(float& angle)
 		}
 	}
 
+}
+
+
+FollowCamera::FollowCamera(EntityManager & entityManager, unsigned int targetId)
+	:
+	entityManager(&entityManager),
+	targetId(targetId)
+{
+}
+
+void FollowCamera::SetTarget(unsigned int targetId_in)
+{
+	targetId = targetId_in;
+}
+
+DirectX::XMMATRIX FollowCamera::GetTransform(const Time & dt)
+{
+	Gui::AddSlider("radians", radianPerSecond, 0.0f, 6.0f);
+
+	if (entityManager->Get(targetId) != nullptr)
+	{
+		DirectX::XMFLOAT3 pos = entityManager->Get(targetId)->GetPosition();
+		DirectX::XMMATRIX transform = entityManager->Get(targetId)->GetTransform();
+	
+		DirectX::XMVECTOR vz = transform.r[2];
+
+		//DirectX::XMVECTOR lerp
+
+		DirectX::XMVECTOR i = DirectX::XMVectorSubtract(vz, previous_vz);
+		i = DirectX::XMVectorAdd(previous_vz, DirectX::XMVectorScale(i, radianPerSecond*dt()));
+		DirectX::XMVECTOR r = DirectX::XMVector3Normalize(i);
+
+		previous_vz = r;
+
+		r = DirectX::XMVectorScale(r, -followZ);
+		r = DirectX::XMVectorAdd(r, DirectX::XMVectorSet(0.0f, followY, 0.0f, 1.0f));
+		r = DirectX::XMVectorAdd(DirectX::XMLoadFloat3(&pos), r);
+
+
+		return DirectX::XMMatrixLookAtLH(r, DirectX::XMVectorSet(pos.x, pos.y, pos.z, 1.0f), DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
+	}
+	assert(false && "follow camera does not have a target");
+	return DirectX::XMMatrixIdentity();
 }

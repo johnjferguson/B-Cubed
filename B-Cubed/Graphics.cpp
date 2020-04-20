@@ -43,7 +43,7 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		D3D11_CREATE_DEVICE_DEBUG,
+		0u,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -61,7 +61,6 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 		 nullptr,
 		 &pTarget
 	 );
-
 	 // create z-buffer
 	 D3D11_DEPTH_STENCIL_DESC dsDesc = {};
 	 dsDesc.DepthEnable = TRUE;
@@ -98,7 +97,6 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 	 pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), pDSV.Get());
 
 	 // configure viewport
-	 D3D11_VIEWPORT vp;
 	 vp.Width = float(width);
 	 vp.Height = float(height);
 	 vp.MinDepth = 0.0f;
@@ -121,6 +119,16 @@ Graphics::Graphics(HWND hwnd, unsigned int width, unsigned int height)
 	 HRESULT hr = DirectX::CreateWICTextureFromFile(pDevice.Get(), pContext.Get(), path, pResource.GetAddressOf(), pTextureView.GetAddressOf());
 	 assert(SUCCEEDED(hr) && "WIC failed to load texture");
 }
+
+	void Graphics::ResetRenderTargetView()
+	{
+		pContext->OMSetRenderTargets(1, pTarget.GetAddressOf(), pDSV.Get());
+	}
+
+	void Graphics::ResetViewPort()
+	{
+		pContext->RSSetViewports(1, &vp);
+	}
 
 void Graphics::EndFrame()
 {
@@ -343,6 +351,11 @@ void Graphics::TestDraw(int x, int y)
 	
 }
 
+void Graphics::SetViewPort(D3D11_VIEWPORT & vp_in)
+{
+	pContext->RSSetViewports(1u, &vp_in);
+}
+
 ID3D11Device * Graphics::GetDevice()
 {
 	return pDevice.Get();
@@ -355,10 +368,19 @@ ID3D11DeviceContext * Graphics::GetContext()
 
 int Graphics::GetHeight() const
 {
-	return height;
+	D3D11_VIEWPORT vp_in;
+	UINT nViewPorts = 1;
+	pContext->RSGetViewports(&nViewPorts, &vp_in);
+
+	return vp_in.Height;
 }
 
 int Graphics::GetWidth() const
 {
-	return width;
+
+	D3D11_VIEWPORT vp_in;
+	UINT nViewPorts = 1;
+	pContext->RSGetViewports(&nViewPorts, &vp_in);
+
+	return vp_in.Width;
 }
