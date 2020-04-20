@@ -33,6 +33,7 @@ void Game::InitializeGame()
 	Sound::Load("sounds//boost.wav", 0.1f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//pipe.wav", 0.6f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 	Sound::Load("sounds//win.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
+	Sound::Load("sounds//lapcomplete.wav", 1.3f, PxVec3(0.f, 0.f, 0.f), PxVec3(0.f, 0.f, 0.f), false);
 
 	bl = std::make_unique<Mesh>(wnd.gfx, 3.1f, "models//secondary.obj");
 	b2 = std::make_unique<Mesh>(wnd.gfx, 3.0f, "models//finalfinalwall.obj");
