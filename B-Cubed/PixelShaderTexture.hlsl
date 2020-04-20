@@ -46,7 +46,14 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 				color += (float4(0.5f,0.5f,0.5f,1.0f) * lightIntensity);
 
 				color = saturate(color);
+
 			}
+		}
+		else
+		{
+			if (projectTexCoord.x != 1.0f && projectTexCoord.x != -1.0f && projectTexCoord.y != 1.0f && projectTexCoord.y -1.0f)
+			textureColor = shaderTexture.Sample(SampleTypeClamp, tex);
+			return saturate(textureColor + float4(0.1f, 0.1f, 0.1f, 1.0f));
 		}
 	}
 	else
@@ -56,7 +63,6 @@ float4 main(float2 tex : TEXCOORD, float4 normal : NORMAL, float4 lightViewPosit
 		if (lightIntensity > 0.0f)
 		{
 			color += (float4(0.4f, 0.4f, 0.4f, 1.0f) * lightIntensity);
-
 			color = saturate(color);
 		}
 	}

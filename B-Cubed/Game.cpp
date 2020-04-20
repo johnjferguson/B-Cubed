@@ -402,7 +402,7 @@ void Game::DoFrame()
 	};
 
 	static float x = 1.0f;
-	static float y = 20.0f;
+	static float y = 35.0f;
 	static float z = 1.0f;
 
 	Gui::AddSlider("x:", x, -100, 100);
