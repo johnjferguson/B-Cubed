@@ -24,7 +24,7 @@ class AI {
 
 
 		// Tweakable Variables
-		int safeRange = 30; // Distance from point that considers reaching said point
+		int safeRange = 40; // Distance from point that considers reaching said point
 		int slowRange = 0; // Distance from point where AI will drive slower (to not drive past/make turning easier)
 		int directionRange = 10; // Maximal degrees error margin
 		float steerSpeed = 1.f; // How much the wheels turn [0.f, 1.f]
@@ -55,7 +55,7 @@ class AI {
 		float dirDiff = 0.f; // The difference between the above 2 degrees
 
 		int stateLock = 0; // Gets set above 0 to stay in the state for x amount of update calls
-		int sleepTime = rand() % 20;
+		int sleepTime = rand() % 30;
 
 		// Output
 		bool accel = false;

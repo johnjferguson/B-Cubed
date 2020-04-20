@@ -60,20 +60,24 @@ void Game::InitializeGame()
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1800.0f, L"images//skybox2.png"));
 	skyboxes.push_back(std::make_unique<SkyBox>(wnd.gfx, 1800.0f, L"images//skybox3.png"));
 
-	aipath.push_back({ -155, 10, -90 });
-	aipath.push_back({ -235, 9, 48 });
-	aipath.push_back({ -153, 13, 203 });
-	aipath.push_back({ -22, 27, 248 });
-	aipath.push_back({ 200, 52, 176 });
-	aipath.push_back({ 280, 42, 60 });
-	aipath.push_back({ 271, 25, -81 });
-	aipath.push_back({ 145, 70, -132 });
-	aipath.push_back({ -85, 36, 8 });
-	aipath.push_back({ -88, 11, 101 });
-	aipath.push_back({ 22, 23, 160 });
-	aipath.push_back({ 121, 24, 114 });
-	aipath.push_back({ 166, 29, -5 });
-	aipath.push_back({ 63, 14, -116 });
+	aipath.push_back({ -188, 10, -64 });
+	aipath.push_back({ -217, 10, 0 });
+	aipath.push_back({ -220, 14, 128 });
+	aipath.push_back({ -134, 17, 217 });
+	aipath.push_back({ 86, 39, 233 });
+	aipath.push_back({ 198, 54, 175 });
+	aipath.push_back({ 283, 42, 42 });
+	aipath.push_back({ 280, 27, -71 });
+	aipath.push_back({ 194, 54, -147 });
+	aipath.push_back({ 59, 88, -88 });
+	aipath.push_back({ -90, 33, 17 });
+	aipath.push_back({ -91, 12, 92 });
+	aipath.push_back({ 9, 23, 163 });
+	aipath.push_back({ 137, 24, 108 });
+	aipath.push_back({ 171, 30, -17 });
+	aipath.push_back({ 83, 16, -109 });
+	aipath.push_back({ -68, 11, -126 });
+
 
 	// Static Physics
 	//std::unique_ptr<PhysicsStatic> sp0 = std::make_unique<PhysicsStatic>(&ps, PxTransform(physx::PxVec3(0.0f, 0.0f, 0.0f)), physx::PxVec3(100.0f, 1.0f, 100.0f));
