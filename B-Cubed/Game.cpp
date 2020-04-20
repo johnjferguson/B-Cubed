@@ -133,10 +133,10 @@ void Game::InitializeGame()
 
 	std::unique_ptr<VehiclePhysics> vehicle_4;
 	if (!AI_4) {
-		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.7f, -125.f, 3);
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, -105.f, 9.8f, -125.f, 3);
 	}
 	else {
-		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.7f, -125.f, 3);
+		vehicle_4 = std::make_unique<VehiclePhysics>(&ps, wnd.clr, this, aipath, -105.f, 9.8f, -125.f, 3);
 	}
 
 
